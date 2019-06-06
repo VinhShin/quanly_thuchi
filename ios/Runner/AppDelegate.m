@@ -1,6 +1,6 @@
 #include "AppDelegate.h"
 #include "GeneratedPluginRegistrant.h"
-
+@import Firebase;
 @implementation AppDelegate
 
 - (BOOL)application:(UIApplication *)application
@@ -9,5 +9,14 @@
   // Override point for customization after application launch.
   return [super application:application didFinishLaunchingWithOptions:launchOptions];
 }
+
+
+//@implementation AppDelegate
+//
+//- (BOOL)application:(UIApplication *)application
+//didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
+//    [FIRApp configure];
+//    return YES;
+//}
 
 @end
