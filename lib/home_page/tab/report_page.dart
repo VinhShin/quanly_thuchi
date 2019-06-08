@@ -5,7 +5,7 @@ class ReportPage extends StatelessWidget {
   Widget build(BuildContext context) {
     // TODO: implement build
     return new Center(
-      child: new Text("Hello Fragment 1"),
+      child: new Text("Báo cáo"),
     );
   }
 

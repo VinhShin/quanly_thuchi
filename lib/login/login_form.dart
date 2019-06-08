@@ -73,7 +73,7 @@ class _LoginFormState extends State<LoginForm> {
         }
         if (state.isSuccess) {
           Navigator.of(context)
-              .pushNamedAndRemoveUntil("revenue_expenditure",(_) => false);
+              .pushReplacementNamed("revenue_expenditure");
 //          BlocProvider.of<AuthenticationBloc>(context).dispatch(LoggedIn());
         }
       },

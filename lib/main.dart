@@ -35,7 +35,9 @@ class _AppState extends State<App> {
       bloc: _authenticationBloc,
       child: MaterialApp(
         routes: <String, WidgetBuilder>{
+          'logout': (BuildContext context) => new LoginScreen(userRepository: _userRepository),
           'revenue_expenditure': (BuildContext context) => new HomePage(),
+
         },
         home: BlocBuilder(
           bloc: _authenticationBloc,
