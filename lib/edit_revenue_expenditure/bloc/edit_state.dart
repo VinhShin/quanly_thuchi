@@ -2,10 +2,19 @@ import 'package:meta/meta.dart';
 
 
 class EditState{
-  int categoryId;
-  String categoryName;
-  double money;
-  bool type;//thu or chi
-  String dateTime;
-  String note;
+  bool success;
+
+  EditState({@required this.success});
+
+  factory EditState.Empty(){
+    return EditState();
+  }
+
+  factory EditState.Success(){
+    return EditState(success:true);
+  }
+
+  factory EditState.Failure(){
+    return EditState(success:false);
+  }
 }

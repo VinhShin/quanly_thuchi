@@ -2,6 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:quanly_thuchi/base_widget/text_base.dart';
 import 'package:quanly_thuchi/base_widget/edit_base.dart';
 import 'package:intl/intl.dart';
+import 'package:quanly_thuchi/model/re_ex_data.dart';
+import 'package:quanly_thuchi/edit_revenue_expenditure/bloc/edit_bloc.dart';
+import 'package:quanly_thuchi/edit_revenue_expenditure/bloc/edit_event.dart';
+import 'package:quanly_thuchi/constant.dart';
 
 class EditRevenueExpendture extends StatelessWidget {
   @override
@@ -26,19 +30,22 @@ class EditPage extends StatefulWidget {
 class _EditPage extends State<EditPage> {
   DateTime selectedDate = DateTime.now();
   TimeOfDay selectedTime = TimeOfDay.now();
+  TextEditingController moneyInput = new TextEditingController();
+  TextEditingController noteInput = new TextEditingController();
+  EditBloc _editBloc;
+  int _radioValue1 = -1;
+  String category = "Bán hàng";
 
   List<DropdownMenuItem<String>> getDropDownMenuItems() {
     List<DropdownMenuItem<String>> items = new List(5);
     items[0] =
-        (new DropdownMenuItem(value: "Bán hàng", child: new Text("Bán hàng")));
-    items[1] =
-        (new DropdownMenuItem(value: "Thu nợ", child: new Text("Thu nợ")));
-    items[2] =
-        (new DropdownMenuItem(value: "Vay nợ", child: new Text("Vay nợ")));
+        new DropdownMenuItem(value: "Bán hàng", child: new Text("Bán hàng"));
+    items[1] = new DropdownMenuItem(value: "Thu nợ", child: new Text("Thu nợ"));
+    items[2] = new DropdownMenuItem(value: "Vay nợ", child: new Text("Vay nợ"));
     items[3] =
-        (new DropdownMenuItem(value: "Thu khác", child: new Text("Thu khác")));
-    items[4] = (new DropdownMenuItem(
-        value: "Điều chỉnh", child: new Text("Điều chỉnh")));
+        new DropdownMenuItem(value: "Thu khác", child: new Text("Thu khác"));
+    items[4] = new DropdownMenuItem(
+        value: "Điều chỉnh", child: new Text("Điều chỉnh"));
     return items;
   }
 
@@ -61,12 +68,28 @@ class _EditPage extends State<EditPage> {
 //      if (picked != null && picked != selectedTime) selectTime(picked);
   }
 
-//
-//  @override
-//  Widget build(BuildContext context) {
-//    // TODO: implement build
-//    return Text("hshs");
-//  }
+  void _handleRadioValueChange1(int value) {
+    setState(() {
+      _radioValue1 = value;
+    });
+  }
+
+  ReExData getReExData() {
+//    ReExData reExData = new ReExData(_type, _money, _dateTime, _note)
+    return new ReExData(1, 2000, "1-1-1", "note");
+  }
+
+  void dropDownButtonHandle(String value){
+    setState(() {
+      category = value;
+    });
+  }
+
+  @override
+  void initState() {
+    _editBloc = new EditBloc();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -76,23 +99,42 @@ class _EditPage extends State<EditPage> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           TextBase("Số tiền"),
-          EditBase("200.000"),
-          TextBase("Danh mục "),
-          Container(
-            margin: EdgeInsets.only(left: 10),
-            height: 60,
-            child: DropdownButton<String>(
-              items: getDropDownMenuItems(),
-              onChanged: (value) {
-                print("value: $value");
-              },
-              hint: Text(
-                "Chọn danh mục",
-                style: TextStyle(
-                  color: Colors.pink,
-                ),
+          EditBase("200.000", controller: this.moneyInput),
+          Row(
+            children: <Widget>[
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  TextBase("Danh mục"),
+                  Container(
+                    margin: EdgeInsets.only(left: 10),
+                    height: 60,
+                    child: DropdownButton<String>(
+                      items: getDropDownMenuItems(),
+                      value: category,
+                      onChanged: (value) {
+                        dropDownButtonHandle(value);
+                      },
+                      hint: Text(
+                        "Chọn danh mục",
+                        style: TextStyle(
+                          color: Colors.pink,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
               ),
-            ),
+              Container(
+                margin: EdgeInsets.only(left: 20),
+                child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      TextBase("Loại", marginLeft: 25.0),
+                      Row(children: createRadioListUsers())
+                    ]),
+              )
+            ],
           ),
           TextBase("Thời gian"),
           Container(
@@ -127,39 +169,65 @@ class _EditPage extends State<EditPage> {
             ),
           ),
           TextBase("Ghi chú"),
-          EditBase("", true),
+          EditBase("", isMultiline: true, controller: this.noteInput),
           Container(
             margin: EdgeInsets.only(top: 20),
             height: 50,
             alignment: Alignment.center,
-            child:  RaisedButton(
-              color: Colors.blue,
-                onPressed: () {},
+            child: RaisedButton(
+                color: Colors.blue,
+                onPressed: () {
+                  _editBloc.dispatch(InsertData(reExData: getReExData()));
+                },
                 child: Container(
-                  width: 100,
-                  height: 40,
-                  child: Center(
-                    child: Text(
-                        'Thêm',
-                        textAlign: TextAlign.center,
-                        style: TextStyle(fontSize: 20, color: Colors.white)
-                    ),
-                  )
-                )
-            ),
+                    width: 100,
+                    height: 40,
+                    child: Center(
+                      child: Text('Thêm',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(fontSize: 20, color: Colors.white)),
+                    ))),
           )
-
-
         ],
       ),
     );
+  }
+
+  List<Widget> createRadioListUsers() {
+    List<Widget> widgets = [];
+    widgets.add(SizedBox(
+      width: 120,
+      child: RadioListTile(
+        value: REVENUE_TYPE,
+        groupValue: _radioValue1,
+        title: Text("Thu"),
+        onChanged: (currentUser) {
+          _handleRadioValueChange1(REVENUE_TYPE);
+        },
+        selected: _radioValue1 == REVENUE_TYPE,
+        activeColor: Colors.green,
+      ),
+    ));
+    widgets.add(SizedBox(
+      width: 120,
+      child: RadioListTile(
+        value: EXPENDTURE_TYPE,
+        groupValue: _radioValue1,
+        title: Text("Chi"),
+        onChanged: (currentUser) {
+          _handleRadioValueChange1(EXPENDTURE_TYPE);
+        },
+        selected: _radioValue1 == EXPENDTURE_TYPE,
+        activeColor: Colors.green,
+      ),
+    ));
+    return widgets;
   }
 }
 
 class _InputDropdown extends StatelessWidget {
   const _InputDropdown(
       {Key key,
-      this.child,
       this.labelText,
       this.valueText,
       this.valueStyle,
@@ -170,7 +238,6 @@ class _InputDropdown extends StatelessWidget {
   final String valueText;
   final TextStyle valueStyle;
   final VoidCallback onPressed;
-  final Widget child;
 
   @override
   Widget build(BuildContext context) {
