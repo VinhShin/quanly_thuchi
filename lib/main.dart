@@ -2,8 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:bloc/bloc.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:quanly_thuchi/authentication_bloc/bloc.dart';
-import 'package:quanly_thuchi/user_repository.dart';
-import 'package:quanly_thuchi/home_screen.dart';
+import 'package:quanly_thuchi/repository/user_repository.dart';
 import 'package:quanly_thuchi/login/login.dart';
 import 'package:quanly_thuchi/splash_screen.dart';
 import 'package:quanly_thuchi/simple_bloc_delegate.dart';
@@ -49,7 +48,8 @@ class _AppState extends State<App> {
               return LoginScreen(userRepository: _userRepository);
             }
             if (state is Authenticated) {
-              return HomeScreen(name: state.displayName);
+//              return HomeScreen(name: state.displayName);
+              return HomePage();
             }
           },
         ),

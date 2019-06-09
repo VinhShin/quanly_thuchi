@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:quanly_thuchi/user_repository.dart';
+import 'package:quanly_thuchi/repository/user_repository.dart';
 import 'package:quanly_thuchi/register/register.dart';
 
 class RegisterScreen extends StatefulWidget {

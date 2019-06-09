@@ -1,14 +1,20 @@
 import 'dart:async';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:quanly_thuchi/repository/firestorage_repository.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:quanly_thuchi/constant.dart';
 
 class UserRepository {
   final FirebaseAuth _firebaseAuth;
   final GoogleSignIn _googleSignIn;
+  FireStorageRepository _fireStorageRepository;
 
   UserRepository({FirebaseAuth firebaseAuth, GoogleSignIn googleSignin})
       : _firebaseAuth = firebaseAuth ?? FirebaseAuth.instance,
-        _googleSignIn = googleSignin ?? GoogleSignIn();
+        _googleSignIn = googleSignin ?? GoogleSignIn(){
+    _fireStorageRepository = new FireStorageRepository();
+  }
 
   Future<FirebaseUser> signInWithGoogle() async {
     final GoogleSignInAccount googleUser = await _googleSignIn.signIn();
@@ -22,11 +28,18 @@ class UserRepository {
     return _firebaseAuth.currentUser();
   }
 
-  Future<void> signInWithCredentials(String email, String password) {
-    return _firebaseAuth.signInWithEmailAndPassword(
+  Future<void> signInWithCredentials(String email, String password) async {
+    await _firebaseAuth.signInWithEmailAndPassword(
       email: email,
       password: password,
     );
+    FirebaseUser user = await _firebaseAuth.currentUser();
+    final prefs = await SharedPreferences.getInstance();
+    // set value
+    prefs.setString(USER_ID, user.uid);
+    prefs.setString(USER_NAME, user.email);
+    _fireStorageRepository.addShop(user.uid, user.email);
+    return;
   }
 
   Future<void> signUp({String email, String password}) async {
@@ -51,4 +64,10 @@ class UserRepository {
   Future<String> getUser() async {
     return (await _firebaseAuth.currentUser()).email;
   }
+
+  Future<String> getId() async {
+    return (await _firebaseAuth.currentUser()).uid;
+  }
+
+
 }

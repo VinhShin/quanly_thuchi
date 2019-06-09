@@ -2,7 +2,7 @@ import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';
 import 'package:rxdart/rxdart.dart';
-import 'package:quanly_thuchi/user_repository.dart';
+import 'package:quanly_thuchi/repository/user_repository.dart';
 import 'package:quanly_thuchi/register/register.dart';
 import 'package:quanly_thuchi/validators.dart';
 

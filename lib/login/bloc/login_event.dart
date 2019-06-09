@@ -54,3 +54,17 @@ class LoginWithCredentialsPressed extends LoginEvent {
     return 'LoginWithCredentialsPressed { email: $email, password: $password }';
   }
 }
+
+class SavePassCheck extends LoginEvent{
+  final String email;
+  final String pass;
+  final bool check;
+
+  SavePassCheck({@required this.email, @required this.pass, @required this.check}):super([email, pass, check]);
+
+  @override
+  String toString() {
+    // TODO: implement toString
+    return super.toString();
+  }
+}

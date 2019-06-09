@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:quanly_thuchi/user_repository.dart';
+import 'package:quanly_thuchi/repository/user_repository.dart';
 import 'package:quanly_thuchi/authentication_bloc/bloc.dart';
 import 'package:quanly_thuchi/login/login.dart';
 
@@ -163,6 +163,12 @@ class _LoginFormState extends State<LoginForm> {
         email: _emailController.text,
         password: _passwordController.text,
       ),
+    );
+  }
+
+  void _savePass(){
+    _loginBloc.dispatch(
+      SavePassCheck(email: _emailController.text, pass: _passwordController.text)
     );
   }
 }

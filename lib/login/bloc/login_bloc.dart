@@ -3,7 +3,7 @@ import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:quanly_thuchi/login/login.dart';
-import 'package:quanly_thuchi/user_repository.dart';
+import 'package:quanly_thuchi/repository/user_repository.dart';
 import 'package:quanly_thuchi/validators.dart';
 
 class LoginBloc extends Bloc<LoginEvent, LoginState> {
@@ -11,17 +11,16 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
 
   LoginBloc({
     @required UserRepository userRepository,
-  })  : assert(userRepository != null),
+  })
+      : assert(userRepository != null),
         _userRepository = userRepository;
 
   @override
   LoginState get initialState => LoginState.empty();
 
   @override
-  Stream<LoginState> transform(
-    Stream<LoginEvent> events,
-    Stream<LoginState> Function(LoginEvent event) next,
-  ) {
+  Stream<LoginState> transform(Stream<LoginEvent> events,
+      Stream<LoginState> Function(LoginEvent event) next,) {
     final observableStream = events as Observable<LoginEvent>;
     final nonDebounceStream = observableStream.where((event) {
       return (event is! EmailChanged && event is! PasswordChanged);
@@ -45,6 +44,8 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
         email: event.email,
         password: event.password,
       );
+    } else if (event is SavePassCheck) {
+      yield* _mapSavePass(event.email, event.pass, event.check);
     }
   }
 
@@ -80,5 +81,10 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
     } catch (_) {
       yield LoginState.failure();
     }
+  }
+
+  Stream<LoginState> _mapSavePass(
+    String email, String pass, bool check) async* {
+
   }
 }

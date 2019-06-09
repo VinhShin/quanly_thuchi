@@ -2,7 +2,7 @@ import 'package:meta/meta.dart';
 import 'package:bloc/bloc.dart';
 import 'edit_event.dart';
 import 'edit_state.dart';
-import 'package:quanly_thuchi/firestorage_repository.dart';
+import 'package:quanly_thuchi/repository/firestorage_repository.dart';
 import 'package:quanly_thuchi/model/re_ex_data.dart';
 
 class EditBloc extends Bloc<EditEvent, EditState> {
