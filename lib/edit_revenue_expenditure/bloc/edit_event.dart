@@ -17,3 +17,7 @@ class EditData extends EditEvent{
 class Delete extends EditEvent{
 
 }
+
+class CateChange extends EditEvent{
+
+}

@@ -26,49 +26,47 @@ class FireStorageRepository {
 // Try reading data from the counter key. If it does not exist, return 0.
     final String userId = prefs.getString(USER_ID) ?? "temp";
     final String userName = prefs.getString(USER_NAME) ?? "temp";
-    String today = new DateFormat.yMMMd().format(DateTime.now());
+    var formatter = new DateFormat('yyyy-MM-dd');
+    String today = formatter.format(DateTime.now());
     int currentMiliSecond = DateTime.now().millisecondsSinceEpoch;
-    final ReExData newReExData = new ReExData(reExData.type, reExData.money,
-        reExData.dateTime, reExData.note, currentMiliSecond.toString());
-
-//    String data = json.encode(newReExData.toMap());
+    reExData.setId = currentMiliSecond.toString();
     await Firestore.instance
         .collection(userId)
         .document("data")
         .collection(today)
         .document()
-        .setData(newReExData.toMap());
+        .setData(reExData.toMap());
     return;
-//    CollectionReference reference =  Firestore.instance.collection(user_id);
-//    final TransactionHandler createTransaction = (Transaction tx) async {
-//      final DocumentSnapshot ds = await tx.get(reference.document("data").collection(today).document());
-//
-//      final Map<String, dynamic> data = newReExData.toMap();
-//
-//      await tx.set(ds.reference, data);
-//      return data;
-//    };
-//
-//    return Firestore.instance.runTransaction(createTransaction).then((mapData) {
-//      return ReExData.fromMap(mapData);
-//    }).catchError((error) {
-//      print('error: $error');
-//      return null;
-//    });
   }
 
-  Stream<QuerySnapshot> getReExDataList({int offset, int limit}) {
-    Stream<QuerySnapshot> snapshots = noteCollection.snapshots();
-
-    if (offset != null) {
-      snapshots = snapshots.skip(offset);
+  Future<List<ReExData>> getReExDataList({String date, int offset, int limit}) async {
+    final prefs = await SharedPreferences.getInstance();
+    final String userId = prefs.getString(USER_ID) ?? "temp";
+//    Stream<QuerySnapshot> snapshots = await Firestore.instance
+//        .collection(userId)
+//        .document("data")
+//        .collection(today)
+//        .snapshots();
+//
+//    if (offset != null) {
+//      snapshots = snapshots.skip(offset);
+//    }
+//
+//    if (limit != null) {
+//      snapshots = snapshots.take(limit);
+//    }
+//    return snapshots.listen(onData);
+    List<ReExData> listData = new List();
+    QuerySnapshot querySnapshot = await await Firestore.instance
+        .collection(userId)
+        .document("data")
+        .collection(date)
+        .getDocuments();
+    var list = querySnapshot.documents;
+    for (final e in list) {
+      listData.add(new ReExData.fromMap(e.data));
     }
-
-    if (limit != null) {
-      snapshots = snapshots.take(limit);
-    }
-
-    return snapshots;
+    return listData;
   }
 
   Future<dynamic> updateReExData(ReExData note) async {

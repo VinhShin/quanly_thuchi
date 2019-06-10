@@ -18,3 +18,8 @@ class EditState{
     return EditState(success:false);
   }
 }
+
+class EditCateState extends EditState{
+  String category;
+  EditCateState({@required this.category});
+}
