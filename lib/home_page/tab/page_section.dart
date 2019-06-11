@@ -3,10 +3,11 @@ import 'package:quanly_thuchi/home_page/tab/bloc/page_bloc.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:quanly_thuchi/home_page/tab/bloc/page_state.dart';
 import 'package:quanly_thuchi/home_page/tab/bloc/page_event.dart';
-import 'package:quanly_thuchi/model/re_ex_data.dart';
+import 'package:quanly_thuchi/model/transaction.dart';
+import 'package:quanly_thuchi/constant.dart';
+import 'package:quanly_thuchi/edit_revenue_expenditure/edit_revenue_expendture.dart';
 
 class PageSection extends StatefulWidget {
-
   String dateTime;
 
   PageSection({@required this.dateTime});
@@ -41,17 +42,26 @@ class _PageSection extends State<PageSection> {
         child: BlocBuilder(
             bloc: _pageBloc,
             builder: (BuildContext context, PageState pageState) {
-              if(pageState is PageLoadedData && pageState.listData != null){
+              if (pageState is PageLoadedData && pageState.section != null) {
                 return Padding(
                     padding: EdgeInsets.all(20),
                     child: new Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
-                        TextKeyValue("Tiền đầu ngày:", "200.000"),
-                        TextKeyValue("Tiền thu:", "50.000"),
-                        TextKeyValue("Tiền chi:", "40.000"),
-                        TextKeyValue("Tổng:", "90.000"),
-                        TextKeyValue("Tiền cuối ngày:", "290.000"),
+//                        TextKeyValue("Tiền đầu ngày:", "200.000"),
+                        TextKeyValue(
+                            "Tiền thu:",
+                            pageState.section.transactionHeader.revenue
+                                .toString()),
+                        TextKeyValue(
+                            "Tiền chi:",
+                            pageState.section.transactionHeader.expendture
+                                .toString()),
+                        TextKeyValue(
+                            "Tổng:",
+                            pageState.section.transactionHeader.total
+                                .toString()),
+//                        TextKeyValue("Tiền cuối ngày:", "290.000"),
                         Container(
                           margin: EdgeInsets.only(top: 10, bottom: 10),
                           child: CustomPaint(
@@ -62,9 +72,11 @@ class _PageSection extends State<PageSection> {
                         Flexible(
                           flex: 1,
                           child: ListView.builder(
-                            itemCount: pageState.listData.length,
+                            itemCount: pageState.section.transactions.length,
                             itemBuilder: (context, position) {
-                              return ItemRow(reExData: pageState.listData[position]);
+                              return ItemRow(
+                                  transaction:
+                                      pageState.section.transactions[position]);
                             },
                           ),
                         )
@@ -76,11 +88,11 @@ class _PageSection extends State<PageSection> {
                   child: new Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
-                      TextKeyValue("Tiền đầu ngày:", "200.000"),
-                      TextKeyValue("Tiền thu:", "50.000"),
-                      TextKeyValue("Tiền chi:", "40.000"),
-                      TextKeyValue("Tổng:", "90.000"),
-                      TextKeyValue("Tiền cuối ngày:", "290.000")
+//                      TextKeyValue("Tiền đầu ngày:", "200.000"),
+                      TextKeyValue("Tiền thu:", ""),
+                      TextKeyValue("Tiền chi:", ""),
+                      TextKeyValue("Tổng:", ""),
+//                      TextKeyValue("Tiền cuối ngày:", "290.000")
                     ],
                   ));
             }));
@@ -123,44 +135,53 @@ class TextKeyValue extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
-    return new Row(
-      children: <Widget>[
-        Text(title, textAlign: TextAlign.left, style: textStyle),
-        Spacer(),
-        Text(value, textAlign: TextAlign.left, style: textStyle),
-      ],
-    );
+    return new Container(
+        margin: EdgeInsets.only(top: 10),
+        child: new Row(
+          children: <Widget>[
+            Text(title, textAlign: TextAlign.left, style: textStyle),
+            Spacer(),
+            Text(value, textAlign: TextAlign.left, style: textStyle),
+          ],
+        ));
   }
 }
 
-class ItemRow extends StatelessWidget{
-  final ReExData reExData;
+class ItemRow extends StatelessWidget {
+  final Transaction transaction;
 
-  const ItemRow({Key key,@required this.reExData}): super(key:key);
+  const ItemRow({Key key, @required this.transaction}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
     return Container(
         margin: EdgeInsets.only(top: 10),
-        child: Card(
-          child: Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: new Row(
-                children: <Widget>[
-                  Text(
-                    reExData.cateId??"",
-                    style: TextStyle(fontSize: 22.0),
-                  ),
-                  Spacer(),
-                  Text(
-                    reExData.money.toString(),
-                    style: TextStyle(fontSize: 22.0),
-                  )
-                ],
-              )),
+        child: GestureDetector(
+          onTap: () {
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => EditRevenueExpendture(transaction:transaction)));
+          },
+          child: Card(
+            color: transaction.type == REVENUE_TYPE ? Colors.green : Colors.red,
+            child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: new Row(
+                  children: <Widget>[
+                    Text(
+                      transaction.cateId ?? "",
+                      style: TextStyle(color: Colors.white, fontSize: 22.0),
+                    ),
+                    Spacer(),
+                    Text(
+                      transaction.money.toString(),
+                      style: TextStyle(color: Colors.white, fontSize: 22.0),
+                    )
+                  ],
+                )),
+          ),
         ));
   }
 }
-
-

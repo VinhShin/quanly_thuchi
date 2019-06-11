@@ -1,5 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:quanly_thuchi/model/re_ex_data.dart';
+import 'package:quanly_thuchi/model/transaction.dart' as MyTransaction;
 import 'package:quanly_thuchi/constant.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:intl/intl.dart';
@@ -21,7 +21,7 @@ class FireStorageRepository {
     return true;
   }
 
-  Future<void> createReExData(ReExData reExData) async {
+  Future<void> createReExData(MyTransaction.Transaction reExData) async {
     final prefs = await SharedPreferences.getInstance();
 // Try reading data from the counter key. If it does not exist, return 0.
     final String userId = prefs.getString(USER_ID) ?? "temp";
@@ -34,29 +34,17 @@ class FireStorageRepository {
         .collection(userId)
         .document("data")
         .collection(today)
-        .document()
+        .document(reExData.id)
         .setData(reExData.toMap());
     return;
   }
 
-  Future<List<ReExData>> getReExDataList({String date, int offset, int limit}) async {
+  Future<List<MyTransaction.Transaction>> getReExDataList(
+      {String date, int offset, int limit}) async {
     final prefs = await SharedPreferences.getInstance();
     final String userId = prefs.getString(USER_ID) ?? "temp";
-//    Stream<QuerySnapshot> snapshots = await Firestore.instance
-//        .collection(userId)
-//        .document("data")
-//        .collection(today)
-//        .snapshots();
-//
-//    if (offset != null) {
-//      snapshots = snapshots.skip(offset);
-//    }
-//
-//    if (limit != null) {
-//      snapshots = snapshots.take(limit);
-//    }
-//    return snapshots.listen(onData);
-    List<ReExData> listData = new List();
+
+    List<MyTransaction.Transaction> listData = new List();
     QuerySnapshot querySnapshot = await await Firestore.instance
         .collection(userId)
         .document("data")
@@ -64,43 +52,34 @@ class FireStorageRepository {
         .getDocuments();
     var list = querySnapshot.documents;
     for (final e in list) {
-      listData.add(new ReExData.fromMap(e.data));
+      listData.add(new MyTransaction.Transaction.fromMap(e.data));
     }
     return listData;
   }
 
-  Future<dynamic> updateReExData(ReExData note) async {
-    final TransactionHandler updateTransaction = (Transaction tx) async {
-      final DocumentSnapshot ds =
-          await tx.get(noteCollection.document(note.id));
-
-      await tx.update(ds.reference, note.toMap());
-      return {'updated': true};
-    };
-
+  Future<dynamic> updateReExData(MyTransaction.Transaction transaction) async {
+    final prefs = await SharedPreferences.getInstance();
+// Try reading data from the counter key. If it does not exist, return 0.
+    final String userId = prefs.getString(USER_ID) ?? "temp";
     return Firestore.instance
-        .runTransaction(updateTransaction)
-        .then((result) => result['updated'])
-        .catchError((error) {
-      print('error: $error');
-      return false;
-    });
+        .collection(userId)
+        .document("data")
+        .collection(transaction.date)
+        .document(transaction.id)
+        .updateData(transaction.toMap());
   }
 
-  Future<dynamic> deleteReExData(String id) async {
-    final TransactionHandler deleteTransaction = (Transaction tx) async {
-      final DocumentSnapshot ds = await tx.get(noteCollection.document(id));
+  Future<void> deleteReExData(String date, String id) async {
+    final prefs = await SharedPreferences.getInstance();
+// Try reading data from the counter key. If it does not exist, return 0.
+    final String userId = prefs.getString(USER_ID) ?? "temp";
 
-      await tx.delete(ds.reference);
-      return {'deleted': true};
-    };
-
-    return Firestore.instance
-        .runTransaction(deleteTransaction)
-        .then((result) => result['deleted'])
-        .catchError((error) {
-      print('error: $error');
-      return false;
-    });
+    await Firestore.instance
+        .collection(userId)
+        .document("data")
+        .collection(date)
+        .document(id)
+        .delete();
+    return;
   }
 }

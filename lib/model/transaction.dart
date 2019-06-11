@@ -1,4 +1,4 @@
-class ReExData {
+class Transaction {
   String _id;
   int _type;
   double _money;
@@ -16,10 +16,16 @@ class ReExData {
   String get cateId => _cateId;
 
   set setId(id) => _id =id;
+  set setType(type) => _type = type;
+  set setMoney(money) => _money = money;
+  set setDate(date) => _date = date;
+  set setTime(time) => _time = time;
+  set setNote(note) => _note = note;
+  set setCate(cate) => _cateId = cate;
 
-  ReExData(this._type, this._money, this._date, this._time, this._note,this._cateId,[this._id]);
+  Transaction(this._type, this._money, this._date, this._time, this._note,this._cateId,[this._id]);
 
-  ReExData.map(dynamic obj) {
+  Transaction.map(dynamic obj) {
     this._id = obj["id"];
     this._type = obj['type'];
     this._money = obj['money'];
@@ -41,7 +47,7 @@ class ReExData {
     return map;
   }
 
-  ReExData.fromMap(Map<String, dynamic> map) {
+  Transaction.fromMap(Map<String, dynamic> map) {
     this._id = map["id"];
     this._type = map['type'];
     this._money = map['money'];

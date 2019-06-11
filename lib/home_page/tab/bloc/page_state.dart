@@ -1,4 +1,4 @@
-import 'package:quanly_thuchi/model/re_ex_data.dart';
+import 'package:quanly_thuchi/model/transaction_section.dart';
 
 
 class PageState{
@@ -10,6 +10,6 @@ class PageLoadingData extends PageState{
 }
 
 class PageLoadedData extends PageState{
-  List<ReExData> listData;
-  PageLoadedData({this.listData});
+  TransactionSection section;
+  PageLoadedData({this.section});
 }

@@ -16,8 +16,8 @@ class RevenueExpenditurePage extends StatefulWidget {
 class _RevenueExpediturePage extends State<RevenueExpenditurePage> {
   PageBloc _pageBloc;
 
-  List<Tab> list = new List(9);
-  List<PageSection> listPage = new List(9);
+  List<Tab> list = new List(10);
+  List<PageSection> listPage = new List(10);
 
   @override
   void initState() {
@@ -28,35 +28,58 @@ class _RevenueExpediturePage extends State<RevenueExpenditurePage> {
 
   @override
   Widget build(BuildContext context) {
-//    _tabController = new TabController(length: 6, vsync: TickerProvider, initialIndex: 3);
-    DateTime dateTime = DateTime.now();
-    var format = new DateFormat("yyyy-MM-dd");
-    String today = format.format(dateTime);
+    DateTime date4 = DateTime.now();
+    //3 ngay sau
+    DateTime date1 = new DateTime(date4.year, date4.month, date4.day + 1);
+    DateTime date2 = new DateTime(date4.year, date4.month, date4.day + 1);
+    DateTime date3 = new DateTime(date4.year, date4.month, date4.day + 1);
+    //7 ngay truoc
+    DateTime date5 = new DateTime(date4.year, date4.month, date4.day - 1);
+    DateTime date6 = new DateTime(date4.year, date4.month, date4.day - 2);
+    DateTime date7 = new DateTime(date4.year, date4.month, date4.day - 3);
+    DateTime date8 = new DateTime(date4.year, date4.month, date4.day - 4);
+    DateTime date9 = new DateTime(date4.year, date4.month, date4.day - 5);
+    DateTime date10 = new DateTime(date4.year, date4.month, date4.day - 6);
 
-    list[0] = Tab(child: Text(today));
-    list[1] = Tab(child: Text(today));
-    list[2] = Tab(child: Text(today));
-    list[3] = Tab(child: Text(today));
-    list[4] = Tab(child: Text(today));
-    list[5] = Tab(child: Text(today));
-    list[6] = Tab(child: Text(today));
-    list[7] = Tab(child: Text(today));
-    list[8] = Tab(child: Text(today));
-    listPage[0] = PageSection(dateTime: today,);
-    listPage[1] = PageSection(dateTime: today,);
-    listPage[2] = PageSection(dateTime: today,);
-    listPage[3] = PageSection(dateTime: today,);
-    listPage[4] = PageSection(dateTime: today,);
-    listPage[5] = PageSection(dateTime: today,);
-    listPage[6] = PageSection(dateTime: today,);
-    listPage[7] = PageSection(dateTime: today,);
-    listPage[8] = PageSection(dateTime: today,);
+
+    var format = new DateFormat("yyyy-MM-dd");
+    String strDate1 = format.format(date1);
+    String strDate2 = format.format(date2);
+    String strDate3 = format.format(date3);
+    String strDate4 = format.format(date4);
+    String strDate5 = format.format(date5);
+    String strDate6 = format.format(date6);
+    String strDate7= format.format(date7);
+    String strDate8 = format.format(date8);
+    String strDate9 = format.format(date9);
+    String strDate10 = format.format(date10);
+
+    list[0] = Tab(child: Text(strDate10));
+    list[1] = Tab(child: Text(strDate9));
+    list[2] = Tab(child: Text(strDate8));
+    list[3] = Tab(child: Text(strDate7));
+    list[4] = Tab(child: Text(strDate6));
+    list[5] = Tab(child: Text(strDate5));
+    list[6] = Tab(child: Text(strDate4));
+    list[7] = Tab(child: Text(strDate3));
+    list[8] = Tab(child: Text(strDate2));
+    list[9] = Tab(child: Text(strDate1));
+    listPage[0] = PageSection(dateTime: strDate10,);
+    listPage[1] = PageSection(dateTime: strDate9,);
+    listPage[2] = PageSection(dateTime: strDate8,);
+    listPage[3] = PageSection(dateTime: strDate7,);
+    listPage[4] = PageSection(dateTime: strDate6,);
+    listPage[5] = PageSection(dateTime: strDate5,);
+    listPage[6] = PageSection(dateTime: strDate4,);
+    listPage[7] = PageSection(dateTime: strDate3,);
+    listPage[8] = PageSection(dateTime: strDate2,);
+    listPage[9] = PageSection(dateTime: strDate1,);
 
     return BlocProvider(
         bloc: _pageBloc,
         child: DefaultTabController(
-            initialIndex: 3,
-            length: 9,
+            initialIndex: 6,
+            length: list.length,
             child: Scaffold(
                 appBar: PreferredSize(
                     preferredSize: Size.fromHeight(50.0),
