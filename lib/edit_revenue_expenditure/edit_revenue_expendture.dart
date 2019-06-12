@@ -79,9 +79,9 @@ class _EditPage extends State<EditPage> {
       bloc: _editBloc,
       listener: (BuildContext context, EditState editState) {
         if (editState.currentStep == STEP_INSERT && editState.status) {
-          Navigator.pop(context);
+          Navigator.pop(context, true);
         } else if(editState.currentStep == STEP_DELETE &&  editState.status){
-          Navigator.pop(context);
+          Navigator.pop(context, true);
         }else if(editState.currentStep == STEP_UPDATE && editState.status){
           Navigator.pop(context);
         }
@@ -94,7 +94,7 @@ class _EditPage extends State<EditPage> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
                   TextBase("Số tiền"),
-                  EditBase("200.000", controller: this.moneyInput),
+                  EditBase("200.000", controller: this.moneyInput, isMoney: true,),
                   Row(
                     children: <Widget>[
                       Column(

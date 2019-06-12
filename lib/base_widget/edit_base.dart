@@ -7,9 +7,11 @@ class EditBase extends StatelessWidget{
   int numberLine = 1;
   String hint;
   bool isMultiline = false;
-  EditBase(String hint, {this.isMultiline, this.controller}){
+  bool isMoney = false;
+  EditBase(String hint, {this.isMultiline, this.controller, this.isMoney}){
     this.hint = hint;
       this.isMultiline = isMultiline??false;
+      this.isMoney = isMoney??false;
   }
 
   @override
@@ -27,7 +29,7 @@ class EditBase extends StatelessWidget{
         ),
         child: new TextField(
           controller: controller,
-          keyboardType: TextInputType.multiline,
+          keyboardType: isMoney?TextInputType.number:TextInputType.multiline,
           maxLines: this.numberLine,
           decoration: new InputDecoration(
               border: new OutlineInputBorder(

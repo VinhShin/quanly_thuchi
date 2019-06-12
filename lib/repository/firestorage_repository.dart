@@ -25,14 +25,12 @@ class FireStorageRepository {
     final prefs = await SharedPreferences.getInstance();
 // Try reading data from the counter key. If it does not exist, return 0.
     final String userId = prefs.getString(USER_ID) ?? "temp";
-    var formatter = new DateFormat('yyyy-MM-dd');
-    String today = formatter.format(DateTime.now());
     int currentMiliSecond = DateTime.now().millisecondsSinceEpoch;
     reExData.setId = currentMiliSecond.toString();
     await Firestore.instance
         .collection(userId)
         .document("data")
-        .collection(today)
+        .collection(reExData.date)
         .document(reExData.id)
         .setData(reExData.toMap());
     return;

@@ -37,6 +37,19 @@ class _PageSection extends State<PageSection> {
   }
 
   @override
+  void didChangeDependencies() {
+    // TODO: implement didChangeDependencies
+    super.didChangeDependencies();
+  }
+
+  @override
+  void didUpdateWidget(PageSection oldWidget) {
+    // TODO: implement didUpdateWidget
+    super.didUpdateWidget(oldWidget);
+    _pageBloc.dispatch(PageLoadData(dateTime));
+  }
+
+  @override
   Widget build(BuildContext context) {
     // TODO: implement build
     return RefreshIndicator(
@@ -88,8 +101,10 @@ class _PageSection extends State<PageSection> {
                                   pageState.section.transactions.length,
                                   itemBuilder: (context, position) {
                                     return ItemRow(
-                                        transaction: pageState
-                                            .section.transactions[position]);
+                                        transaction:
+                                        pageState.section.transactions[position],
+                                        pageBloc:_pageBloc
+                                    );
                                   },
                                 ),
                               )
@@ -168,8 +183,9 @@ class TextKeyValue extends StatelessWidget {
 
 class ItemRow extends StatelessWidget {
   final Transaction transaction;
+  final PageBloc pageBloc;
 
-  const ItemRow({Key key, @required this.transaction}) : super(key: key);
+  const ItemRow({Key key, @required this.transaction, this.pageBloc}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -177,12 +193,15 @@ class ItemRow extends StatelessWidget {
     return Container(
         margin: EdgeInsets.only(top: 10),
         child: GestureDetector(
-          onTap: () {
-            Navigator.push(
+          onTap: () async {
+            var result = await Navigator.push(
                 context,
                 MaterialPageRoute(
                     builder: (context) =>
                         EditRevenueExpendture(transaction: transaction)));
+            if(result){
+              pageBloc.dispatch(PageLoadData(transaction.date));
+            }
           },
           child: Card(
             child: Padding(

@@ -5,6 +5,7 @@ import 'package:quanly_thuchi/edit_revenue_expenditure/edit_revenue_expendture.d
 import 'package:quanly_thuchi/home_page/tab/bloc/page_bloc.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
+import 'package:quanly_thuchi/home_page/tab/bloc/page_event.dart';
 
 class RevenueExpenditurePage extends StatefulWidget {
   @override
@@ -76,6 +77,18 @@ class _RevenueExpediturePage extends State<RevenueExpenditurePage> {
     listPage[8] = PageSection(dateTime: strDate2,);
     listPage[9] = PageSection(dateTime: strDate1,);
 
+    _passAddScreen()async{
+      var result = await Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) =>
+                EditRevenueExpendture()),
+      );
+      if(result){
+        _pageBloc.dispatch(PageLoadData(strDate4));
+      }
+    }
+
     return BlocProvider(
         bloc: _pageBloc,
         child: DefaultTabController(
@@ -106,12 +119,7 @@ class _RevenueExpediturePage extends State<RevenueExpenditurePage> {
                           alignment: Alignment.bottomRight,
                           child: FloatingActionButton(
                             onPressed: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) =>
-                                        EditRevenueExpendture()),
-                              );
+                              _passAddScreen();
                             },
                             child: Icon(
                               Icons.add,
@@ -121,6 +129,9 @@ class _RevenueExpediturePage extends State<RevenueExpenditurePage> {
                         ))
                   ],
                 ))));
+
   }
+
+
 }
 //
