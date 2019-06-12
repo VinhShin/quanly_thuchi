@@ -23,6 +23,9 @@ class _PageSection extends State<PageSection> {
   String dateTime;
   PageBloc _pageBloc;
 
+  final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey =
+      new GlobalKey<RefreshIndicatorState>();
+
   _PageSection({@required this.dateTime});
 
   @override
@@ -36,66 +39,82 @@ class _PageSection extends State<PageSection> {
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
-    return BlocListener(
-        bloc: _pageBloc,
-        listener: (BuildContext context, PageState pageState) {},
-        child: BlocBuilder(
+    return RefreshIndicator(
+        key: _refreshIndicatorKey,
+        onRefresh: () {
+          _pageBloc.dispatch(PageLoadData(this.dateTime));
+          return _handleRefresh();
+        },
+        child: BlocListener(
             bloc: _pageBloc,
-            builder: (BuildContext context, PageState pageState) {
-              if (pageState is PageLoadedData && pageState.section != null) {
-                return Padding(
-                    padding: EdgeInsets.all(20),
-                    child: new Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
+            listener: (BuildContext context, PageState pageState) {},
+            child: BlocBuilder(
+                bloc: _pageBloc,
+                builder: (BuildContext context, PageState pageState) {
+                  if (pageState is PageLoadedData &&
+                      pageState.section != null) {
+                    if(pageState.dateTime == this.dateTime){
+                      return Padding(
+                          padding: EdgeInsets.all(20),
+                          child: new Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: <Widget>[
 //                        TextKeyValue("Tiền đầu ngày:", "200.000"),
-                        TextKeyValue(
-                            "Tiền thu:",
-                            pageState.section.transactionHeader.revenue
-                                .toString()),
-                        TextKeyValue(
-                            "Tiền chi:",
-                            pageState.section.transactionHeader.expendture
-                                .toString()),
-                        TextKeyValue(
-                            "Tổng:",
-                            pageState.section.transactionHeader.total
-                                .toString()),
+                              TextKeyValue(
+                                  "Tiền thu:",
+                                  pageState.section.transactionHeader.revenue
+                                      .toString()),
+                              TextKeyValue(
+                                  "Tiền chi:",
+                                  pageState.section.transactionHeader.expendture
+                                      .toString()),
+                              TextKeyValue(
+                                  "Tổng:",
+                                  pageState.section.transactionHeader.total
+                                      .toString()),
 //                        TextKeyValue("Tiền cuối ngày:", "290.000"),
-                        Container(
-                          margin: EdgeInsets.only(top: 10, bottom: 10),
-                          child: CustomPaint(
-                            size: Size(MediaQuery.of(context).size.width, 1),
-                            painter: Drawhorizontalline(),
-                          ),
-                        ),
-                        Flexible(
-                          flex: 1,
-                          child: ListView.builder(
-                            itemCount: pageState.section.transactions.length,
-                            itemBuilder: (context, position) {
-                              return ItemRow(
-                                  transaction:
-                                      pageState.section.transactions[position]);
-                            },
-                          ),
-                        )
-                      ],
-                    ));
-              }
-              return Padding(
-                  padding: EdgeInsets.all(20),
-                  child: new Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
+                              Container(
+                                margin: EdgeInsets.only(top: 10, bottom: 10),
+                                child: CustomPaint(
+                                  size:
+                                  Size(MediaQuery.of(context).size.width, 1),
+                                  painter: Drawhorizontalline(),
+                                ),
+                              ),
+                              Flexible(
+                                flex: 1,
+                                child: ListView.builder(
+                                  itemCount:
+                                  pageState.section.transactions.length,
+                                  itemBuilder: (context, position) {
+                                    return ItemRow(
+                                        transaction: pageState
+                                            .section.transactions[position]);
+                                  },
+                                ),
+                              )
+                            ],
+                          ));
+                    }
+
+                  }
+                  return Padding(
+                      padding: EdgeInsets.all(20),
+                      child: new Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
 //                      TextKeyValue("Tiền đầu ngày:", "200.000"),
-                      TextKeyValue("Tiền thu:", ""),
-                      TextKeyValue("Tiền chi:", ""),
-                      TextKeyValue("Tổng:", ""),
+                          TextKeyValue("Tiền thu:", "0"),
+                          TextKeyValue("Tiền chi:", "0"),
+                          TextKeyValue("Tổng:", "0"),
 //                      TextKeyValue("Tiền cuối ngày:", "290.000")
-                    ],
-                  ));
-            }));
+                        ],
+                      ));
+                })));
+  }
+
+  Future<bool> _handleRefresh() async {
+    return true;
   }
 }
 
@@ -162,22 +181,30 @@ class ItemRow extends StatelessWidget {
             Navigator.push(
                 context,
                 MaterialPageRoute(
-                    builder: (context) => EditRevenueExpendture(transaction:transaction)));
+                    builder: (context) =>
+                        EditRevenueExpendture(transaction: transaction)));
           },
           child: Card(
-            color: transaction.type == REVENUE_TYPE ? Colors.green : Colors.red,
             child: Padding(
                 padding: const EdgeInsets.all(16.0),
                 child: new Row(
                   children: <Widget>[
                     Text(
                       transaction.cateId ?? "",
-                      style: TextStyle(color: Colors.white, fontSize: 22.0),
+                      style: TextStyle(
+                          color: transaction.type == REVENUE_TYPE
+                              ? Colors.green
+                              : Colors.red,
+                          fontSize: 22.0),
                     ),
                     Spacer(),
                     Text(
                       transaction.money.toString(),
-                      style: TextStyle(color: Colors.white, fontSize: 22.0),
+                      style: TextStyle(
+                          color: transaction.type == REVENUE_TYPE
+                              ? Colors.green
+                              : Colors.red,
+                          fontSize: 22.0),
                     )
                   ],
                 )),

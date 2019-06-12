@@ -20,6 +20,8 @@ class PageBloc extends Bloc<PageEvent, PageState>{
   Stream<PageState> mapEventToState(PageEvent event) async*{
     // TODO: implement mapEventToState
     if(event is PageLoadData){
+//      yield new PageLoadingData();
+
       List<Transaction> listData = await _fireStorageRepository.getReExDataList(date: event.date,offset:0,limit:0);
       double revenue = 0;
       double expendTure = 0;
@@ -34,7 +36,8 @@ class PageBloc extends Bloc<PageEvent, PageState>{
           transactionHeader: new TransactionHeader(revenue: revenue, expendture: expendTure, total: revenue + expendTure),
           transactions: listData
       );
-      yield new PageLoadedData(section: section);
+      yield new PageLoadedData(section: section,dateTime: event.date);
+
     }
   }
 }
