@@ -3,7 +3,7 @@ import 'package:quanly_thuchi/home_page/tab/report_page.dart';
 import 'package:quanly_thuchi/home_page/tab/revenue_expenditure_page.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:quanly_thuchi/main.dart';
-
+import 'package:quanly_thuchi/user/user_home.dart';
 class DrawerItem {
   String title;
   IconData icon;
@@ -36,7 +36,7 @@ class HomePageState extends State<HomePage> {
         case 1:
           return new ReportPage();
         case 2:
-          return new RevenueExpenditurePage();
+          return new UserHome();
         default:
           return new Text("Error");
     }
