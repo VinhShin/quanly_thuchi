@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:quanly_thuchi/home_page/tab/bloc/page_state.dart';
 import 'package:quanly_thuchi/home_page/tab/bloc/page_event.dart';
 import 'package:quanly_thuchi/model/transaction.dart';
+import 'package:quanly_thuchi/model/transaction_section.dart';
 import 'package:quanly_thuchi/constant.dart';
 import 'package:quanly_thuchi/edit_revenue_expenditure/edit_revenue_expendture.dart';
 
@@ -22,6 +23,7 @@ class PageSection extends StatefulWidget {
 class _PageSection extends State<PageSection> {
   String dateTime;
   PageBloc _pageBloc;
+  TransactionSection section;
 
   final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey =
       new GlobalKey<RefreshIndicatorState>();
@@ -66,7 +68,10 @@ class _PageSection extends State<PageSection> {
                 builder: (BuildContext context, PageState pageState) {
                   if (pageState is PageLoadedData &&
                       pageState.section != null) {
-                    if(pageState.dateTime == this.dateTime){
+                    if (pageState.dateTime == this.dateTime) {
+                      this.section = pageState.section;
+                    }
+                    if (this.section != null) {
                       return Padding(
                           padding: EdgeInsets.all(20),
                           child: new Column(
@@ -75,22 +80,25 @@ class _PageSection extends State<PageSection> {
 //                        TextKeyValue("Tiền đầu ngày:", "200.000"),
                               TextKeyValue(
                                   "Tiền thu:",
-                                  pageState.section.transactionHeader.revenue
+                                  this.section.transactionHeader.revenue
                                       .toString()),
                               TextKeyValue(
                                   "Tiền chi:",
-                                  pageState.section.transactionHeader.expendture
+                                  this.section.transactionHeader.expendture
                                       .toString()),
                               TextKeyValue(
                                   "Tổng:",
-                                  pageState.section.transactionHeader.total
+                                  this.section.transactionHeader.total
                                       .toString()),
 //                        TextKeyValue("Tiền cuối ngày:", "290.000"),
                               Container(
                                 margin: EdgeInsets.only(top: 10, bottom: 10),
                                 child: CustomPaint(
                                   size:
-                                  Size(MediaQuery.of(context).size.width, 1),
+                                  Size(MediaQuery
+                                      .of(context)
+                                      .size
+                                      .width, 1),
                                   painter: Drawhorizontalline(),
                                 ),
                               ),
@@ -98,20 +106,18 @@ class _PageSection extends State<PageSection> {
                                 flex: 1,
                                 child: ListView.builder(
                                   itemCount:
-                                  pageState.section.transactions.length,
+                                  this.section.transactions.length,
                                   itemBuilder: (context, position) {
                                     return ItemRow(
-                                        transaction:
-                                        pageState.section.transactions[position],
-                                        pageBloc:_pageBloc
-                                    );
+                                        transaction: this
+                                            .section.transactions[position],
+                                        pageBloc: _pageBloc);
                                   },
                                 ),
                               )
                             ],
                           ));
                     }
-
                   }
                   return Padding(
                       padding: EdgeInsets.all(20),
@@ -185,7 +191,8 @@ class ItemRow extends StatelessWidget {
   final Transaction transaction;
   final PageBloc pageBloc;
 
-  const ItemRow({Key key, @required this.transaction, this.pageBloc}) : super(key: key);
+  const ItemRow({Key key, @required this.transaction, this.pageBloc})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -199,7 +206,7 @@ class ItemRow extends StatelessWidget {
                 MaterialPageRoute(
                     builder: (context) =>
                         EditRevenueExpendture(transaction: transaction)));
-            if(result){
+            if (result) {
               pageBloc.dispatch(PageLoadData(transaction.date));
             }
           },

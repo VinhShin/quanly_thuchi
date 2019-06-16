@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'page_section.dart';
-import 'page_section2.dart';
 import 'package:quanly_thuchi/edit_revenue_expenditure/edit_revenue_expendture.dart';
 import 'package:quanly_thuchi/home_page/tab/bloc/page_bloc.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -32,8 +31,8 @@ class _RevenueExpediturePage extends State<RevenueExpenditurePage> {
   Widget build(BuildContext context) {
     DateTime date4 = DateTime.now();
     //3 ngay sau
-    DateTime date1 = new DateTime(date4.year, date4.month, date4.day + 1);
-    DateTime date2 = new DateTime(date4.year, date4.month, date4.day + 1);
+    DateTime date1 = new DateTime(date4.year, date4.month, date4.day + 3);
+    DateTime date2 = new DateTime(date4.year, date4.month, date4.day + 2);
     DateTime date3 = new DateTime(date4.year, date4.month, date4.day + 1);
     //7 ngay truoc
     DateTime date5 = new DateTime(date4.year, date4.month, date4.day - 1);
