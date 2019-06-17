@@ -206,7 +206,7 @@ class ItemRow extends StatelessWidget {
                 MaterialPageRoute(
                     builder: (context) =>
                         EditRevenueExpendture(transaction: transaction)));
-            if (result) {
+            if (result!=null) {
               pageBloc.dispatch(PageLoadData(transaction.date));
             }
           },
