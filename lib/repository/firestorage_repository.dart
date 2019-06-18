@@ -42,7 +42,7 @@ class FireStorageRepository {
     final String userId = prefs.getString(USER_ID) ?? "temp";
 
     List<MyTransaction.Transaction> listData = new List();
-    QuerySnapshot querySnapshot = await await Firestore.instance
+    QuerySnapshot querySnapshot =  await Firestore.instance
         .collection(userId)
         .document("data")
         .collection(date)
@@ -78,5 +78,42 @@ class FireStorageRepository {
         .document(id)
         .delete();
     return;
+  }
+//
+//  Future<void> addUser(String userName, String password) async {
+//    final prefs = await SharedPreferences.getInstance();
+//// Try reading data from the counter key. If it does not exist, return 0.
+//    final String userId = prefs.getString(USER_ID) ?? "temp";
+//    String currentMiliSecond = DateTime.now().millisecondsSinceEpoch.toString();
+//    var map = new Map<String, dynamic>();
+//    map["user"] = userName;
+//    map["pass"] = password;
+//    await Firestore.instance
+//        .collection(userId)
+//        .document(currentMiliSecond)
+//        .setData(map);
+//    return;
+//  }
+
+  Future<bool> addUser(String userName, String password) async {
+    final prefs = await SharedPreferences.getInstance();
+// Try reading data from the counter key. If it does not exist, return 0.
+    final String userId = prefs.getString(USER_ID) ?? "temp";
+
+
+    QuerySnapshot snapshot = await Firestore.instance.collection(userId).where('user', isEqualTo: userName)
+        .getDocuments();
+    if(snapshot.documents.length==0){
+      String currentMiliSecond = DateTime.now().millisecondsSinceEpoch.toString();
+      var map = new Map<String, dynamic>();
+      map["user"] = userName;
+      map["pass"] = password;
+      await Firestore.instance
+          .collection(userId)
+          .document(currentMiliSecond)
+          .setData(map);
+      return true;
+    }
+    return false;
   }
 }

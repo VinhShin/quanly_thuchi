@@ -8,10 +8,12 @@ class EditBase extends StatelessWidget{
   String hint;
   bool isMultiline = false;
   bool isMoney = false;
-  EditBase(String hint, {this.isMultiline, this.controller, this.isMoney}){
+  bool isPassWord = false;
+  EditBase(String hint, {this.isMultiline, this.controller, this.isMoney, this.isPassWord}){
     this.hint = hint;
       this.isMultiline = isMultiline??false;
       this.isMoney = isMoney??false;
+      this.isPassWord = isPassWord??false;
   }
 
   @override
@@ -28,6 +30,7 @@ class EditBase extends StatelessWidget{
           primaryColorDark: Colors.red,
         ),
         child: new TextField(
+          obscureText: this.isPassWord,
           controller: controller,
           keyboardType: isMoney?TextInputType.number:TextInputType.multiline,
           maxLines: this.numberLine,
