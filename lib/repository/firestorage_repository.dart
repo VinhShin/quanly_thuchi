@@ -98,22 +98,25 @@ class FireStorageRepository {
   Future<bool> addUser(String userName, String password) async {
     final prefs = await SharedPreferences.getInstance();
 // Try reading data from the counter key. If it does not exist, return 0.
-    final String userId = prefs.getString(USER_NAME) ?? "temp";
+    final String user_id = prefs.getString(USER_ID) ?? "temp";
+    final String user_name = prefs.getString(USER_NAME) ?? "temp";
 
 
-    QuerySnapshot snapshot = await Firestore.instance.collection(userId).where('user', isEqualTo: userName)
+    QuerySnapshot snapshot = await Firestore.instance.collection("sub_user").where('user', isEqualTo: userName)
         .getDocuments();
     if(snapshot.documents.length==0){
-      String currentMiliSecond = DateTime.now().millisecondsSinceEpoch.toString();
       var map = new Map<String, dynamic>();
       map["user"] = userName;
       map["pass"] = password;
+      map["parent_id"] = user_id;
+      map["parent_name"] = user_name;
       await Firestore.instance
-          .collection(userId)
+          .collection("sub_user")
           .document(userName)
           .setData(map);
       return true;
     }
     return false;
   }
+
 }
