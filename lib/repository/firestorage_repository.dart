@@ -24,7 +24,7 @@ class FireStorageRepository {
   Future<void> createReExData(MyTransaction.Transaction reExData) async {
     final prefs = await SharedPreferences.getInstance();
 // Try reading data from the counter key. If it does not exist, return 0.
-    final String userId = prefs.getString(USER_ID) ?? "temp";
+    final String userId = prefs.getString(USER_NAME) ?? "temp";
     int currentMiliSecond = DateTime.now().millisecondsSinceEpoch;
     reExData.setId = currentMiliSecond.toString();
     await Firestore.instance
@@ -39,7 +39,7 @@ class FireStorageRepository {
   Future<List<MyTransaction.Transaction>> getReExDataList(
       {String date, int offset, int limit}) async {
     final prefs = await SharedPreferences.getInstance();
-    final String userId = prefs.getString(USER_ID) ?? "temp";
+    final String userId = prefs.getString(USER_NAME) ?? "temp";
 
     List<MyTransaction.Transaction> listData = new List();
     QuerySnapshot querySnapshot =  await Firestore.instance
@@ -57,7 +57,7 @@ class FireStorageRepository {
   Future<dynamic> updateReExData(MyTransaction.Transaction transaction) async {
     final prefs = await SharedPreferences.getInstance();
 // Try reading data from the counter key. If it does not exist, return 0.
-    final String userId = prefs.getString(USER_ID) ?? "temp";
+    final String userId = prefs.getString(USER_NAME) ?? "temp";
     return Firestore.instance
         .collection(userId)
         .document("data")
@@ -69,7 +69,7 @@ class FireStorageRepository {
   Future<void> deleteReExData(String date, String id) async {
     final prefs = await SharedPreferences.getInstance();
 // Try reading data from the counter key. If it does not exist, return 0.
-    final String userId = prefs.getString(USER_ID) ?? "temp";
+    final String userId = prefs.getString(USER_NAME) ?? "temp";
 
     await Firestore.instance
         .collection(userId)
@@ -98,7 +98,7 @@ class FireStorageRepository {
   Future<bool> addUser(String userName, String password) async {
     final prefs = await SharedPreferences.getInstance();
 // Try reading data from the counter key. If it does not exist, return 0.
-    final String userId = prefs.getString(USER_ID) ?? "temp";
+    final String userId = prefs.getString(USER_NAME) ?? "temp";
 
 
     QuerySnapshot snapshot = await Firestore.instance.collection(userId).where('user', isEqualTo: userName)
@@ -110,7 +110,7 @@ class FireStorageRepository {
       map["pass"] = password;
       await Firestore.instance
           .collection(userId)
-          .document(currentMiliSecond)
+          .document(userName)
           .setData(map);
       return true;
     }
