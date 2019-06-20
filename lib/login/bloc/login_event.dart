@@ -15,6 +15,15 @@ class EmailChanged extends LoginEvent {
   String toString() => 'EmailChanged { email :$email }';
 }
 
+class UidChanged extends LoginEvent {
+  final String uid;
+
+  UidChanged({@required this.uid}) : super([uid]);
+
+  @override
+  String toString() => 'UidChanged { uid :$uid }';
+}
+
 class PasswordChanged extends LoginEvent {
   final String password;
 
@@ -22,6 +31,15 @@ class PasswordChanged extends LoginEvent {
 
   @override
   String toString() => 'PasswordChanged { password: $password }';
+}
+
+class UpassChanged extends LoginEvent {
+  final String upass;
+
+  UpassChanged({@required this.upass}) : super([upass]);
+
+  @override
+  String toString() => 'UpassChanged { upass: $upass }';
 }
 
 class Submitted extends LoginEvent {
@@ -52,6 +70,18 @@ class LoginWithCredentialsPressed extends LoginEvent {
   @override
   String toString() {
     return 'LoginWithCredentialsPressed { email: $email, password: $password }';
+  }
+}
+class LoginWithSubUserPressed extends LoginEvent {
+  final String uid;
+  final String upassword;
+
+  LoginWithSubUserPressed({@required this.uid, @required this.upassword})
+      : super([uid, upassword]);
+
+  @override
+  String toString() {
+    return 'LoginWithSubUserPressed { uid: $uid, password: $upassword }';
   }
 }
 

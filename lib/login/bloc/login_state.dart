@@ -8,8 +8,11 @@ class LoginState {
   final bool isSuccess;
   final bool isFailure;
   final bool isSavePass;
+  final bool isUidvalid;
+  final bool isUpasswordValid;
 
   bool get isFormValid => isEmailValid && isPasswordValid;
+  bool get isFormUserValid => isUidvalid && isUpasswordValid;
 
   LoginState({
     @required this.isEmailValid,
@@ -18,12 +21,16 @@ class LoginState {
     @required this.isSuccess,
     @required this.isFailure,
     @required this.isSavePass,
+    @required this.isUidvalid,
+    @required this.isUpasswordValid,
   });
 
   factory LoginState.empty() {
     return LoginState(
       isEmailValid: true,
       isPasswordValid: true,
+      isUidvalid: true,
+      isUpasswordValid: true,
       isSubmitting: false,
       isSuccess: false,
       isFailure: false,
@@ -34,6 +41,8 @@ class LoginState {
     return LoginState(
       isEmailValid: true,
       isPasswordValid: true,
+      isUidvalid: true,
+      isUpasswordValid: true,
       isSubmitting: true,
       isSuccess: false,
       isFailure: false,
@@ -44,6 +53,8 @@ class LoginState {
     return LoginState(
       isEmailValid: true,
       isPasswordValid: true,
+      isUidvalid: true,
+      isUpasswordValid: true,
       isSubmitting: false,
       isSuccess: false,
       isFailure: true,
@@ -54,6 +65,8 @@ class LoginState {
     return LoginState(
       isEmailValid: true,
       isPasswordValid: true,
+      isUidvalid: true,
+      isUpasswordValid: true,
       isSubmitting: false,
       isSuccess: true,
       isFailure: false,
@@ -63,6 +76,8 @@ class LoginState {
   LoginState update({
     bool isEmailValid,
     bool isPasswordValid,
+    bool isUidvalid,
+    bool isUpasswordValid,
   }) {
     return copyWith(
       isEmailValid: isEmailValid,
@@ -70,6 +85,8 @@ class LoginState {
       isSubmitting: false,
       isSuccess: false,
       isFailure: false,
+      isUidvalid: isUidvalid,
+      isUpasswordValid: isUpasswordValid,
     );
   }
 
@@ -80,6 +97,8 @@ class LoginState {
     bool isSubmitting,
     bool isSuccess,
     bool isFailure,
+    bool isUidvalid,
+    bool isUpasswordValid,
   }) {
     return LoginState(
       isEmailValid: isEmailValid ?? this.isEmailValid,
@@ -87,12 +106,16 @@ class LoginState {
       isSubmitting: isSubmitting ?? this.isSubmitting,
       isSuccess: isSuccess ?? this.isSuccess,
       isFailure: isFailure ?? this.isFailure,
+      isUidvalid: isUidvalid ?? this.isUidvalid,
+      isUpasswordValid: isUpasswordValid ?? this.isUpasswordValid,
     );
   }
 
   @override
   String toString() {
     return '''LoginState {
+      isUidvalid: $isUidvalid,
+      isUpasswordValid: $isUpasswordValid,
       isEmailValid: $isEmailValid,
       isPasswordValid: $isPasswordValid,      
       isSubmitting: $isSubmitting,

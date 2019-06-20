@@ -37,6 +37,10 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
       yield* _mapEmailChangedToState(event.email);
     } else if (event is PasswordChanged) {
       yield* _mapPasswordChangedToState(event.password);
+    }else if (event is UidChanged) {
+      yield* _mapUidChangedToState(event.uid);
+    } else if (event is UpassChanged) {
+      yield* _mapUPasswordChangedToState(event.upass);
     } else if (event is LoginWithGooglePressed) {
       yield* _mapLoginWithGooglePressedToState();
     } else if (event is LoginWithCredentialsPressed) {
@@ -44,9 +48,15 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
         email: event.email,
         password: event.password,
       );
+    } else if (event is LoginWithSubUserPressed) {
+      yield* _mapLoginWithSubUserPressedToState(
+        uid: event.uid,
+        upassword: event.upassword,
+      );
     } else if (event is SavePassCheck) {
       yield* _mapSavePass(event.email, event.pass, event.check);
     }
+    //
   }
 
   Stream<LoginState> _mapEmailChangedToState(String email) async* {
@@ -58,6 +68,18 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
   Stream<LoginState> _mapPasswordChangedToState(String password) async* {
     yield currentState.update(
       isPasswordValid: Validators.isValidPassword(password),
+    );
+  }
+
+  Stream<LoginState> _mapUidChangedToState(String uid) async* {
+    yield currentState.update(
+      isUidvalid: Validators.isValidUid(uid),
+    );
+  }
+
+  Stream<LoginState> _mapUPasswordChangedToState(String upassword) async* {
+    yield currentState.update(
+      isUpasswordValid: Validators.isValidUpass(upassword),
     );
   }
 
@@ -78,6 +100,20 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
     try {
       await _userRepository.signInWithCredentials(email, password);
       yield LoginState.success();
+    } catch (_) {
+      yield LoginState.failure();
+    }
+  }
+  //login sub_user
+  Stream<LoginState> _mapLoginWithSubUserPressedToState({
+    String uid,
+    String upassword,
+  }) async* {
+    yield LoginState.loading();
+    try {
+      if(await _userRepository.signInWithSubUser(uid, upassword))
+        yield LoginState.success();
+      else yield LoginState.failure();
     } catch (_) {
       yield LoginState.failure();
     }

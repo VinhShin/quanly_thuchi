@@ -42,6 +42,10 @@ class UserRepository {
     return;
   }
 
+  Future<bool> signInWithSubUser(String uid, String upassword) async {
+    return await _fireStorageRepository.getUser(uid, upassword);
+  }
+
   Future<void> signUp({String email, String password}) async {
     return await _firebaseAuth.createUserWithEmailAndPassword(
       email: email,

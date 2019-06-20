@@ -118,5 +118,10 @@ class FireStorageRepository {
     }
     return false;
   }
-
+  Future<bool> getUser(String userName, String passWord) async {
+    DocumentSnapshot snapshot = await Firestore.instance.collection("sub_user").document(userName).get();
+    if(snapshot.data.containsValue(passWord) && snapshot.data.containsValue(userName))
+      return true;
+    return false;
+  }
 }
