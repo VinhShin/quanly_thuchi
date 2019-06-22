@@ -50,7 +50,7 @@ class _LoginFormState extends State<LoginForm> {
               SnackBar(
                 content: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [Text('Login Failure'), Icon(Icons.error)],
+                  children: [Text('Đăng nhập thất bại'), Icon(Icons.error)],
                 ),
                 backgroundColor: Colors.red,
               ),
@@ -64,7 +64,7 @@ class _LoginFormState extends State<LoginForm> {
                 content: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text('Logging In...'),
+                    Text('Đang xử lý...'),
                     CircularProgressIndicator(),
                   ],
                 ),
@@ -92,7 +92,7 @@ class _LoginFormState extends State<LoginForm> {
                   TextFormField(
                     controller: _emailController,
                     decoration: InputDecoration(
-                      icon: Icon(Icons.email),
+                      icon: Icon(Icons.person),
                       labelText: 'Email',
                     ),
                     autovalidate: true,
@@ -124,7 +124,7 @@ class _LoginFormState extends State<LoginForm> {
                               ? _onFormSubmitted
                               : null,
                         ),
-                        GoogleLoginButton(),
+//                        GoogleLoginButton(),
                         CreateAccountButton(userRepository: _userRepository),
                       ],
                     ),

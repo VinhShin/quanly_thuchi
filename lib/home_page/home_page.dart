@@ -4,6 +4,8 @@ import 'package:quanly_thuchi/home_page/tab/revenue_expenditure_page.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:quanly_thuchi/main.dart';
 import 'package:quanly_thuchi/user/user_home.dart';
+import 'package:quanly_thuchi/constant.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 class DrawerItem {
   String title;
   IconData icon;
@@ -27,6 +29,7 @@ class HomePage extends StatefulWidget {
 
 class HomePageState extends State<HomePage> {
   int _selectedDrawerIndex = 0;
+  String userName = "";
 
   _getDrawerItemWidget(int pos) {
 
@@ -53,6 +56,22 @@ class HomePageState extends State<HomePage> {
     }
   }
 
+  Future<void> printDailyNewsDigest() async {
+    final prefs = await SharedPreferences.getInstance();
+// Try reading data from the counter key. If it does not exist, return 0.
+    final String user_name = prefs.getString(USER_NAME) ?? "temp";
+    setState(() {
+      userName = user_name;
+    });
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    printDailyNewsDigest();
+  }
+
   @override
   Widget build(BuildContext context) {
     var drawerOptions = <Widget>[];
@@ -65,6 +84,9 @@ class HomePageState extends State<HomePage> {
         onTap: () => _onSelectItem(i),
       ));
     }
+
+
+
     return Scaffold(
           appBar: new AppBar(
             // here we display the title corresponding to the fragment
@@ -75,7 +97,14 @@ class HomePageState extends State<HomePage> {
             child: new Column(
               children: <Widget>[
                 new UserAccountsDrawerHeader(
-                    accountName: new Text("Tên nhân viên"), accountEmail: null),
+                    currentAccountPicture: Container(
+                      decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          image: DecorationImage(
+                              fit: BoxFit.fill,
+                              image: ExactAssetImage('assets/flutter_logo.png'))),
+                    ),
+                    accountName: new Text(userName), accountEmail: null),
                 new Column(children: drawerOptions)
               ],
             ),
@@ -83,4 +112,5 @@ class HomePageState extends State<HomePage> {
           body: _getDrawerItemWidget(_selectedDrawerIndex),
         );
   }
+
 }

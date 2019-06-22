@@ -4,6 +4,7 @@ import 'edit_event.dart';
 import 'edit_state.dart';
 import 'package:quanly_thuchi/repository/firestorage_repository.dart';
 import 'package:quanly_thuchi/model/transaction.dart';
+import 'dart:io';
 
 class EditBloc extends Bloc<EditEvent, EditState> {
 
@@ -20,13 +21,22 @@ class EditBloc extends Bloc<EditEvent, EditState> {
   @override
   Stream<EditState> mapEventToState(EditEvent event) async* {
     // TODO: implement mapEventToState
-    if (event is InsertData) {
-      yield* _insertData(event.reExData);
-    }else if (event is Delete){
-      yield* _delete(event.date, event.id);
-    } else if(event is Update){
-      yield* _update(event.reExData);
-    }
+      try {
+        final result = await InternetAddress.lookup('google.com');
+        if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
+          yield EditState.Loading();
+          if (event is InsertData) {
+            yield* _insertData(event.reExData);
+          }else if (event is Delete){
+            yield* _delete(event.date, event.id);
+          } else if(event is Update){
+            yield* _update(event.reExData);
+          }
+        }
+      } on SocketException catch (_) {
+        yield EditState.FAIL();
+      }
+
   }
 
   Stream<EditState> _insertData(Transaction data) async* {

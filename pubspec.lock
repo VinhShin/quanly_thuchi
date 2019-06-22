@@ -90,6 +90,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.14.0"
+  flutter_money_formatter:
+    dependency: transitive
+    description:
+      name: flutter_money_formatter
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.8.2"
   flutter_test:
     dependency: "direct dev"
     description: flutter
@@ -130,6 +137,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.1.6"
+  moneytextformfield:
+    dependency: "direct dev"
+    description:
+      name: moneytextformfield
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.3.5+1"
   path:
     dependency: transitive
     description:

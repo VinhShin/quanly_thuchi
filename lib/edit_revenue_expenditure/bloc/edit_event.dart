@@ -27,6 +27,10 @@ class Update extends EditEvent{
   Update({@required this.reExData});
 }
 
+class NoInternet extends EditEvent{
+  NoInternet();
+}
+
 class CateChange extends EditEvent{
 
 }

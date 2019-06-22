@@ -7,6 +7,7 @@ import 'package:quanly_thuchi/model/transaction.dart';
 import 'package:quanly_thuchi/model/transaction_section.dart';
 import 'package:quanly_thuchi/constant.dart';
 import 'package:quanly_thuchi/edit_revenue_expenditure/edit_revenue_expendture.dart';
+import 'package:quanly_thuchi/common_func.dart';
 
 class PageSection extends StatefulWidget {
   String dateTime;
@@ -80,37 +81,42 @@ class _PageSection extends State<PageSection> {
 //                        TextKeyValue("Tiền đầu ngày:", "200.000"),
                               TextKeyValue(
                                   "Tiền thu:",
-                                  this.section.transactionHeader.revenue
-                                      .toString()),
+                                  formatMoney(this
+                                      .section
+                                      .transactionHeader
+                                      .revenue
+                                      .toString())),
                               TextKeyValue(
                                   "Tiền chi:",
-                                  this.section.transactionHeader.expendture
-                                      .toString()),
+                                  formatMoney(this
+                                      .section
+                                      .transactionHeader
+                                      .expendture
+                                      .toString())),
                               TextKeyValue(
                                   "Tổng:",
-                                  this.section.transactionHeader.total
-                                      .toString()),
+                                  formatMoney(this
+                                      .section
+                                      .transactionHeader
+                                      .total
+                                      .toString())),
 //                        TextKeyValue("Tiền cuối ngày:", "290.000"),
                               Container(
                                 margin: EdgeInsets.only(top: 10, bottom: 10),
                                 child: CustomPaint(
-                                  size:
-                                  Size(MediaQuery
-                                      .of(context)
-                                      .size
-                                      .width, 1),
+                                  size: Size(
+                                      MediaQuery.of(context).size.width, 1),
                                   painter: Drawhorizontalline(),
                                 ),
                               ),
                               Flexible(
                                 flex: 1,
                                 child: ListView.builder(
-                                  itemCount:
-                                  this.section.transactions.length,
+                                  itemCount: this.section.transactions.length,
                                   itemBuilder: (context, position) {
                                     return ItemRow(
-                                        transaction: this
-                                            .section.transactions[position],
+                                        transaction:
+                                            this.section.transactions[position],
                                         pageBloc: _pageBloc);
                                   },
                                 ),
@@ -206,7 +212,7 @@ class ItemRow extends StatelessWidget {
                 MaterialPageRoute(
                     builder: (context) =>
                         EditRevenueExpendture(transaction: transaction)));
-            if (result!=null) {
+            if (result != null) {
               pageBloc.dispatch(PageLoadData(transaction.date));
             }
           },
@@ -225,7 +231,7 @@ class ItemRow extends StatelessWidget {
                     ),
                     Spacer(),
                     Text(
-                      transaction.money.toString(),
+                      formatMoney(transaction.money.toString()),
                       style: TextStyle(
                           color: transaction.type == REVENUE_TYPE
                               ? Colors.green

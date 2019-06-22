@@ -102,11 +102,14 @@ class _RegisterFormState extends State<RegisterForm> {
                       return !state.isPasswordValid ? 'Invalid Password' : null;
                     },
                   ),
-                  RegisterButton(
-                    onPressed: isRegisterButtonEnabled(state)
-                        ? _onFormSubmitted
-                        : null,
-                  ),
+                  Container(
+                      margin: EdgeInsets.only(top: 20),
+                      child: RegisterButton(
+                        onPressed: isRegisterButtonEnabled(state)
+                            ? _onFormSubmitted
+                            : null,
+                      ),
+                  )
                 ],
               ),
             ),

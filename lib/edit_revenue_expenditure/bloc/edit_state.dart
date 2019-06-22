@@ -1,10 +1,11 @@
 import 'package:meta/meta.dart';
 
 final int STEP_INIT = 1;
-final int STEP_INSERT = 2;
-final int STEP_DELETE = 3;
-final int STEP_UPDATE = 4;
-
+final int STEP_INSERT = STEP_INIT + 1;
+final int STEP_DELETE = STEP_INSERT + 1;
+final int STEP_UPDATE = STEP_DELETE + 1;
+final int CONNECT_FAIL = STEP_UPDATE + 1;
+final int STEP_LOADING = CONNECT_FAIL + 1;
 class EditState{
   int currentStep = 0;
   bool status = false;
@@ -25,6 +26,16 @@ class EditState{
   factory EditState.Delete(bool state){
     return EditState(currentStep: STEP_DELETE,status: state);
   }
+
+  factory EditState.Loading(){
+    return EditState(currentStep: STEP_LOADING, status: true);
+  }
+
+  factory EditState.FAIL(){
+    return EditState(currentStep: CONNECT_FAIL,status: true);
+  }
+
+
 
 }
 

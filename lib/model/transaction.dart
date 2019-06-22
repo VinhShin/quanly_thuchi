@@ -1,7 +1,7 @@
 class Transaction {
   String _id;
   int _type;
-  double _money;
+  int _money;
   String _date;
   String _time;
   String _note;
@@ -10,7 +10,7 @@ class Transaction {
 
   String get id => _id;
   int get type => _type;
-  double get money => _money;
+  int get money => _money;
   String get date => _date;
   String get time => _time;
   String get note => _note;
@@ -55,7 +55,7 @@ class Transaction {
   Transaction.fromMap(Map<String, dynamic> map) {
     this._id = map["id"];
     this._type = map['type'];
-    this._money = map['money'];
+    this._money = map["money"];
     this._date = map['date'];
     this._time = map['time'];
     this._note = map['note'];

@@ -14,9 +14,11 @@ class LoginScreen extends StatefulWidget {
   State<LoginScreen> createState() => _LoginScreenState();
 }
 
-class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStateMixin {
+class _LoginScreenState extends State<LoginScreen>
+    with SingleTickerProviderStateMixin {
   LoginBloc _loginBloc;
   TabController _controller;
+
   UserRepository get _userRepository => widget._userRepository;
 
   @override
@@ -31,33 +33,42 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: new AppBar(
-        title: Text('Login'),
-        bottom: new TabBar(
-          controller: _controller,
-          tabs: <Widget>[
-            new Tab(icon: new Icon(Icons.mail_outline),text:'Email',),
-            new Tab(icon: new Icon(Icons.people_outline),text:'User',),
-            //new Tab(text:'Email',),
-            //new Tab(text:'User',),
-          ],
+      appBar: PreferredSize(
+        preferredSize: Size.fromHeight(100),
+        // here the desired height
+        child: new AppBar(
+          bottom: new TabBar(
+            controller: _controller,
+            tabs: <Widget>[
+              new Tab(
+                icon: new Icon(Icons.person),
+                text: 'Admin',
+              ),
+              new Tab(
+                icon: new Icon(Icons.people_outline),
+                text: 'User',
+              ),
+              //new Tab(text:'Email',),
+              //new Tab(text:'User',),
+            ],
+          ),
         ),
       ),
-     body: new TabBarView(
-       controller: _controller,
-       children:<Widget>[
-         BlocProvider<LoginBloc>(
-           bloc: _loginBloc,
-           child: LoginForm(userRepository: _userRepository),
-         ),
-         BlocProvider<LoginBloc>(
-           bloc: _loginBloc,
-           child: LoginFormUser(userRepository: _userRepository),
-         ),
-       ],
-     // body: BlocProvider<LoginBloc>(
-      //  bloc: _loginBloc,
-      //  child: LoginForm(userRepository: _userRepository),
+      body: new TabBarView(
+        controller: _controller,
+        children: <Widget>[
+          BlocProvider<LoginBloc>(
+            bloc: _loginBloc,
+            child: LoginForm(userRepository: _userRepository),
+          ),
+          BlocProvider<LoginBloc>(
+            bloc: _loginBloc,
+            child: LoginFormUser(userRepository: _userRepository),
+          ),
+        ],
+        // body: BlocProvider<LoginBloc>(
+        //  bloc: _loginBloc,
+        //  child: LoginForm(userRepository: _userRepository),
       ),
     );
   }

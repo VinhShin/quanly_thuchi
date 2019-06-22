@@ -10,7 +10,9 @@ import 'package:quanly_thuchi/edit_revenue_expenditure/bloc/edit_state.dart';
 import 'package:quanly_thuchi/constant.dart';
 import 'package:intl/intl.dart';
 import 'package:quanly_thuchi/edit_revenue_expenditure/input_down.dart';
-import 'package:quanly_thuchi/handle_constant.dart';
+import 'package:quanly_thuchi/base_widget/edit_money_base.dart';
+import 'dart:io';
+import 'package:quanly_thuchi/common_func.dart';
 
 class EditRevenueExpendture extends StatelessWidget {
   Transaction transaction = null;
@@ -62,7 +64,7 @@ class _EditPage extends State<EditPage> {
   void initState() {
     _editBloc = new EditBloc();
     if(transaction != null){
-      moneyInput.text = transaction.money.toString();
+        moneyInput.text = formatMoney(transaction.money.toString());
       noteInput.text = transaction.note;
       category = transaction.cateId;
       _radioValue1 = transaction.type;
@@ -79,7 +81,25 @@ class _EditPage extends State<EditPage> {
     return BlocListener(
       bloc: _editBloc,
       listener: (BuildContext context, EditState editState) {
-        if (editState.currentStep == STEP_INSERT && editState.status) {
+        if(editState.currentStep == STEP_LOADING ){
+          Scaffold.of(context)
+            ..hideCurrentSnackBar()
+            ..showSnackBar(
+              SnackBar(
+                content: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text('Đang xử lý...'),
+                    CircularProgressIndicator(),
+                  ],
+                ),
+              ),
+            );
+        }
+        else if(editState.currentStep == CONNECT_FAIL){
+          _showDialogNoNetWork();
+        }
+        else if (editState.currentStep == STEP_INSERT && editState.status) {
           Navigator.pop(context, true);
         } else if(editState.currentStep == STEP_DELETE &&  editState.status){
           Navigator.pop(context, true);
@@ -95,7 +115,7 @@ class _EditPage extends State<EditPage> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
                   TextBase("Số tiền"),
-                  EditBase("200.000", controller: this.moneyInput, isMoney: true,),
+                  EditMoneyBase("200.000", controller: this.moneyInput, isMoney: true,),
                   Row(
                     children: <Widget>[
                       Column(
@@ -295,9 +315,12 @@ class _EditPage extends State<EditPage> {
     var dateFormat = new DateFormat('yyyy-MM-dd');
     String date = dateFormat.format(selectedDate);
 
+    String money = moneyInput.text;
+    money = money.replaceAll('.', '');
+
     Transaction newTransaction = new Transaction(
         _radioValue1,
-        double.parse(moneyInput.text),
+        int.parse(money),
         date,
         selectedTime.format(context),
         noteInput.text,
@@ -328,6 +351,30 @@ class _EditPage extends State<EditPage> {
               },
             ),new FlatButton(
               child: new Text("Hủy"),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+
+
+  void _showDialogNoNetWork() {
+    // flutter defined function
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        // return object of type Dialog
+        return AlertDialog(
+          title: new Text("Tác vụ thất bại"),
+          content: new Text("Bạn cần kết nối internet để thực hiện tác vụ này"),
+          actions: <Widget>[
+            new FlatButton(
+              child: new Text("OK"),
               onPressed: () {
                 Navigator.of(context).pop();
               },

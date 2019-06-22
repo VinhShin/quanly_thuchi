@@ -5,7 +5,9 @@ import io.flutter.plugins.firebase.cloudfirestore.CloudFirestorePlugin;
 import io.flutter.plugins.firebaseauth.FirebaseAuthPlugin;
 import io.flutter.plugins.firebase.core.FirebaseCorePlugin;
 import io.flutter.plugins.firebase.database.FirebaseDatabasePlugin;
+import com.octapush.moneyformatter.fluttermoneyformatter.FlutterMoneyFormatterPlugin;
 import io.flutter.plugins.googlesignin.GoogleSignInPlugin;
+import com.octapush.moneytextformfield.moneytextformfield.MoneytextformfieldPlugin;
 import io.flutter.plugins.sharedpreferences.SharedPreferencesPlugin;
 
 /**
@@ -20,7 +22,9 @@ public final class GeneratedPluginRegistrant {
     FirebaseAuthPlugin.registerWith(registry.registrarFor("io.flutter.plugins.firebaseauth.FirebaseAuthPlugin"));
     FirebaseCorePlugin.registerWith(registry.registrarFor("io.flutter.plugins.firebase.core.FirebaseCorePlugin"));
     FirebaseDatabasePlugin.registerWith(registry.registrarFor("io.flutter.plugins.firebase.database.FirebaseDatabasePlugin"));
+    FlutterMoneyFormatterPlugin.registerWith(registry.registrarFor("com.octapush.moneyformatter.fluttermoneyformatter.FlutterMoneyFormatterPlugin"));
     GoogleSignInPlugin.registerWith(registry.registrarFor("io.flutter.plugins.googlesignin.GoogleSignInPlugin"));
+    MoneytextformfieldPlugin.registerWith(registry.registrarFor("com.octapush.moneytextformfield.moneytextformfield.MoneytextformfieldPlugin"));
     SharedPreferencesPlugin.registerWith(registry.registrarFor("io.flutter.plugins.sharedpreferences.SharedPreferencesPlugin"));
   }
 

@@ -23,8 +23,8 @@ class PageBloc extends Bloc<PageEvent, PageState>{
 //      yield new PageLoadingData();
 
       List<Transaction> listData = await _fireStorageRepository.getReExDataList(date: event.date,offset:0,limit:0);
-      double revenue = 0;
-      double expendTure = 0;
+      int revenue = 0;
+      int expendTure = 0;
       for(int i = 0 ; i < listData.length; i++){
         if(listData[i].type == REVENUE_TYPE){
           revenue += listData[i].money;
