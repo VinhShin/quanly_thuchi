@@ -6,6 +6,7 @@ import 'package:quanly_thuchi/model/index.dart';
 import 'package:quanly_thuchi/constant.dart';
 class PageBloc extends Bloc<PageEvent, PageState>{
 
+  String currentTime = "";
   FireStorageRepository _fireStorageRepository;
 
   PageBloc(){
@@ -20,6 +21,7 @@ class PageBloc extends Bloc<PageEvent, PageState>{
   Stream<PageState> mapEventToState(PageEvent event) async*{
     // TODO: implement mapEventToState
     if(event is PageLoadData){
+      currentTime = event.date;
 //      yield new PageLoadingData();
 
       List<Transaction> listData = await _fireStorageRepository.getReExDataList(date: event.date,offset:0,limit:0);
@@ -36,7 +38,11 @@ class PageBloc extends Bloc<PageEvent, PageState>{
           transactionHeader: new TransactionHeader(revenue: revenue, expendture: expendTure, total: revenue + expendTure),
           transactions: listData
       );
-      yield new PageLoadedData(section: section,dateTime: event.date);
+      if(event.date == currentTime) {
+        yield new PageLoadedData(section: section, dateTime: event.date);
+      } else {
+        print("ahyhy");
+      }
 
     }
   }

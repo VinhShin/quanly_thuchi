@@ -35,6 +35,7 @@ class _PageSection extends State<PageSection> {
   void initState() {
     // TODO: implement initState
     super.initState();
+    section = TransactionSection.init();
     _pageBloc = BlocProvider.of<PageBloc>(context);
     _pageBloc.dispatch(PageLoadData(dateTime));
   }
@@ -45,12 +46,12 @@ class _PageSection extends State<PageSection> {
     super.didChangeDependencies();
   }
 
-  @override
-  void didUpdateWidget(PageSection oldWidget) {
-    // TODO: implement didUpdateWidget
-    super.didUpdateWidget(oldWidget);
-    _pageBloc.dispatch(PageLoadData(dateTime));
-  }
+//  @override
+//  void didUpdateWidget(PageSection oldWidget) {
+//    // TODO: implement didUpdateWidget
+//    super.didUpdateWidget(oldWidget);
+//    _pageBloc.dispatch(PageLoadData(dateTime));
+//  }
 
   @override
   Widget build(BuildContext context) {
@@ -63,7 +64,24 @@ class _PageSection extends State<PageSection> {
         },
         child: BlocListener(
             bloc: _pageBloc,
-            listener: (BuildContext context, PageState pageState) {},
+            listener: (BuildContext context, PageState pageState) {
+              if(pageState is PageLoadingData){
+                Scaffold.of(context)
+                  ..hideCurrentSnackBar()
+                  ..showSnackBar(
+                    SnackBar(
+                      content: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text('Đang tải dữ liệu...'),
+                          CircularProgressIndicator(),
+                        ],
+                      ),
+                    ),
+                  );
+              }
+
+            },
             child: BlocBuilder(
                 bloc: _pageBloc,
                 builder: (BuildContext context, PageState pageState) {
@@ -72,59 +90,57 @@ class _PageSection extends State<PageSection> {
                     if (pageState.dateTime == this.dateTime) {
                       this.section = pageState.section;
                     }
-                    if (this.section != null) {
-                      return Padding(
-                          padding: EdgeInsets.all(20),
-                          child: new Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: <Widget>[
-//                        TextKeyValue("Tiền đầu ngày:", "200.000"),
-                              TextKeyValue(
-                                  "Tiền thu:",
-                                  formatMoney(this
-                                      .section
-                                      .transactionHeader
-                                      .revenue
-                                      .toString())),
-                              TextKeyValue(
-                                  "Tiền chi:",
-                                  formatMoney(this
-                                      .section
-                                      .transactionHeader
-                                      .expendture
-                                      .toString())),
-                              TextKeyValue(
-                                  "Tổng:",
-                                  formatMoney(this
-                                      .section
-                                      .transactionHeader
-                                      .total
-                                      .toString())),
-//                        TextKeyValue("Tiền cuối ngày:", "290.000"),
-                              Container(
-                                margin: EdgeInsets.only(top: 10, bottom: 10),
-                                child: CustomPaint(
-                                  size: Size(
-                                      MediaQuery.of(context).size.width, 1),
-                                  painter: Drawhorizontalline(),
-                                ),
-                              ),
-                              Flexible(
-                                flex: 1,
-                                child: ListView.builder(
-                                  itemCount: this.section.transactions.length,
-                                  itemBuilder: (context, position) {
-                                    return ItemRow(
-                                        transaction:
-                                            this.section.transactions[position],
-                                        pageBloc: _pageBloc);
-                                  },
-                                ),
-                              )
-                            ],
-                          ));
-                    }
                   }
+                  return Padding(
+                      padding: EdgeInsets.all(20),
+                      child: new Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+//                        TextKeyValue("Tiền đầu ngày:", "200.000"),
+                          TextKeyValue(
+                              "Tiền thu:",
+                              formatMoney(this
+                                  .section
+                                  .transactionHeader
+                                  .revenue
+                                  .toString())),
+                          TextKeyValue(
+                              "Tiền chi:",
+                              formatMoney(this
+                                  .section
+                                  .transactionHeader
+                                  .expendture
+                                  .toString())),
+                          TextKeyValue(
+                              "Tổng:",
+                              formatMoney(this
+                                  .section
+                                  .transactionHeader
+                                  .total
+                                  .toString())),
+//                        TextKeyValue("Tiền cuối ngày:", "290.000"),
+                          Container(
+                            margin: EdgeInsets.only(top: 10, bottom: 10),
+                            child: CustomPaint(
+                              size: Size(MediaQuery.of(context).size.width, 1),
+                              painter: Drawhorizontalline(),
+                            ),
+                          ),
+                          Flexible(
+                            flex: 1,
+                            child: ListView.builder(
+                              itemCount: this.section.transactions.length,
+                              itemBuilder: (context, position) {
+                                return ItemRow(
+                                    transaction:
+                                        this.section.transactions[position],
+                                    pageBloc: _pageBloc);
+                              },
+                            ),
+                          )
+                        ],
+                      ));
+
                   return Padding(
                       padding: EdgeInsets.all(20),
                       child: new Column(

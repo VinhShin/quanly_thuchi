@@ -22,9 +22,9 @@ class EditBloc extends Bloc<EditEvent, EditState> {
   Stream<EditState> mapEventToState(EditEvent event) async* {
     // TODO: implement mapEventToState
       try {
+        yield EditState.Loading();
         final result = await InternetAddress.lookup('google.com');
         if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
-          yield EditState.Loading();
           if (event is InsertData) {
             yield* _insertData(event.reExData);
           }else if (event is Delete){

@@ -26,7 +26,7 @@ class EditRevenueExpendture extends StatelessWidget {
       appBar: new AppBar(
         // here we display the title corresponding to the fragment
         // you can instead choose to have a static title
-        title: new Text(transaction == null? "Thêm thu chi" : "Sửa thu chi"),
+        title: new Text(transaction == null ? "Thêm thu chi" : "Sửa thu chi"),
       ),
       body: EditPage(transaction),
     );
@@ -51,6 +51,7 @@ class _EditPage extends State<EditPage> {
   EditBloc _editBloc;
   int _radioValue1 = REVENUE_TYPE;
   String category = "Bán hàng";
+  bool isOnClick = false;
 
   _EditPage(this.transaction);
 
@@ -63,14 +64,15 @@ class _EditPage extends State<EditPage> {
   @override
   void initState() {
     _editBloc = new EditBloc();
-    if(transaction != null){
-        moneyInput.text = formatMoney(transaction.money.toString());
+    if (transaction != null) {
+      moneyInput.text = formatMoney(transaction.money.toString());
       noteInput.text = transaction.note;
       category = transaction.cateId;
       _radioValue1 = transaction.type;
       selectedDate = DateTime.parse(transaction.date + " 00:00:00.00");
       List<String> time = transaction.time.split(":");
-      selectedTime = TimeOfDay(hour: int.parse(time[0]), minute: int.parse(time[1].split(" ")[0]));
+      selectedTime = TimeOfDay(
+          hour: int.parse(time[0]), minute: int.parse(time[1].split(" ")[0]));
     }
     super.initState();
   }
@@ -81,7 +83,7 @@ class _EditPage extends State<EditPage> {
     return BlocListener(
       bloc: _editBloc,
       listener: (BuildContext context, EditState editState) {
-        if(editState.currentStep == STEP_LOADING ){
+        if (editState.currentStep == STEP_LOADING) {
           Scaffold.of(context)
             ..hideCurrentSnackBar()
             ..showSnackBar(
@@ -95,16 +97,16 @@ class _EditPage extends State<EditPage> {
                 ),
               ),
             );
-        }
-        else if(editState.currentStep == CONNECT_FAIL){
-          _showDialogNoNetWork();
-        }
-        else if (editState.currentStep == STEP_INSERT && editState.status) {
+        } else if (editState.currentStep == CONNECT_FAIL) {
+//          _showDialogNoNetWork();
+          alertNotify(this.context, "Tác vụ thất bại",
+              "Bạn cần kết nối internet để thực hiện tác vụ này");
+        } else if (editState.currentStep == STEP_INSERT && editState.status) {
           Navigator.pop(context, true);
-        } else if(editState.currentStep == STEP_DELETE &&  editState.status){
+        } else if (editState.currentStep == STEP_DELETE && editState.status) {
           Navigator.pop(context, true);
-        }else if(editState.currentStep == STEP_UPDATE && editState.status){
-          Navigator.pop(context);
+        } else if (editState.currentStep == STEP_UPDATE && editState.status) {
+          Navigator.pop(context, true);
         }
       },
       child: BlocBuilder(
@@ -115,7 +117,11 @@ class _EditPage extends State<EditPage> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
                   TextBase("Số tiền"),
-                  EditMoneyBase("200.000", controller: this.moneyInput, isMoney: true,),
+                  EditMoneyBase(
+                    "200.000",
+                    controller: this.moneyInput,
+                    isMoney: true,
+                  ),
                   Row(
                     children: <Widget>[
                       Column(
@@ -192,7 +198,9 @@ class _EditPage extends State<EditPage> {
                     height: 50,
                     alignment: Alignment.center,
                     child: Row(
-                      mainAxisAlignment: transaction !=null? MainAxisAlignment.spaceAround: MainAxisAlignment.center,
+                      mainAxisAlignment: transaction != null
+                          ? MainAxisAlignment.spaceAround
+                          : MainAxisAlignment.center,
                       children: <Widget>[
                         Visibility(
                           visible: transaction != null,
@@ -214,8 +222,16 @@ class _EditPage extends State<EditPage> {
                         RaisedButton(
                             color: Colors.blue,
                             onPressed: () {
-                              _editBloc.dispatch(
-                                transaction == null? InsertData(reExData: getReExData()):Update(reExData: getReExData()));
+                              if (!isOnClick) {
+                                Transaction transac = getReExData();
+                                if (transac != null) {
+                                  _editBloc.dispatch(transaction == null
+                                      ? InsertData(reExData:transac)
+                                      : Update(reExData: transac));
+                                }else{
+                                  isOnClick = false;
+                                }
+                              }
                             },
                             child: Container(
                                 width: 100,
@@ -282,19 +298,25 @@ class _EditPage extends State<EditPage> {
   }
 
   Future<Null> _selectDate(BuildContext context) async {
-    final DateTime picked = await showDatePicker(
-        context: context,
-        initialDatePickerMode: DatePickerMode.day,
-        initialDate: selectedDate,
-        firstDate: DateTime(2015, 8),
-        lastDate: DateTime(2101));
-    if (picked != null && picked != selectedDate)
-      setState(() {
-        selectedDate = picked;
-      });
+    if (transaction == null) {
+      final DateTime picked = await showDatePicker(
+          context: context,
+          initialDatePickerMode: DatePickerMode.day,
+          initialDate: selectedDate,
+          firstDate: DateTime(2015, 8),
+          lastDate: DateTime(2101));
+      if (picked != null && picked != selectedDate)
+        setState(() {
+          selectedDate = picked;
+        });
+    } else {
+      alertNotify(
+          this.context, "Thông báo", "Bạn không có quyền sửa thông tin này");
+    }
   }
 
   Future<void> _selectTime(BuildContext context) async {
+//    if(transaction == null) {
     final TimeOfDay picked =
         await showTimePicker(context: context, initialTime: selectedTime);
     if (picked != null && picked != selectedTime) {
@@ -302,6 +324,10 @@ class _EditPage extends State<EditPage> {
         selectedTime = picked;
       });
     }
+//    }
+//    else {
+//      alertNotify(this.context,"Thông báo","Bạn không có quyền sửa thông tin này");
+//    }
   }
 
   void _handleRadioValueChange1(int value) {
@@ -317,18 +343,24 @@ class _EditPage extends State<EditPage> {
 
     String money = moneyInput.text;
     money = money.replaceAll('.', '');
-
-    Transaction newTransaction = new Transaction(
-        _radioValue1,
-        int.parse(money),
-        date,
-        selectedTime.format(context),
-        noteInput.text,
-        category,'subuser');
-    if(transaction != null){
-      newTransaction.setId = transaction.id;
+    if (money.length == 0) {
+      alertNotify(context, "Thông báo", "Số tiền không được để trống");
+    } else {
+      Transaction newTransaction = new Transaction(
+          _radioValue1,
+          int.parse(money),
+          date,
+          selectedTime.format(context),
+          noteInput.text,
+          category,
+          'subuser');
+      if (transaction != null) {
+        newTransaction.setId = transaction.id;
+      }
+      return newTransaction;
     }
-    return newTransaction;
+    return null;
+
   }
 
   void _showDialog(EditBloc editBloc) {
@@ -346,10 +378,11 @@ class _EditPage extends State<EditPage> {
               child: new Text("Đồng ý"),
               onPressed: () {
                 editBloc.dispatch(
-                    Delete(date:transaction.date, id: transaction.id));
+                    Delete(date: transaction.date, id: transaction.id));
                 Navigator.of(context).pop();
               },
-            ),new FlatButton(
+            ),
+            new FlatButton(
               child: new Text("Hủy"),
               onPressed: () {
                 Navigator.of(context).pop();
@@ -360,8 +393,6 @@ class _EditPage extends State<EditPage> {
       },
     );
   }
-
-
 
   void _showDialogNoNetWork() {
     // flutter defined function

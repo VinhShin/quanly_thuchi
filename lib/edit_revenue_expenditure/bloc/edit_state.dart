@@ -1,9 +1,9 @@
 import 'package:meta/meta.dart';
 
 final int STEP_INIT = 1;
-final int STEP_INSERT = STEP_INIT + 1;
-final int STEP_DELETE = STEP_INSERT + 1;
-final int STEP_UPDATE = STEP_DELETE + 1;
+final int STEP_INSERT = STEP_INIT + 1;//2
+final int STEP_DELETE = STEP_INSERT + 1;//3
+final int STEP_UPDATE = STEP_DELETE + 1;//4
 final int CONNECT_FAIL = STEP_UPDATE + 1;
 final int STEP_LOADING = CONNECT_FAIL + 1;
 class EditState{
