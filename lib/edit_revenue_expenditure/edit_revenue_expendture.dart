@@ -10,6 +10,7 @@ import 'package:quanly_thuchi/edit_revenue_expenditure/bloc/edit_state.dart';
 import 'package:quanly_thuchi/constant.dart';
 import 'package:intl/intl.dart';
 import 'package:quanly_thuchi/edit_revenue_expenditure/input_down.dart';
+import 'package:quanly_thuchi/handle_constant.dart';
 
 class EditRevenueExpendture extends StatelessWidget {
   Transaction transaction = null;
@@ -290,6 +291,7 @@ class _EditPage extends State<EditPage> {
   }
 
   Transaction getReExData() {
+// Try reading data from the counter key. If it does not exist, return 0.
     var dateFormat = new DateFormat('yyyy-MM-dd');
     String date = dateFormat.format(selectedDate);
 
@@ -299,7 +301,7 @@ class _EditPage extends State<EditPage> {
         date,
         selectedTime.format(context),
         noteInput.text,
-        category);
+        category,'subuser');
     if(transaction != null){
       newTransaction.setId = transaction.id;
     }

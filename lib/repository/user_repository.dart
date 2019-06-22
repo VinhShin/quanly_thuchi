@@ -38,6 +38,7 @@ class UserRepository {
     // set value
     prefs.setString(USER_ID, user.uid);
     prefs.setString(USER_NAME, user.email);
+    prefs.setString(SUB_USER_NAME, 'sub_user_name_is_empty');
     _fireStorageRepository.addShop(user.uid, user.email);
     return;
   }
@@ -54,6 +55,9 @@ class UserRepository {
   }
 
   Future<void> signOut() async {
+    final prefs = await SharedPreferences.getInstance();
+    prefs.setString(SUB_USER_NAME, 'sub_user_name_is_empty');
+    prefs.setString(USER_NAME, 'user_name_is_empty');
     return Future.wait([
       _firebaseAuth.signOut(),
       _googleSignIn.signOut(),
