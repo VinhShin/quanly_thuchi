@@ -290,10 +290,10 @@ class _EditPage extends State<EditPage> {
         new DropdownMenuItem(value: "Bán hàng", child: new Text("Bán hàng"));
     items[1] = new DropdownMenuItem(value: "Thu nợ", child: new Text("Thu nợ"));
     items[2] = new DropdownMenuItem(value: "Vay nợ", child: new Text("Vay nợ"));
-    items[3] =
-        new DropdownMenuItem(value: "Thu khác", child: new Text("Thu khác"));
-    items[4] = new DropdownMenuItem(
+    items[3] = new DropdownMenuItem(
         value: "Điều chỉnh", child: new Text("Điều chỉnh"));
+    items[4] =
+    new DropdownMenuItem(value: "khác", child: new Text("khác"));
     return items;
   }
 
