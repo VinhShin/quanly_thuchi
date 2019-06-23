@@ -6,11 +6,11 @@ class PageState{
 }
 
 class PageLoadingData extends PageState{
-  PageLoadingData();
+  String time;
+  PageLoadingData({this.time});
 }
 
 class PageLoadedData extends PageState{
-  String dateTime;//dung de compare voi cac section khac
   TransactionSection section;
-  PageLoadedData({this.section, this.dateTime});
+  PageLoadedData({this.section});
 }

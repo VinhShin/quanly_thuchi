@@ -15,6 +15,6 @@ class TextBase extends StatelessWidget{
     // TODO: implement build
     return Container(
       margin: EdgeInsets.only(top: 10,left: leftMargin),
-      child: Text(this.text,style: TextStyle(fontSize: 21)),
+      child: Text(this.text,style: TextStyle(fontSize: 18)),
     );}
 }

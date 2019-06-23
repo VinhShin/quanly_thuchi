@@ -147,16 +147,15 @@ class _EditPage extends State<EditPage> {
                           ),
                         ],
                       ),
-                      Container(
-                        margin: EdgeInsets.only(left: 20),
-                        child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: <Widget>[
-                              TextBase("Loại", marginLeft: 25.0),
-                              Row(children: createRadioListUsers())
-                            ]),
-                      )
                     ],
+                  ),
+                  Container(
+                    child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          TextBase("Loại"),
+                          Row(children: createRadioListUsers())
+                        ]),
                   ),
                   TextBase("Thời gian"),
                   Container(
@@ -226,9 +225,9 @@ class _EditPage extends State<EditPage> {
                                 Transaction transac = getReExData();
                                 if (transac != null) {
                                   _editBloc.dispatch(transaction == null
-                                      ? InsertData(reExData:transac)
+                                      ? InsertData(reExData: transac)
                                       : Update(reExData: transac));
-                                }else{
+                                } else {
                                   isOnClick = false;
                                 }
                               }
@@ -292,8 +291,7 @@ class _EditPage extends State<EditPage> {
     items[2] = new DropdownMenuItem(value: "Vay nợ", child: new Text("Vay nợ"));
     items[3] = new DropdownMenuItem(
         value: "Điều chỉnh", child: new Text("Điều chỉnh"));
-    items[4] =
-    new DropdownMenuItem(value: "khác", child: new Text("khác"));
+    items[4] = new DropdownMenuItem(value: "khác", child: new Text("khác"));
     return items;
   }
 
@@ -360,7 +358,6 @@ class _EditPage extends State<EditPage> {
       return newTransaction;
     }
     return null;
-
   }
 
   void _showDialog(EditBloc editBloc) {

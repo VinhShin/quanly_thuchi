@@ -4,6 +4,8 @@ import 'package:quanly_thuchi/constant.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:intl/intl.dart';
 import 'dart:convert';
+import 'package:quanly_thuchi/model/transaction_section.dart';
+import 'package:quanly_thuchi/model/index.dart';
 
 final CollectionReference noteCollection =
     Firestore.instance.collection('shops12');
@@ -38,6 +40,28 @@ class FireStorageRepository {
     return;
   }
 
+
+
+  Stream<QuerySnapshot> getAllData(
+      {String date, int offset, int limit}) {
+    return SharedPreferences.getInstance().then((prefs){
+      final String userId = prefs.getString(USER_NAME) ?? "temp";
+      final String subUserName = prefs.getString(SUB_USER_NAME);
+      if(subUserName!='sub_user_name_is_empty')
+        return Firestore.instance
+            .collection(userId)
+            .document("data")
+            .collection(date)
+            .where('sub_user', isEqualTo: subUserName).getDocuments();
+      else
+        return Firestore.instance
+            .collection(userId)
+            .document("data")
+            .collection(date).getDocuments();
+    }).asStream();
+  }
+
+
   Future<List<MyTransaction.Transaction>> getReExDataList(
       {String date, int offset, int limit}) async {
     final prefs = await SharedPreferences.getInstance();
@@ -64,6 +88,55 @@ class FireStorageRepository {
     }
     return listData;
   }
+
+
+//  Future<TransactionSection> getReExDataList(
+//      {String date, int offset, int limit}) {
+//    return SharedPreferences.getInstance().then((prefs){
+//      final String userId = prefs.getString(USER_NAME) ?? "temp";
+//      final String subUserName = prefs.getString(SUB_USER_NAME);
+//      List<MyTransaction.Transaction> listData = new List();
+//      Future<QuerySnapshot> querySnapshot;
+//      if(subUserName!='sub_user_name_is_empty')
+//        querySnapshot = Firestore.instance
+//            .collection(userId)
+//            .document("data")
+//            .collection(date)
+//            .where('sub_user', isEqualTo: subUserName)
+//            .getDocuments();
+//      else
+//        querySnapshot =  Firestore.instance
+//            .collection(userId)
+//            .document("data")
+//            .collection(date)
+//            .getDocuments();
+//
+//      querySnapshot.then((querySnapshot){
+//        var list = querySnapshot.documents;
+//        for (final e in list) {
+//          listData.add(new MyTransaction.Transaction.fromMap(e.data));
+//        }
+//        int revenue = 0;
+//        int expendTure = 0;
+//        for(int i = 0 ; i < listData.length; i++){
+//          if(listData[i].type == REVENUE_TYPE){
+//            revenue += listData[i].money;
+//          } else{
+//            expendTure += listData[i].money;
+//          }
+//        }
+//        TransactionSection section = new TransactionSection(
+//            transactionHeader: new TransactionHeader(revenue: revenue, expendture: expendTure, total: revenue + expendTure),
+//            transactions: listData
+//        );
+//
+//        return section;
+//      });
+//    });
+//
+//
+//  }
+
 
   Future<dynamic> updateReExData(MyTransaction.Transaction transaction) async {
     final prefs = await SharedPreferences.getInstance();

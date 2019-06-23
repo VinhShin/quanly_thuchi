@@ -32,6 +32,21 @@ class _UserHome extends State<UserHome> {
     return BlocListener(
         bloc: _userBloc,
         listener: (BuildContext context, UserState state) {
+          if(state.loading){
+            Scaffold.of(context)
+                  ..hideCurrentSnackBar()
+                  ..showSnackBar(
+                    SnackBar(
+                      content: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text('Đang xử lý...'),
+                          CircularProgressIndicator(),
+                        ],
+                      ),
+                    ),
+                  );
+          }
           if (state.loaded) {
             _showDialogRegisterResult(state.addSuccess);
             if(state.addSuccess) {

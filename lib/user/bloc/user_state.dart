@@ -10,8 +10,13 @@ class UserState{
     return UserState(loading: false, loaded: false, addSuccess: false);
   }
 
+  factory UserState.Processing(){
+    return UserState(loading:true, loaded: false,  addSuccess:false);
+  }
+
+
   factory UserState.AddUser(){
-     return UserState(loading:true, loaded: false,  addSuccess:false);
+     return UserState(loading:false, loaded: false,  addSuccess:false);
   }
 
   factory UserState.AddResult(bool success ){

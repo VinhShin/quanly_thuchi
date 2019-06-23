@@ -3,11 +3,15 @@ import 'package:quanly_thuchi/home_page/tab/bloc/page_bloc.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:quanly_thuchi/home_page/tab/bloc/page_state.dart';
 import 'package:quanly_thuchi/home_page/tab/bloc/page_event.dart';
-import 'package:quanly_thuchi/model/transaction.dart';
+import 'package:quanly_thuchi/model/transaction.dart' as my;
+import 'package:quanly_thuchi/model/transaction_header.dart';
 import 'package:quanly_thuchi/model/transaction_section.dart';
 import 'package:quanly_thuchi/constant.dart';
 import 'package:quanly_thuchi/edit_revenue_expenditure/edit_revenue_expendture.dart';
 import 'package:quanly_thuchi/common_func.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:quanly_thuchi/repository/firestorage_repository.dart';
+import 'package:modal_progress_hud/modal_progress_hud.dart';
 
 class PageSection extends StatefulWidget {
   String dateTime;
@@ -25,6 +29,7 @@ class _PageSection extends State<PageSection> {
   String dateTime;
   PageBloc _pageBloc;
   TransactionSection section;
+  bool _isLoading = false;
 
   final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey =
       new GlobalKey<RefreshIndicatorState>();
@@ -35,8 +40,8 @@ class _PageSection extends State<PageSection> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    section = TransactionSection.init();
     _pageBloc = BlocProvider.of<PageBloc>(context);
+    section = _pageBloc.getTemp(this.dateTime);
     _pageBloc.dispatch(PageLoadData(dateTime));
   }
 
@@ -65,20 +70,21 @@ class _PageSection extends State<PageSection> {
         child: BlocListener(
             bloc: _pageBloc,
             listener: (BuildContext context, PageState pageState) {
-              if(pageState is PageLoadingData){
-                Scaffold.of(context)
-                  ..hideCurrentSnackBar()
-                  ..showSnackBar(
-                    SnackBar(
-                      content: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text('Đang tải dữ liệu...'),
-                          CircularProgressIndicator(),
-                        ],
-                      ),
-                    ),
-                  );
+              if(pageState is PageLoadingData && pageState.time == this.dateTime){
+                //this._isLoading = true;
+//                Scaffold.of(context)
+//                  ..hideCurrentSnackBar()
+//                  ..showSnackBar(
+//                    SnackBar(
+//                      content: Row(
+//                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+//                        children: [
+//                          Text('Đang tải dữ liệu...'),
+//                          CircularProgressIndicator(),
+//                        ],
+//                      ),
+//                    ),
+//                  );
               }
 
             },
@@ -87,70 +93,64 @@ class _PageSection extends State<PageSection> {
                 builder: (BuildContext context, PageState pageState) {
                   if (pageState is PageLoadedData &&
                       pageState.section != null) {
-                    if (pageState.dateTime == this.dateTime) {
+                    this._isLoading = false;
+                    if (pageState.section.time == this.dateTime) {
                       this.section = pageState.section;
                     }
                   }
                   return Padding(
                       padding: EdgeInsets.all(20),
-                      child: new Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
+                      child:Stack(
                         children: <Widget>[
+                          ModalProgressHUD(child: Container(
+                             child: new Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: <Widget>[
 //                        TextKeyValue("Tiền đầu ngày:", "200.000"),
-                          TextKeyValue(
-                              "Tiền thu:",
-                              formatMoney(this
-                                  .section
-                                  .transactionHeader
-                                  .revenue
-                                  .toString())),
-                          TextKeyValue(
-                              "Tiền chi:",
-                              formatMoney(this
-                                  .section
-                                  .transactionHeader
-                                  .expendture
-                                  .toString())),
-                          TextKeyValue(
-                              "Tổng:",
-                              formatMoney(this
-                                  .section
-                                  .transactionHeader
-                                  .total
-                                  .toString())),
+                                  TextKeyValue(
+                                      "Tiền thu:",
+                                      formatMoney(this
+                                          .section
+                                          .transactionHeader
+                                          .revenue
+                                          .toString())),
+                                  TextKeyValue(
+                                      "Tiền chi:",
+                                      formatMoney(this
+                                          .section
+                                          .transactionHeader
+                                          .expendture
+                                          .toString())),
+                                  TextKeyValue(
+                                      "Tổng:",
+                                      formatMoney(this
+                                          .section
+                                          .transactionHeader
+                                          .total
+                                          .toString())),
 //                        TextKeyValue("Tiền cuối ngày:", "290.000"),
-                          Container(
-                            margin: EdgeInsets.only(top: 10, bottom: 10),
-                            child: CustomPaint(
-                              size: Size(MediaQuery.of(context).size.width, 1),
-                              painter: Drawhorizontalline(),
-                            ),
-                          ),
-                          Flexible(
-                            flex: 1,
-                            child: ListView.builder(
-                              itemCount: this.section.transactions.length,
-                              itemBuilder: (context, position) {
-                                return ItemRow(
-                                    transaction:
-                                        this.section.transactions[position],
-                                    pageBloc: _pageBloc);
-                              },
-                            ),
-                          )
-                        ],
-                      ));
-
-                  return Padding(
-                      padding: EdgeInsets.all(20),
-                      child: new Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
-//                      TextKeyValue("Tiền đầu ngày:", "200.000"),
-                          TextKeyValue("Tiền thu:", "0"),
-                          TextKeyValue("Tiền chi:", "0"),
-                          TextKeyValue("Tổng:", "0"),
-//                      TextKeyValue("Tiền cuối ngày:", "290.000")
+                                  Container(
+                                    margin: EdgeInsets.only(top: 10, bottom: 10),
+                                    child: CustomPaint(
+                                      size: Size(MediaQuery.of(context).size.width, 1),
+                                      painter: Drawhorizontalline(),
+                                    ),
+                                  ),
+                                  Flexible(
+                                    flex: 1,
+                                    child: ListView.builder(
+                                      itemCount: this.section.transactions.length,
+                                      itemBuilder: (context, position) {
+                                        return ItemRow(
+                                            transaction:
+                                            this.section.transactions[position],
+                                            pageBloc: _pageBloc);
+                                      },
+                                    ),
+                                  )
+                                ],
+                              )
+                          ), inAsyncCall: _isLoading),
                         ],
                       ));
                 })));
@@ -184,7 +184,7 @@ class Drawhorizontalline extends CustomPainter {
 
 class TextKeyValue extends StatelessWidget {
   final textStyle = TextStyle(
-    fontSize: 21,
+    fontSize: 18,
   );
   String title;
   String value;
@@ -210,7 +210,7 @@ class TextKeyValue extends StatelessWidget {
 }
 
 class ItemRow extends StatelessWidget {
-  final Transaction transaction;
+  final my.Transaction transaction;
   final PageBloc pageBloc;
 
   const ItemRow({Key key, @required this.transaction, this.pageBloc})
@@ -243,7 +243,7 @@ class ItemRow extends StatelessWidget {
                           color: transaction.type == REVENUE_TYPE
                               ? Colors.green
                               : Colors.red,
-                          fontSize: 22.0),
+                          fontSize: 18.0),
                     ),
                     Spacer(),
                     Text(
@@ -252,7 +252,7 @@ class ItemRow extends StatelessWidget {
                           color: transaction.type == REVENUE_TYPE
                               ? Colors.green
                               : Colors.red,
-                          fontSize: 22.0),
+                          fontSize: 18.0),
                     )
                   ],
                 )),
