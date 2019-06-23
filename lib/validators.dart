@@ -23,6 +23,6 @@ class Validators {
   }
 
   static isValidUpass(String upassword) {
-    return upassword.length>2;
+    return upassword.length>0;
   }
 }

@@ -47,7 +47,7 @@ class HomePageState extends State<HomePage> {
   }
 
   _onSelectItem(int index) {
-    if(index == 3){
+    if(index == widget.drawerItems.length-1){
       Navigator.of(context)
           .pushReplacementNamed("logout");
     } else {
@@ -60,9 +60,18 @@ class HomePageState extends State<HomePage> {
     final prefs = await SharedPreferences.getInstance();
 // Try reading data from the counter key. If it does not exist, return 0.
     final String user_name = prefs.getString(USER_NAME) ?? "temp";
-    setState(() {
-      userName = user_name;
-    });
+    final String subUserName = prefs.getString(SUB_USER_NAME);
+    if (subUserName != SUB_USER_NAME_EMPTY) {
+      setState(() {
+        userName = user_name;
+        this.widget.drawerItems.removeAt(2);
+      });
+    }else{
+      setState(() {
+        userName = user_name;
+      });
+    }
+
   }
 
   @override
@@ -70,10 +79,12 @@ class HomePageState extends State<HomePage> {
     // TODO: implement initState
     super.initState();
     printDailyNewsDigest();
+
   }
 
   @override
   Widget build(BuildContext context) {
+
     var drawerOptions = <Widget>[];
     for (var i = 0; i < widget.drawerItems.length; i++) {
       var d = widget.drawerItems[i];
