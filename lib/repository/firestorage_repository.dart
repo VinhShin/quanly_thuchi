@@ -47,7 +47,7 @@ class FireStorageRepository {
     return SharedPreferences.getInstance().then((prefs){
       final String userId = prefs.getString(USER_NAME) ?? "temp";
       final String subUserName = prefs.getString(SUB_USER_NAME);
-      if(subUserName!='sub_user_name_is_empty')
+      if(subUserName!= SUB_USER_NAME_EMPTY)
         return Firestore.instance
             .collection(userId)
             .document("data")
@@ -69,7 +69,7 @@ class FireStorageRepository {
     final String subUserName = prefs.getString(SUB_USER_NAME);
     List<MyTransaction.Transaction> listData = new List();
     QuerySnapshot querySnapshot;
-    if (subUserName != 'sub_user_name_is_empty')
+    if (subUserName != SUB_USER_NAME_EMPTY)
       querySnapshot = await Firestore.instance
           .collection(userId)
           .document("data")
@@ -245,7 +245,7 @@ class FireStorageRepository {
           .collection(new DateFormat('yyyy-MM-dd').format(new DateTime(dateTime.year,dateTime.month,dateTime.day)))
           .where('sub_user', isEqualTo: subUser)
           .getDocuments();
-      if (subUser == "sub_user_name_is_empty")
+      if (subUser == SUB_USER_NAME_EMPTY)
         querySnapshot = await Firestore.instance
             .collection(user)
             .document("data")
