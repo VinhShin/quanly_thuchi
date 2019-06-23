@@ -45,7 +45,7 @@ class FireStorageRepository {
     final String subUserName = prefs.getString(SUB_USER_NAME);
     List<MyTransaction.Transaction> listData = new List();
     QuerySnapshot querySnapshot;
-    if(subUserName!='sub_user_name_is_empty')
+    if (subUserName != 'sub_user_name_is_empty')
       querySnapshot = await Firestore.instance
           .collection(userId)
           .document("data")
@@ -53,11 +53,11 @@ class FireStorageRepository {
           .where('sub_user', isEqualTo: subUserName)
           .getDocuments();
     else
-    querySnapshot =  await Firestore.instance
-        .collection(userId)
-        .document("data")
-        .collection(date)
-        .getDocuments();
+      querySnapshot = await Firestore.instance
+          .collection(userId)
+          .document("data")
+          .collection(date)
+          .getDocuments();
     var list = querySnapshot.documents;
     for (final e in list) {
       listData.add(new MyTransaction.Transaction.fromMap(e.data));
@@ -92,6 +92,7 @@ class FireStorageRepository {
         .delete();
     return;
   }
+
 //
 //  Future<void> addUser(String userName, String password) async {
 //    final prefs = await SharedPreferences.getInstance();
@@ -114,10 +115,11 @@ class FireStorageRepository {
     final String user_id = prefs.getString(USER_ID) ?? "temp";
     final String user_name = prefs.getString(USER_NAME) ?? "temp";
 
-
-    QuerySnapshot snapshot = await Firestore.instance.collection("sub_user").where('user', isEqualTo: userName)
+    QuerySnapshot snapshot = await Firestore.instance
+        .collection("sub_user")
+        .where('user', isEqualTo: userName)
         .getDocuments();
-    if(snapshot.documents.length==0){
+    if (snapshot.documents.length == 0) {
       var map = new Map<String, dynamic>();
       map["user"] = userName;
       map["pass"] = password;
@@ -131,20 +133,54 @@ class FireStorageRepository {
     }
     return false;
   }
+
   Future<bool> getUser(String userName, String passWord) async {
-    DocumentSnapshot snapshot = await Firestore.instance.collection("sub_user").document(userName).get();
+    DocumentSnapshot snapshot = await Firestore.instance
+        .collection("sub_user")
+        .document(userName)
+        .get();
     Map<String, dynamic> map = snapshot.data;
-    final String user = map['user'];
+    final prefs = await SharedPreferences.getInstance();
+    String user = map['user'];
     String pass = map['pass'];
     String parentName = map['parent_name'];
-    if(userName == user && passWord == pass && parentName != null) {
-      final prefs = await SharedPreferences.getInstance();
+    if (userName == user && passWord == pass && parentName != null) {
       // set value
-
       prefs.setString(SUB_USER_NAME, user);
       prefs.setString(USER_NAME, parentName);
+
+      //List<DocumentSnapshot> list =
+      //await getDataFromDateTo(DateTime.now(), DateTime.utc(2019, 12, 30));
+      //list.toString();
       return true;
     }
     return false;
+  }
+  Future<List<DocumentSnapshot>> getDataFromDateTo(
+      DateTime dateFrom, DateTime dateTo) async {
+
+    List<DocumentSnapshot> list = new List();
+    DateTime dateTime = dateFrom;
+    final prefs = await SharedPreferences.getInstance();
+    // set value
+    String subUser = prefs.getString(SUB_USER_NAME);
+    String user = prefs.getString(USER_NAME);
+    do {
+      QuerySnapshot querySnapshot = await Firestore.instance
+          .collection(user)
+          .document("data")
+          .collection(new DateFormat('yyyy-MM-dd').format(new DateTime(dateTime.year,dateTime.month,dateTime.day)))
+          .where('sub_user', isEqualTo: subUser)
+          .getDocuments();
+      if (subUser == "sub_user_name_is_empty")
+        querySnapshot = await Firestore.instance
+            .collection(user)
+            .document("data")
+            .collection(new DateFormat('yyyy-MM-dd').format(new DateTime(dateTime.year,dateTime.month,dateTime.day)))
+            .getDocuments();
+      for (final e in querySnapshot.documents)
+        list.add(e);
+      dateTime = dateTime.add(new Duration(days: 1));
+    } while (!dateTime.isAfter(dateTo));
   }
 }

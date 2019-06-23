@@ -6,10 +6,10 @@ class Validators {
     r'^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$',
   );
   static final RegExp _uidRegExp = RegExp(
-    r'^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{3,}$',
+    r'^[A-Za-z\d]{1,}$',
   );
   static final RegExp _upassRegExp = RegExp(
-    r'^[A-Za-z\d]{3,}$',
+    r'^[A-Za-z\d]{1,}$',
   );
   static isValidEmail(String email) {
     return _emailRegExp.hasMatch(email);
