@@ -2,10 +2,11 @@ import 'package:quanly_thuchi/model/transaction.dart';
 import 'package:quanly_thuchi/model/transaction_header.dart';
 
 class TransactionSection{
+  String time;
   TransactionHeader transactionHeader;
   List<Transaction> transactions;
 
-  TransactionSection({this.transactionHeader, this.transactions});
+  TransactionSection({this.time, this.transactionHeader, this.transactions});
 
   factory TransactionSection.init(){
     TransactionHeader transactionHeader = new TransactionHeader(revenue: 0,expendture: 0,total: 0);

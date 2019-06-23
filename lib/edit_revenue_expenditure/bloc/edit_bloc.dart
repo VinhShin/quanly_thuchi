@@ -37,11 +37,6 @@ class EditBloc extends Bloc<EditEvent, EditState> {
         } else{
           yield EditState.FAIL();
         }
-
-
-
-
-
   }
 
   Stream<EditState> _insertData(Transaction data) async* {

@@ -20,6 +20,7 @@ class UserBloc extends Bloc<UserEvent, UserState>{
   Stream<UserState> mapEventToState(UserEvent event) async* {
     // TODO: implement mapEventToState
     if(event is UserEventRegister){
+      yield UserState.Processing();
       yield* inserNewUser(event.userName, event.userPass);
     }
   }
