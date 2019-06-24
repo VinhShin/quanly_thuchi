@@ -13,6 +13,7 @@ import 'package:quanly_thuchi/edit_revenue_expenditure/input_down.dart';
 import 'package:quanly_thuchi/base_widget/edit_money_base.dart';
 import 'dart:io';
 import 'package:quanly_thuchi/common_func.dart';
+import 'package:quanly_thuchi/category/category.dart';
 
 class EditRevenueExpendture extends StatelessWidget {
   Transaction transaction = null;
@@ -127,7 +128,22 @@ class _EditPage extends State<EditPage> {
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
-                          TextBase("Danh mục"),
+                          Row(
+                            children: <Widget>[
+                              TextBase("Danh mục"),
+                              GestureDetector(
+                                child: Container(
+                                  margin: EdgeInsets.only(left: 10),
+                                  color: Colors.white,
+                                  height: 60,
+                                  child: GestureDetector(
+                                    onTap: passEditCategory,
+                                    child: Icon(Icons.edit),
+                                  ),
+                                ),
+                              )
+                            ],
+                          ),
                           Container(
                             margin: EdgeInsets.only(left: 10),
                             height: 60,
@@ -389,6 +405,18 @@ class _EditPage extends State<EditPage> {
         );
       },
     );
+  }
+
+  void passEditCategory() async {
+    var result = await Navigator.push(
+      context,
+      MaterialPageRoute(
+          builder: (context) =>
+              Category()),
+    );
+    if(result){
+//      _pageBloc.dispatch(PageLoadData(strDate4));
+    }
   }
 
   void _showDialogNoNetWork() {

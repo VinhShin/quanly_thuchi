@@ -51,10 +51,17 @@ class UserRepository {
   }
 
   Future<void> signUp({String email, String password}) async {
-    return await _firebaseAuth.createUserWithEmailAndPassword(
+    FirebaseUser user =  await _firebaseAuth.createUserWithEmailAndPassword(
       email: email,
       password: password,
     );
+
+    final prefs = await SharedPreferences.getInstance();
+    // set value
+    prefs.setString(USER_ID, user.uid);
+    prefs.setString(USER_NAME, user.email);
+    prefs.setString(SUB_USER_NAME, SUB_USER_NAME_EMPTY);
+    return user;
   }
 
   Future<void> signOut() async {

@@ -24,7 +24,7 @@ class EditBase extends StatelessWidget{
     }
     // TODO: implement build
     return Container(
-      margin: EdgeInsets.only(top: 10,left: 10, right: 10),
+          margin: EdgeInsets.only(top: 10,left: 10, right: 10),
       child:  new Theme(
         data: new ThemeData(
           primaryColor: Colors.redAccent,

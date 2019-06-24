@@ -51,13 +51,6 @@ class _PageSection extends State<PageSection> {
     super.didChangeDependencies();
   }
 
-//  @override
-//  void didUpdateWidget(PageSection oldWidget) {
-//    // TODO: implement didUpdateWidget
-//    super.didUpdateWidget(oldWidget);
-//    _pageBloc.dispatch(PageLoadData(dateTime));
-//  }
-
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
