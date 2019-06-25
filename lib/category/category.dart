@@ -16,6 +16,7 @@ import 'package:quanly_thuchi/category/bloc/cate_bloc.dart';
 import 'package:quanly_thuchi/category/bloc/cate_event.dart';
 import 'package:quanly_thuchi/category/bloc/cate_state.dart';
 import 'package:quanly_thuchi/base_widget/edit_base.dart';
+import 'package:quanly_thuchi/model/category_model.dart';
 
 class Category extends StatefulWidget {
   Category();
@@ -30,13 +31,25 @@ class Category extends StatefulWidget {
 class _category extends State<Category> {
   CateBloc _cateBloc;
   String currentCateSelect = "";
-  _category();
-
+  String buttonText = "Thêm";
+  List<CategoryModel> _listCate;
+  TextEditingController _cateController;
+  CategoryModel currentCate;
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     _cateBloc = new CateBloc();
+    _cateBloc.dispatch(LoadCate());
+    _listCate = new List();
+    _cateController = new TextEditingController();
+//    _cateController.addListener((){
+//      if(_cateController.text.length == 0) {
+//        setState(() {
+//          buttonText = "Thêm";
+//        });
+//      }
+//    });
   }
 
   @override
@@ -45,29 +58,17 @@ class _category extends State<Category> {
     super.didChangeDependencies();
   }
 
-  void setCategory(String category){
-    setState(() {
-      currentCateSelect:category;
-    });
+  void setCategory(String category) {
+//    setState(() {
+//      currentCateSelect:
+//      category;
+//    });
   }
-  
+
   @override
   Widget build(BuildContext context) {
-    List<String> listCategory = new List();
-    listCategory.add("Danh Muc 1");
-    listCategory.add("Danh Muc 2");
-    listCategory.add("Danh Muc 3");
-    listCategory.add("Danh Muc 4");
-    listCategory.add("Danh Muc 5");
-    listCategory.add("Danh Muc 6");
-    listCategory.add("Danh Muc 7");
-
-    final TextStyle valueStyle = Theme
-        .of(context)
-        .textTheme
-        .body1;
-
     return Scaffold(
+        resizeToAvoidBottomInset:false,
         appBar: new AppBar(
           // here we display the title corresponding to the fragment
           // you can instead choose to have a static title
@@ -76,7 +77,7 @@ class _category extends State<Category> {
         body: BlocListener(
           bloc: _cateBloc,
           listener: (BuildContext context, CateState state) {
-            if (state.currentStep == STEP_LOADING) {
+            if(state is CateLoading){
               Scaffold.of(context)
                 ..hideCurrentSnackBar()
                 ..showSnackBar(
@@ -90,53 +91,94 @@ class _category extends State<Category> {
                     ),
                   ),
                 );
-            } else if (state.currentStep == CONNECT_FAIL) {
-//          _showDialogNoNetWork();
-              alertNotify(this.context, "Tác vụ thất bại",
-                  "Bạn cần kết nối internet để thực hiện tác vụ này");
-            } else if (state.currentStep == STEP_INSERT && state.status) {
-              Navigator.pop(context, true);
-            } else if (state.currentStep == STEP_DELETE && state.status) {
-              Navigator.pop(context, true);
-            } else if (state.currentStep == STEP_UPDATE && state.status) {
-              Navigator.pop(context, true);
+            } else if(state is CateLoad){
+              Scaffold.of(context)..hideCurrentSnackBar();
             }
           },
           child: BlocBuilder(
               bloc: _cateBloc,
               builder: (BuildContext context, CateState state) {
+                if (state is CateLoad && state.listCategory != null) {
+                  _listCate = state.listCategory;
+                  buttonText = "Thêm";
+                  _cateController.text = "";
+                }
+
+                else if (state is CateEdit) {
+                  if (_listCate.isNotEmpty &&
+                      _listCate.length > state.position) {
+                    _cateController.text = _listCate[state.position].name;
+                    currentCate = _listCate[state.position];
+                    buttonText = "Cập nhật";
+                    _cateBloc.dispatch(EmptyEvent());
+                  }
+                } else if(state is CateNameAdd){
+                  buttonText = "Thêm";
+                }
+
                 return Column(children: <Widget>[
-                  Flexible(
-//                    child: Text("sss"),
-                    child: Row(children: <Widget>[
+              Row(children: <Widget>[
                       Expanded(
-                        child: EditBase("Thêm danh mục"),
-                      ),
+                          child: Container(
+                              margin:
+                                  EdgeInsets.only(top: 10, left: 10, right: 10),
+                              child: new Theme(
+                                data: new ThemeData(
+                                  primaryColor: Colors.redAccent,
+                                  primaryColorDark: Colors.red,
+                                ),
+                                child: new TextField(
+                                  onChanged: (text) {
+                                    if (text.length == 0) {
+                                      _cateBloc.dispatch(ChangeTextToAdd());
+
+                                    }
+                                  },
+                                  controller: _cateController,
+                                  decoration: new InputDecoration(
+                                      border: new OutlineInputBorder(
+                                          borderSide: new BorderSide(
+                                              color: Colors.teal)),
+                                      hintText: "Thêm danh mục",
+                                      suffixStyle:
+                                          const TextStyle(color: Colors.green)),
+                                ),
+                              ))),
                       Container(
-                          margin: EdgeInsets.only(
-                              top: 10, left: 10, right: 10),
-                          width: 120,
-                          height: 55,
-                          child: RaisedButton(
-                              color: Colors.blue,
-                              onPressed: () {},
-                              child: Text('Thêm',
-                                        textAlign: TextAlign.center,
-                                        style: TextStyle(
-                                            fontSize: 20, color: Colors.white)),
-                                  ),
+                        margin: EdgeInsets.only(top: 10, left: 10, right: 10),
+                        width: 120,
+                        height: 55,
+                        child: RaisedButton(
+                          color: Colors.blue,
+                          onPressed: () {
+                            if(buttonText == "Thêm") {
+                              _cateBloc.dispatch(AddCate(_cateController.text));
+                            } else{
+                              if(currentCate != null) {
+                                currentCate.setName = _cateController.text;
+                                _cateBloc.dispatch(Update(categoryModel:currentCate));
+                              }
+                            }
+                            setState(() {
+                              _cateController.text = "";
+                            });
+                          },
+                          child: Text(buttonText,
+                              textAlign: TextAlign.center,
+                              style:
+                                  TextStyle(fontSize: 20, color: Colors.white)),
+                        ),
                       )
-
-
                     ]),
-                  ),
-                  Flexible(
+                  Expanded(
                     child: ListView.builder(
-                      itemCount: listCategory.length,
+                      itemCount: _listCate.length,
                       itemBuilder: (context, position) {
                         return ItemRow(
-                            cate: listCategory[position],
-                            cateBloc: this._cateBloc);
+                          cate: _listCate[position],
+                          cateBloc: this._cateBloc,
+                          position: position,
+                        );
                       },
                     ),
                   )
@@ -167,61 +209,78 @@ class Drawhorizontalline extends CustomPainter {
   }
 }
 
-class TextKeyValue extends StatelessWidget {
-  final textStyle = TextStyle(
-    fontSize: 18,
-  );
-  String title;
-  String value;
-
-  TextKeyValue(title, value) {
-    this.title = title;
-    this.value = value;
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    // TODO: implement build
-    return new Container(
-        margin: EdgeInsets.only(top: 10),
-        child: new Row(
-          children: <Widget>[
-            Text(title, textAlign: TextAlign.left, style: textStyle),
-            Spacer(),
-            Text(value, textAlign: TextAlign.left, style: textStyle),
-          ],
-        ));
-  }
-}
-
 class ItemRow extends StatelessWidget {
-  final String cate;
+  final CategoryModel cate;
   final CateBloc cateBloc;
+  final int position;
 
-  const ItemRow({Key key, @required this.cate, this.cateBloc})
+  const ItemRow({Key key, @required this.cate, this.cateBloc, this.position})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
     return Container(
-        margin: EdgeInsets.only(top: 10),
+        margin: EdgeInsets.all(10),
         child: GestureDetector(
           onTap: () async {
-//            cateBloc.dispatch(event)
+            cateBloc.dispatch(CateChange(position));
           },
           child: Card(
             child: Padding(
                 padding: const EdgeInsets.all(16.0),
                 child: new Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
                     Text(
-                      cate,
+                      cate.name,
                       style: TextStyle(fontSize: 18.0),
                     ),
+                    GestureDetector(
+                      child: Container(
+                        margin: EdgeInsets.only(left: 10),
+                        height: 40,
+                        child: GestureDetector(
+                          onTap: () {
+                            _showDialog(context, cateBloc, cate.id);
+                          },
+                          child: Icon(Icons.delete),
+                        ),
+                      ),
+                    )
                   ],
                 )),
           ),
         ));
   }
+}
+
+void _showDialog(BuildContext context, CateBloc cateBloc, int id) {
+  // flutter defined function
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      // return object of type Dialog
+      return AlertDialog(
+        title: new Text("Xóa danh mục"),
+        content: new Text("Bạn có chắc muốn xóa danh mục này"),
+        actions: <Widget>[
+          // usually buttons at the bottom of the dialog
+          new FlatButton(
+            child: new Text("Đồng ý"),
+            onPressed: () {
+              cateBloc.dispatch(Delete(id: id));
+              Navigator.of(context).pop();
+            },
+          ),
+          new FlatButton(
+            child: new Text("Hủy"),
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+          ),
+        ],
+      );
+    },
+  );
 }

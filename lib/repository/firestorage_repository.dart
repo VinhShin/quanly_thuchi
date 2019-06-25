@@ -6,6 +6,7 @@ import 'package:intl/intl.dart';
 import 'dart:convert';
 import 'package:quanly_thuchi/model/transaction_section.dart';
 import 'package:quanly_thuchi/model/index.dart';
+import 'package:quanly_thuchi/model/category_model.dart';
 
 final CollectionReference noteCollection =
     Firestore.instance.collection('shops12');
@@ -256,4 +257,65 @@ class FireStorageRepository {
       dateTime = dateTime.add(new Duration(days: 1));
     } while (!dateTime.isAfter(dateTo));
   }
+
+  //category
+  Future<void> addCate(String category) async {
+
+    final prefs = await SharedPreferences.getInstance();
+// Try reading data from the counter key. If it does not exist, return 0.
+    final String userName = prefs.getString(USER_NAME) ?? "temp";
+    int currentMiliSecond = DateTime.now().millisecondsSinceEpoch;
+    CategoryModel categoryModel = new CategoryModel(currentMiliSecond, category);
+    await Firestore.instance
+        .collection(userName)
+        .document("category")
+        .collection("data")
+        .document(categoryModel.id.toString())
+        .setData(categoryModel.toMap());
+    return;
+  }
+
+
+  Future<List<CategoryModel>> getAllCategory() async {
+    final prefs = await SharedPreferences.getInstance();
+    final String userId = prefs.getString(USER_NAME) ?? "temp";
+    List<CategoryModel> listData = new List();
+    QuerySnapshot querySnapshot = await Firestore.instance
+          .collection(userId)
+          .document("category")
+          .collection("data")
+          .getDocuments();
+    var list = querySnapshot.documents;
+    for (final e in list) {
+      listData.add(new CategoryModel.fromMap(e.data));
+    }
+    return listData;
+  }
+
+  Future<void> deleteCate(int id) async {
+    final prefs = await SharedPreferences.getInstance();
+// Try reading data from the counter key. If it does not exist, return 0.
+    final String userId = prefs.getString(USER_NAME) ?? "temp";
+
+    await Firestore.instance
+        .collection(userId)
+        .document("category")
+        .collection("data")
+        .document(id.toString())
+        .delete();
+    return;
+  }
+
+  Future<dynamic> updateCategory(CategoryModel cate) async {
+    final prefs = await SharedPreferences.getInstance();
+// Try reading data from the counter key. If it does not exist, return 0.
+    final String userId = prefs.getString(USER_NAME) ?? "temp";
+    return Firestore.instance
+        .collection(userId)
+        .document("category")
+        .collection("data")
+        .document(cate.id.toString())
+        .updateData(cate.toMap());
+  }
+
 }

@@ -134,7 +134,6 @@ class _EditPage extends State<EditPage> {
                               GestureDetector(
                                 child: Container(
                                   margin: EdgeInsets.only(left: 10),
-                                  color: Colors.white,
                                   height: 60,
                                   child: GestureDetector(
                                     onTap: passEditCategory,
@@ -338,10 +337,6 @@ class _EditPage extends State<EditPage> {
         selectedTime = picked;
       });
     }
-//    }
-//    else {
-//      alertNotify(this.context,"Thông báo","Bạn không có quyền sửa thông tin này");
-//    }
   }
 
   void _handleRadioValueChange1(int value) {

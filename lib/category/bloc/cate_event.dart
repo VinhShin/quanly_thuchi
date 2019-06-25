@@ -1,40 +1,49 @@
 import 'package:meta/meta.dart';
 import 'package:equatable/equatable.dart';
 import 'package:quanly_thuchi/model/transaction.dart';
-
-abstract class CateEvent extends Equatable{
+import 'package:quanly_thuchi/model/category_model.dart';
+abstract class CateEvent extends Equatable {
 }
 
-class InsertData extends CateEvent{
+class InsertData extends CateEvent {
   final Transaction reExData;
+
   InsertData({@required this.reExData});
 }
 
-class EditData extends CateEvent{
+class Delete extends CateEvent {
+  int id;
+
+  Delete({this.id});
 
 }
 
-class Delete extends CateEvent{
-  String date;
-  String id;
+class Update extends CateEvent {
+  final CategoryModel categoryModel;
 
-  Delete({this.date, this.id});
-
+  Update({@required this.categoryModel});
 }
 
-class Update extends CateEvent{
-  final Transaction reExData;
-  Update({@required this.reExData});
-}
-
-class LoadCate extends CateEvent{
+class LoadCate extends CateEvent {
   LoadCate();
 }
 
-class NoInternet extends CateEvent{
+class AddCate extends CateEvent {
+  String cateName;
+
+  AddCate(this.cateName);
+}
+
+class NoInternet extends CateEvent {
   NoInternet();
 }
 
-class CateChange extends CateEvent{
-
+class CateChange extends CateEvent {
+  int position;
+  CateChange(this.position);
 }
+
+class ChangeTextToAdd extends CateEvent{
+}
+
+class EmptyEvent extends CateEvent{}
