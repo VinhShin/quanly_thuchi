@@ -240,6 +240,13 @@ class ItemRow extends StatelessWidget {
                     ),
                     Spacer(),
                     Text(
+                      transaction.subUserId == '2'?"":transaction.subUserId,
+                      style: TextStyle(
+                          color: Colors.blue,
+                          fontSize: 18.0),
+                    ),
+                    Spacer(),
+                    Text(
                       formatMoney(transaction.money.toString()),
                       style: TextStyle(
                           color: transaction.type == REVENUE_TYPE

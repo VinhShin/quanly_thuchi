@@ -1,4 +1,5 @@
 import 'package:meta/meta.dart';
+import 'package:quanly_thuchi/model/category_model.dart';
 
 final int STEP_INIT = 1;
 final int STEP_INSERT = STEP_INIT + 1;//2
@@ -34,14 +35,14 @@ class EditState{
   factory EditState.FAIL(){
     return EditState(currentStep: CONNECT_FAIL,status: true);
   }
-
-
-
 }
-
-
 
 class EditCateState extends EditState{
   String category;
   EditCateState({@required this.category});
+}
+
+class EditAllCategory extends EditState{
+  List<CategoryModel> list;
+  EditAllCategory(this.list);
 }

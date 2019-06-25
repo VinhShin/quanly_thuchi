@@ -51,8 +51,9 @@ class _EditPage extends State<EditPage> {
   TextEditingController noteInput = new TextEditingController();
   EditBloc _editBloc;
   int _radioValue1 = REVENUE_TYPE;
-  String category = "Bán hàng";
+  String category = "Chọn danh mục";
   bool isOnClick = false;
+  List<DropdownMenuItem<String>> listDropDonwMenuItem = new List();
 
   _EditPage(this.transaction);
 
@@ -65,6 +66,7 @@ class _EditPage extends State<EditPage> {
   @override
   void initState() {
     _editBloc = new EditBloc();
+    _editBloc.dispatch(LoadCategory());
     if (transaction != null) {
       moneyInput.text = formatMoney(transaction.money.toString());
       noteInput.text = transaction.note;
@@ -75,6 +77,8 @@ class _EditPage extends State<EditPage> {
       selectedTime = TimeOfDay(
           hour: int.parse(time[0]), minute: int.parse(time[1].split(" ")[0]));
     }
+    listDropDonwMenuItem.add(new DropdownMenuItem(value: "Chọn danh mục", child: new Text("Chọn danh mục")));
+
     super.initState();
   }
 
@@ -98,21 +102,38 @@ class _EditPage extends State<EditPage> {
                 ),
               ),
             );
-        } else if (editState.currentStep == CONNECT_FAIL) {
+        } else {
+          Scaffold.of(context)..hideCurrentSnackBar();
+          if (editState.currentStep == CONNECT_FAIL) {
 //          _showDialogNoNetWork();
-          alertNotify(this.context, "Tác vụ thất bại",
-              "Bạn cần kết nối internet để thực hiện tác vụ này");
-        } else if (editState.currentStep == STEP_INSERT && editState.status) {
-          Navigator.pop(context, true);
-        } else if (editState.currentStep == STEP_DELETE && editState.status) {
-          Navigator.pop(context, true);
-        } else if (editState.currentStep == STEP_UPDATE && editState.status) {
-          Navigator.pop(context, true);
+            alertNotify(this.context, "Tác vụ thất bại",
+                "Bạn cần kết nối internet để thực hiện tác vụ này");
+          } else if (editState.currentStep == STEP_INSERT && editState.status) {
+            Navigator.pop(context, true);
+          } else if (editState.currentStep == STEP_DELETE && editState.status) {
+            Navigator.pop(context, true);
+          } else if (editState.currentStep == STEP_UPDATE && editState.status) {
+            Navigator.pop(context, true);
+          }
         }
       },
       child: BlocBuilder(
           bloc: _editBloc,
           builder: (BuildContext context, EditState edistate) {
+            if (edistate is EditAllCategory) {
+              listDropDonwMenuItem = new List(edistate.list.length);
+              for (int i = 0; i < edistate.list.length; i++) {
+                listDropDonwMenuItem[i] = new DropdownMenuItem(
+                    value: edistate.list[i].name,
+                    child: new Text(edistate.list[i].name));
+              }
+              if (edistate.list.length > 0) {
+                category = edistate.list[0].name;
+              }
+              _editBloc.dispatch(editEventEmpty());
+//              listDropDonwMenuItem = getDropDownMenuItems();
+            }
+
             return SingleChildScrollView(
               child: new Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -147,7 +168,7 @@ class _EditPage extends State<EditPage> {
                             margin: EdgeInsets.only(left: 10),
                             height: 60,
                             child: DropdownButton<String>(
-                              items: getDropDownMenuItems(),
+                              items: listDropDonwMenuItem,
                               value: category,
                               onChanged: (value) {
                                 dropDownButtonHandle(value);
@@ -299,14 +320,14 @@ class _EditPage extends State<EditPage> {
   }
 
   List<DropdownMenuItem<String>> getDropDownMenuItems() {
-    List<DropdownMenuItem<String>> items = new List(5);
+    List<DropdownMenuItem<String>> items = new List(1);
     items[0] =
         new DropdownMenuItem(value: "Bán hàng", child: new Text("Bán hàng"));
-    items[1] = new DropdownMenuItem(value: "Thu nợ", child: new Text("Thu nợ"));
-    items[2] = new DropdownMenuItem(value: "Vay nợ", child: new Text("Vay nợ"));
-    items[3] = new DropdownMenuItem(
-        value: "Điều chỉnh", child: new Text("Điều chỉnh"));
-    items[4] = new DropdownMenuItem(value: "khác", child: new Text("khác"));
+//    items[1] = new DropdownMenuItem(value: "Thu nợ", child: new Text("Thu nợ"));
+//    items[2] = new DropdownMenuItem(value: "Vay nợ", child: new Text("Vay nợ"));
+//    items[3] = new DropdownMenuItem(
+//        value: "Điều chỉnh", child: new Text("Điều chỉnh"));
+//    items[4] = new DropdownMenuItem(value: "khác", child: new Text("khác"));
     return items;
   }
 
@@ -362,7 +383,7 @@ class _EditPage extends State<EditPage> {
           selectedTime.format(context),
           noteInput.text,
           category,
-          'subuser');
+          '');
       if (transaction != null) {
         newTransaction.setId = transaction.id;
       }
@@ -405,12 +426,10 @@ class _EditPage extends State<EditPage> {
   void passEditCategory() async {
     var result = await Navigator.push(
       context,
-      MaterialPageRoute(
-          builder: (context) =>
-              Category()),
+      MaterialPageRoute(builder: (context) => Category()),
     );
-    if(result){
-//      _pageBloc.dispatch(PageLoadData(strDate4));
+    if (result == null) {
+      _editBloc.dispatch(LoadCategory());
     }
   }
 

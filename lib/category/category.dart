@@ -102,6 +102,7 @@ class _category extends State<Category> {
                   _listCate = state.listCategory;
                   buttonText = "Thêm";
                   _cateController.text = "";
+                  _cateBloc.dispatch(EmptyEvent());
                 }
 
                 else if (state is CateEdit) {
