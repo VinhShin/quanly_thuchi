@@ -35,7 +35,7 @@ class _AppState extends State<App> {
       child: MaterialApp(
         routes: <String, WidgetBuilder>{
           'logout': (BuildContext context) => new LoginScreen(userRepository: _userRepository),
-          'revenue_expenditure': (BuildContext context) => new HomePage(),
+          'revenue_expenditure': (BuildContext context) => new HomePage(_userRepository),
 
         },
         home: BlocBuilder(
@@ -49,7 +49,7 @@ class _AppState extends State<App> {
             }
             if (state is Authenticated) {
 //              return HomeScreen(name: state.displayName);
-              return HomePage();
+              return HomePage(_userRepository);
             }
           },
         ),

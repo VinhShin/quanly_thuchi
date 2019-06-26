@@ -6,6 +6,7 @@ import 'package:quanly_thuchi/main.dart';
 import 'package:quanly_thuchi/user/user_home.dart';
 import 'package:quanly_thuchi/constant.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:quanly_thuchi/repository/user_repository.dart';
 class DrawerItem {
   String title;
   IconData icon;
@@ -14,6 +15,10 @@ class DrawerItem {
 }
 
 class HomePage extends StatefulWidget {
+  final UserRepository _userRepository;
+
+  HomePage(this._userRepository);
+
   final drawerItems = [
     new DrawerItem("Thu Chi", new Icon(FontAwesomeIcons.coins).icon),
     new DrawerItem("Báo cáo", new Icon(FontAwesomeIcons.chartLine).icon),
@@ -23,13 +28,16 @@ class HomePage extends StatefulWidget {
 
   @override
   State<StatefulWidget> createState() {
-    return new HomePageState();
+    return new HomePageState(this._userRepository);
   }
 }
 
 class HomePageState extends State<HomePage> {
   int _selectedDrawerIndex = 0;
   String userName = "";
+  final UserRepository _userRepository;
+
+  HomePageState(this._userRepository);
 
   _getDrawerItemWidget(int pos) {
 
@@ -46,8 +54,9 @@ class HomePageState extends State<HomePage> {
 
   }
 
-  _onSelectItem(int index) {
+  _onSelectItem(int index) async {
     if(index == widget.drawerItems.length-1){
+      await _userRepository.signOut();
       Navigator.of(context)
           .pushReplacementNamed("logout");
     } else {
@@ -95,8 +104,6 @@ class HomePageState extends State<HomePage> {
         onTap: () => _onSelectItem(i),
       ));
     }
-
-
 
     return Scaffold(
           appBar: new AppBar(

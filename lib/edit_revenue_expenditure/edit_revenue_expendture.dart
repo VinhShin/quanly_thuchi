@@ -14,6 +14,7 @@ import 'package:quanly_thuchi/base_widget/edit_money_base.dart';
 import 'dart:io';
 import 'package:quanly_thuchi/common_func.dart';
 import 'package:quanly_thuchi/category/category.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class EditRevenueExpendture extends StatelessWidget {
   Transaction transaction = null;
@@ -51,8 +52,10 @@ class _EditPage extends State<EditPage> {
   TextEditingController noteInput = new TextEditingController();
   EditBloc _editBloc;
   int _radioValue1 = REVENUE_TYPE;
-  String category = "Chọn danh mục";
+  String category;
   bool isOnClick = false;
+  bool isShowEditCategory = true;
+
   List<DropdownMenuItem<String>> listDropDonwMenuItem = new List();
 
   _EditPage(this.transaction);
@@ -77,7 +80,15 @@ class _EditPage extends State<EditPage> {
       selectedTime = TimeOfDay(
           hour: int.parse(time[0]), minute: int.parse(time[1].split(" ")[0]));
     }
+    category = "Chọn danh mục";
     listDropDonwMenuItem.add(new DropdownMenuItem(value: "Chọn danh mục", child: new Text("Chọn danh mục")));
+
+     SharedPreferences.getInstance().then((prefs){
+       final String subUserName = prefs.getString(SUB_USER_NAME);
+       setState(() {
+         isShowEditCategory = subUserName == SUB_USER_NAME_EMPTY;
+       });
+     });
 
     super.initState();
   }
@@ -152,16 +163,20 @@ class _EditPage extends State<EditPage> {
                           Row(
                             children: <Widget>[
                               TextBase("Danh mục"),
-                              GestureDetector(
-                                child: Container(
-                                  margin: EdgeInsets.only(left: 10),
-                                  height: 60,
-                                  child: GestureDetector(
-                                    onTap: passEditCategory,
-                                    child: Icon(Icons.edit),
+                              Visibility(
+                                visible: isShowEditCategory,
+                                child: GestureDetector(
+                                  child: Container(
+                                    margin: EdgeInsets.only(left: 10),
+                                    height: 60,
+                                    child: GestureDetector(
+                                      onTap: passEditCategory,
+                                      child: Icon(Icons.edit),
+                                    ),
                                   ),
                                 ),
                               )
+
                             ],
                           ),
                           Container(
