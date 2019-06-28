@@ -141,7 +141,7 @@ class _EditPage extends State<EditPage> {
               if (edistate.list.length > 0) {
                 category = edistate.list[0].name;
               }
-              _editBloc.dispatch(editEventEmpty());
+              _editBloc.dispatch(EditEventEmpty());
 //              listDropDonwMenuItem = getDropDownMenuItems();
             }
 

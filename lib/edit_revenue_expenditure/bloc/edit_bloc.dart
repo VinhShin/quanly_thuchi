@@ -39,7 +39,8 @@ class EditBloc extends Bloc<EditEvent, EditState> {
       } else if (event is Update) {
         yield EditState.Loading();
         yield* _update(event.reExData);
-      }
+      } else if (event is EditEventEmpty)
+        yield EditState.Empty();
     } else {
       yield EditState.FAIL();
     }

@@ -33,4 +33,4 @@ class NoInternet extends EditEvent {
 
 class CateChange extends EditEvent {}
 
-class editEventEmpty extends EditEvent{}
+class EditEventEmpty extends EditEvent{}
