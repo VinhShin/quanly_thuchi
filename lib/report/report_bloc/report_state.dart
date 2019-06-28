@@ -34,8 +34,9 @@ class Reporting extends ReportState{}
 class ReportStart extends ReportState{}
 class ReportReloaded extends ReportState{}
 class ReportAll extends ReportState{
-  int  tongThu;
-  int  tongChi;
-  Map<String,int>  mapCateSum;
-  ReportAll(this.tongThu,this.tongChi,this.mapCateSum);
+  int  sumRe;
+  int  sumEx;
+  Map<String,double>  mapCateSumEx;
+  Map<String,double>  mapCateSumRe;
+  ReportAll(this.sumRe,this.sumEx,this.mapCateSumEx,this.mapCateSumRe);
 }
