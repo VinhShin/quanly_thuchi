@@ -52,6 +52,8 @@ class _MyHomePageState extends State<MyHomePage> {
         .add(new DropdownMenuItem(value: "m", child: new Text("Tháng")));
     listDropDonwMenuItem
         .add(new DropdownMenuItem(value: "y", child: new Text("Năm")));
+    listDropDonwMenuItem
+        .add(new DropdownMenuItem(value: "d2d", child: new Text("Tùy chọn")));
     _reportBloc.dispatch(ReportInit());
     super.initState();
   }
