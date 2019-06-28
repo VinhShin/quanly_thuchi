@@ -8,3 +8,9 @@ class UserEventRegister extends UserEvent{
 
   UserEventRegister({this.userName, this.userPass});
 }
+
+class UserEventDelete extends UserEvent{
+  String userName;
+
+  UserEventDelete({this.userName});
+}

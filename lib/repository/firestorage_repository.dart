@@ -228,6 +228,24 @@ class FireStorageRepository {
     return false;
   }
 
+
+  Future<bool> deleteUser(String userName) async {
+    final prefs = await SharedPreferences.getInstance();
+// Try reading data from the counter key. If it does not exist, return 0.
+    QuerySnapshot snapshot = await Firestore.instance
+        .collection("sub_user")
+        .where('user', isEqualTo: userName)
+        .getDocuments();
+    if (snapshot.documents.length != 0) {
+      await Firestore.instance
+          .collection("sub_user")
+          .document(userName)
+          .delete();
+      return true;
+    }
+    return false;
+  }
+
   Future<List<DocumentSnapshot>> getDataFromDateTo(DateTime dateFrom,
       DateTime dateTo) async {
     List<DocumentSnapshot> list = new List();

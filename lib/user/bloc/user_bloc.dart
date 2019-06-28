@@ -14,23 +14,35 @@ class UserBloc extends Bloc<UserEvent, UserState>{
 
   @override
   // TODO: implement initialState
-  UserState get initialState => UserState.Empty();
+  UserState get initialState => UserAdd.Empty();
 
   @override
   Stream<UserState> mapEventToState(UserEvent event) async* {
     // TODO: implement mapEventToState
     if(event is UserEventRegister){
-      yield UserState.Processing();
+      yield UserAdd.Processing();
       yield* inserNewUser(event.userName, event.userPass);
+    } else if (event is UserEventDelete){
+      yield UserAdd.Processing();
+      yield* deleteUser(event.userName);
     }
   }
 
   Stream<UserState> inserNewUser(String user, String pass) async* {
     try{
       bool success = await _fireStorageRepository.addUser(user, pass);
-      yield UserState.AddResult(success);
+      yield UserAdd.AddResult(success);
     }catch(_){
-      yield UserState.AddResult(false);
+      yield UserAdd.AddResult(false);
+    }
+  }
+
+  Stream<UserState> deleteUser(String user) async* {
+    try{
+      bool success = await _fireStorageRepository.deleteUser(user);
+      yield UserDelete.DeleteResult(success);
+    }catch(_){
+      yield UserDelete.DeleteResult(false);
     }
   }
 

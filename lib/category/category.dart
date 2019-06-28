@@ -35,6 +35,7 @@ class _category extends State<Category> {
   List<CategoryModel> _listCate;
   TextEditingController _cateController;
   CategoryModel currentCate;
+
   @override
   void initState() {
     // TODO: implement initState
@@ -68,7 +69,7 @@ class _category extends State<Category> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        resizeToAvoidBottomInset:false,
+        resizeToAvoidBottomInset: false,
         appBar: new AppBar(
           // here we display the title corresponding to the fragment
           // you can instead choose to have a static title
@@ -77,7 +78,7 @@ class _category extends State<Category> {
         body: BlocListener(
           bloc: _cateBloc,
           listener: (BuildContext context, CateState state) {
-            if(state is CateLoading){
+            if (state is CateLoading) {
               Scaffold.of(context)
                 ..hideCurrentSnackBar()
                 ..showSnackBar(
@@ -91,7 +92,7 @@ class _category extends State<Category> {
                     ),
                   ),
                 );
-            } else if(state is CateLoad){
+            } else if (state is CateLoad) {
               Scaffold.of(context)..hideCurrentSnackBar();
             }
           },
@@ -99,13 +100,11 @@ class _category extends State<Category> {
               bloc: _cateBloc,
               builder: (BuildContext context, CateState state) {
                 if (state is CateLoad && state.listCategory != null) {
-                  _listCate = state.listCategory  ;
+                  _listCate = state.listCategory;
                   buttonText = "Thêm";
                   _cateController.text = "";
                   _cateBloc.dispatch(EmptyEvent());
-                }
-
-                else if (state is CateEdit) {
+                } else if (state is CateEdit) {
                   if (_listCate.isNotEmpty &&
                       _listCate.length > state.position) {
                     _cateController.text = _listCate[state.position].name;
@@ -113,64 +112,66 @@ class _category extends State<Category> {
                     buttonText = "Cập nhật";
                     _cateBloc.dispatch(EmptyEvent());
                   }
-                } else if(state is CateNameAdd){
+                } else if (state is CateNameAdd) {
                   buttonText = "Thêm";
                 }
 
                 return Column(children: <Widget>[
-              Row(children: <Widget>[
-                      Expanded(
-                          child: Container(
-                              margin:
-                                  EdgeInsets.only(top: 10, left: 10, right: 10),
-                              child: new Theme(
-                                data: new ThemeData(
-                                  primaryColor: Colors.redAccent,
-                                  primaryColorDark: Colors.red,
-                                ),
-                                child: new TextField(
-                                  onChanged: (text) {
-                                    if (text.length == 0) {
-                                      _cateBloc.dispatch(ChangeTextToAdd());
-
-                                    }
-                                  },
-                                  controller: _cateController,
-                                  decoration: new InputDecoration(
-                                      border: new OutlineInputBorder(
-                                          borderSide: new BorderSide(
-                                              color: Colors.teal)),
-                                      hintText: "Thêm danh mục",
-                                      suffixStyle:
-                                          const TextStyle(color: Colors.green)),
-                                ),
-                              ))),
-                      Container(
-                        margin: EdgeInsets.only(top: 10, left: 10, right: 10),
-                        width: 120,
-                        height: 55,
-                        child: RaisedButton(
-                          color: Colors.blue,
-                          onPressed: () {
-                            if(buttonText == "Thêm") {
-                              _cateBloc.dispatch(AddCate(_cateController.text));
-                            } else{
-                              if(currentCate != null) {
-                                currentCate.setName = _cateController.text;
-                                _cateBloc.dispatch(Update(categoryModel:currentCate));
-                              }
+                  Row(children: <Widget>[
+                    Expanded(
+                        child: Container(
+                          width: 100,
+                            height: 55,
+                            margin:
+                                EdgeInsets.only(top: 10, left: 10, right: 10),
+                            child: new Theme(
+                              data: new ThemeData(
+                                primaryColor: Colors.redAccent,
+                                primaryColorDark: Colors.red,
+                              ),
+                              child: new TextField(
+                                onChanged: (text) {
+                                  if (text.length == 0) {
+                                    _cateBloc.dispatch(ChangeTextToAdd());
+                                  }
+                                },
+                                controller: _cateController,
+                                decoration: new InputDecoration(
+                                    border: new OutlineInputBorder(
+                                        borderSide:
+                                            new BorderSide(color: Colors.teal)),
+                                    hintText: "Thêm danh mục",
+                                    suffixStyle:
+                                        const TextStyle(color: Colors.green)),
+                              ),
+                            ))),
+                    Container(
+                      margin: EdgeInsets.only(top: 10, left: 10, right: 10),
+                      width: 100,
+                      height: 40,
+                      child: RaisedButton(
+                        color: Colors.blue,
+                        onPressed: () {
+                          if (buttonText == "Thêm") {
+                            _cateBloc.dispatch(AddCate(_cateController.text));
+                          } else {
+                            if (currentCate != null) {
+                              currentCate.setName = _cateController.text;
+                              _cateBloc
+                                  .dispatch(Update(categoryModel: currentCate));
                             }
-                            setState(() {
-                              _cateController.text = "";
-                            });
-                          },
-                          child: Text(buttonText,
-                              textAlign: TextAlign.center,
-                              style:
-                                  TextStyle(fontSize: 20, color: Colors.white)),
-                        ),
-                      )
-                    ]),
+                          }
+                          setState(() {
+                            _cateController.text = "";
+                          });
+                        },
+                        child: Text(buttonText,
+                            textAlign: TextAlign.center,
+                            style:
+                                TextStyle(fontSize: 20, color: Colors.white)),
+                      ),
+                    )
+                  ]),
                   Expanded(
                     child: ListView.builder(
                       itemCount: _listCate.length,
@@ -222,6 +223,7 @@ class ItemRow extends StatelessWidget {
   Widget build(BuildContext context) {
     // TODO: implement build
     return Container(
+      height: 50,
         margin: EdgeInsets.all(10),
         child: GestureDetector(
           onTap: () async {
@@ -229,7 +231,7 @@ class ItemRow extends StatelessWidget {
           },
           child: Card(
             child: Padding(
-                padding: const EdgeInsets.all(16.0),
+                padding: const EdgeInsets.all(6.0),
                 child: new Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[

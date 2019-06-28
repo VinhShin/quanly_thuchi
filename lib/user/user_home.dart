@@ -32,7 +32,7 @@ class _UserHome extends State<UserHome> {
     return BlocListener(
         bloc: _userBloc,
         listener: (BuildContext context, UserState state) {
-          if (state.loading) {
+          if (state is UserAdd && state.loading) {
             Scaffold.of(context)
               ..hideCurrentSnackBar()
               ..showSnackBar(
@@ -47,10 +47,19 @@ class _UserHome extends State<UserHome> {
                 ),
               );
           }
-          if (state.loaded) {
+          else if (state is UserAdd && state.loaded) {
             Scaffold.of(context)..hideCurrentSnackBar();
-            _showDialogRegisterResult(state.addSuccess);
+            _showDialogRegisterResult(state.addSuccess ? "Đăng ký thành công" : "Tài khoản đăng ký đã tồn tại");
             if (state.addSuccess) {
+              setState(() {
+                subUserName.text = "";
+                subPassName.text = "";
+              });
+            }
+          } else if (state is UserDelete){
+            Scaffold.of(context)..hideCurrentSnackBar();
+            _showDialogRegisterResult(state.deleteSuccess ? "Xóa tài khoản thành công" : "Tài khoản không tồn tại");
+            if (state.deleteSuccess) {
               setState(() {
                 subUserName.text = "";
                 subPassName.text = "";
@@ -74,35 +83,63 @@ class _UserHome extends State<UserHome> {
                 isMoney: false,
                 isPassWord: true,
               ),
-              Container(
-                margin: EdgeInsets.only(top: 20),
-                alignment: Alignment.center,
-                child: RaisedButton(
-                    color: Colors.blue,
-                    onPressed: () {
-                      if (this.subPassName.text.length == 0 ||
-                          this.subUserName.text.length == 0) {
-                        _showDialogRegisterNotValid();
-                      } else {
-                        _userBloc.dispatch(UserEventRegister(
-                            userName: this.subUserName.text,
-                            userPass: this.subPassName.text));
-                      }
-                    },
-                    child: Container(
-                        width: 150,
-                        height: 45,
-                        child: Center(
-                          child: Text("Thêm tài khoản",
-                              textAlign: TextAlign.center,
-                              style:
-                                  TextStyle(fontSize: 20, color: Colors.white)),
-                        ))),
-              )
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: <Widget>[
+                Container(
+                  margin: EdgeInsets.only(top: 20),
+                  alignment: Alignment.center,
+                  child: RaisedButton(
+                      color: Colors.blue,
+                      onPressed: () {
+                        if (this.subUserName.text.length == 0) {
+                          _showDialogRegisterResult("Tài khoản và mật khẩu không được để trống");
+                        } else {
+                          _userBloc.dispatch(UserEventDelete(
+                              userName: this.subUserName.text));
+                        }
+                      },
+                      child: Container(
+                          width: 150,
+                          height: 45,
+                          child: Center(
+                            child: Text("Xóa tài khoản",
+                                textAlign: TextAlign.center,
+                                style:
+                                TextStyle(fontSize: 20, color: Colors.white)),
+                          ))),
+                ),
+                Container(
+                  margin: EdgeInsets.only(top: 20),
+                  alignment: Alignment.center,
+                  child: RaisedButton(
+                      color: Colors.blue,
+                      onPressed: () {
+                        if (this.subPassName.text.length == 0 ||
+                            this.subUserName.text.length == 0) {
+                          _showDialogRegisterResult("Tài khoản và mật khẩu không được để trống");
+                        } else {
+                          _userBloc.dispatch(UserEventRegister(
+                              userName: this.subUserName.text,
+                              userPass: this.subPassName.text));
+                        }
+                      },
+                      child: Container(
+                          width: 150,
+                          height: 45,
+                          child: Center(
+                            child: Text("Thêm tài khoản",
+                                textAlign: TextAlign.center,
+                                style:
+                                TextStyle(fontSize: 20, color: Colors.white)),
+                          ))),
+                )
+              ],)
+
             ]));
   }
 
-  void _showDialogRegisterResult(bool sucess) {
+  void _showDialogRegisterResult(String content) {
     // flutter defined function
     showDialog(
       context: context,
@@ -110,8 +147,7 @@ class _UserHome extends State<UserHome> {
         // return object of type Dialog
         return AlertDialog(
           title: new Text("Thông báo"),
-          content: new Text(
-              sucess ? "Đăng ký thành công" : "Tài khoản đăng ký đã tồn tại"),
+          content: new Text(content),
           actions: <Widget>[
             // usually buttons at the bottom of the dialog
             new FlatButton(
@@ -125,27 +161,35 @@ class _UserHome extends State<UserHome> {
       },
     );
   }
+}
 
-  void _showDialogRegisterNotValid() {
-    // flutter defined function
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        // return object of type Dialog
-        return AlertDialog(
-          title: new Text("Thông báo"),
-          content: new Text("Tài khoản và mật khẩu không được để trống"),
-          actions: <Widget>[
-            // usually buttons at the bottom of the dialog
-            new FlatButton(
-              child: new Text("Ok"),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-          ],
-        );
-      },
-    );
-  }
+void _showDialog(BuildContext context, UserBloc userBloc, String user) {
+  // flutter defined function
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      // return object of type Dialog
+      return AlertDialog(
+        title: new Text("Xóa Tài khoản"),
+        content: new Text("Bạn có chắc muốn xóa tài khoản này"),
+        actions: <Widget>[
+          // usually buttons at the bottom of the dialog
+          new FlatButton(
+            child: new Text("Đồng ý"),
+            onPressed: () {
+              userBloc.dispatch(
+                  UserEventDelete(userName: user ));
+              Navigator.of(context).pop();
+            },
+          ),
+          new FlatButton(
+            child: new Text("Hủy"),
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+          ),
+        ],
+      );
+    },
+  );
 }
