@@ -100,6 +100,17 @@ class ReportBloc extends Bloc<ReportEvent, ReportState> {
             map[e.data['cate_id']] += e.data['money'];
           }
           break;
+        case 'd2d':
+          list = await _userRepository.getDateFromTo(datefrom, dateto);
+          for(final e in list)
+          {
+            if(e.data['type']==1)
+              tongChi += e.data['money'];
+            else
+              tongThu += e.data['money'];
+            map[e.data['cate_id']] += e.data['money'];
+          }
+          break;
       }
 
       yield ReportState.Success();
