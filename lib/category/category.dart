@@ -99,7 +99,7 @@ class _category extends State<Category> {
               bloc: _cateBloc,
               builder: (BuildContext context, CateState state) {
                 if (state is CateLoad && state.listCategory != null) {
-                  _listCate = state.listCategory;
+                  _listCate = state.listCategory  ;
                   buttonText = "Thêm";
                   _cateController.text = "";
                   _cateBloc.dispatch(EmptyEvent());

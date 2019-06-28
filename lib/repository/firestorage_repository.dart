@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:quanly_thuchi/model/transaction.dart' as MyTransaction;
 import 'package:quanly_thuchi/constant.dart';
@@ -9,11 +10,11 @@ import 'package:quanly_thuchi/model/index.dart';
 import 'package:quanly_thuchi/model/category_model.dart';
 
 final CollectionReference noteCollection =
-    Firestore.instance.collection('shops12');
+Firestore.instance.collection('shops12');
 
 class FireStorageRepository {
   static final FireStorageRepository _instance =
-      new FireStorageRepository.internal();
+  new FireStorageRepository.internal();
 
   factory FireStorageRepository() => _instance;
 
@@ -30,7 +31,9 @@ class FireStorageRepository {
     final String userId = prefs.getString(USER_NAME) ?? "temp";
     final String subUserName = prefs.getString(SUB_USER_NAME);
     reExData.setSubUserId = subUserName;
-    int currentMiliSecond = DateTime.now().millisecondsSinceEpoch;
+    int currentMiliSecond = DateTime
+        .now()
+        .millisecondsSinceEpoch;
     reExData.setId = currentMiliSecond.toString();
     await Firestore.instance
         .collection(userId)
@@ -42,13 +45,11 @@ class FireStorageRepository {
   }
 
 
-
-  Stream<QuerySnapshot> getAllData(
-      {String date, int offset, int limit}) {
-    return SharedPreferences.getInstance().then((prefs){
+  Stream<QuerySnapshot> getAllData({String date, int offset, int limit}) {
+    return SharedPreferences.getInstance().then((prefs) {
       final String userId = prefs.getString(USER_NAME) ?? "temp";
       final String subUserName = prefs.getString(SUB_USER_NAME);
-      if(subUserName!= SUB_USER_NAME_EMPTY)
+      if (subUserName != SUB_USER_NAME_EMPTY)
         return Firestore.instance
             .collection(userId)
             .document("data")
@@ -222,17 +223,13 @@ class FireStorageRepository {
       // set value
       prefs.setString(SUB_USER_NAME, user);
       prefs.setString(USER_NAME, parentName);
-
-      //List<DocumentSnapshot> list =
-      //await getDataFromDateTo(DateTime.now(), DateTime.utc(2019, 12, 30));
-      //list.toString();
       return true;
     }
     return false;
   }
-  Future<List<DocumentSnapshot>> getDataFromDateTo(
-      DateTime dateFrom, DateTime dateTo) async {
 
+  Future<List<DocumentSnapshot>> getDataFromDateTo(DateTime dateFrom,
+      DateTime dateTo) async {
     List<DocumentSnapshot> list = new List();
     DateTime dateTime = dateFrom;
     final prefs = await SharedPreferences.getInstance();
@@ -243,29 +240,34 @@ class FireStorageRepository {
       QuerySnapshot querySnapshot = await Firestore.instance
           .collection(user)
           .document("data")
-          .collection(new DateFormat('yyyy-MM-dd').format(new DateTime(dateTime.year,dateTime.month,dateTime.day)))
+          .collection(new DateFormat('yyyy-MM-dd').format(
+          new DateTime(dateTime.year, dateTime.month, dateTime.day)))
           .where('sub_user', isEqualTo: subUser)
           .getDocuments();
       if (subUser == SUB_USER_NAME_EMPTY)
         querySnapshot = await Firestore.instance
             .collection(user)
             .document("data")
-            .collection(new DateFormat('yyyy-MM-dd').format(new DateTime(dateTime.year,dateTime.month,dateTime.day)))
+            .collection(new DateFormat('yyyy-MM-dd').format(
+            new DateTime(dateTime.year, dateTime.month, dateTime.day)))
             .getDocuments();
       for (final e in querySnapshot.documents)
         list.add(e);
       dateTime = dateTime.add(new Duration(days: 1));
     } while (!dateTime.isAfter(dateTo));
+    return list;
   }
 
   //category
   Future<void> addCate(String category) async {
-
     final prefs = await SharedPreferences.getInstance();
 // Try reading data from the counter key. If it does not exist, return 0.
     final String userName = prefs.getString(USER_NAME) ?? "temp";
-    int currentMiliSecond = DateTime.now().millisecondsSinceEpoch;
-    CategoryModel categoryModel = new CategoryModel(currentMiliSecond, category);
+    int currentMiliSecond = DateTime
+        .now()
+        .millisecondsSinceEpoch;
+    CategoryModel categoryModel = new CategoryModel(
+        currentMiliSecond, category);
     await Firestore.instance
         .collection(userName)
         .document("category")
@@ -281,10 +283,10 @@ class FireStorageRepository {
     final String userId = prefs.getString(USER_NAME) ?? "temp";
     List<CategoryModel> listData = new List();
     QuerySnapshot querySnapshot = await Firestore.instance
-          .collection(userId)
-          .document("category")
-          .collection("data")
-          .getDocuments();
+        .collection(userId)
+        .document("category")
+        .collection("data")
+        .getDocuments();
     var list = querySnapshot.documents;
     for (final e in list) {
       listData.add(new CategoryModel.fromMap(e.data));
@@ -317,5 +319,4 @@ class FireStorageRepository {
         .document(cate.id.toString())
         .updateData(cate.toMap());
   }
-
 }
