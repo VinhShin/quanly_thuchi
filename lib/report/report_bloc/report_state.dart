@@ -1,8 +1,11 @@
 import 'package:meta/meta.dart';
+import 'package:quanly_thuchi/model/transaction.dart';
+
 @immutable
 class ReportState {
   final bool isSuccess;
   final bool isFailure;
+
   ReportState({
     @required this.isSuccess,
     @required this.isFailure,
@@ -38,5 +41,8 @@ class ReportAll extends ReportState{
   int  sumEx;
   Map<String,double>  mapCateSumEx;
   Map<String,double>  mapCateSumRe;
-  ReportAll(this.sumRe,this.sumEx,this.mapCateSumEx,this.mapCateSumRe);
+  String reportType;
+  List<Transaction> listRevenue;
+  List<Transaction> listExpendture;
+  ReportAll(this.sumRe,this.sumEx,this.mapCateSumEx,this.mapCateSumRe, this.reportType, this.listExpendture, this.listRevenue);
 }

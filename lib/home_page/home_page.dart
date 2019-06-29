@@ -7,6 +7,7 @@ import 'package:quanly_thuchi/user/user_home.dart';
 import 'package:quanly_thuchi/constant.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:quanly_thuchi/repository/user_repository.dart';
+
 class DrawerItem {
   String title;
   IconData icon;
@@ -36,29 +37,27 @@ class HomePageState extends State<HomePage> {
   int _selectedDrawerIndex = 0;
   String userName = "";
   final UserRepository _userRepository;
+  bool isAdmin = true;
 
   HomePageState(this._userRepository);
 
   _getDrawerItemWidget(int pos) {
-
-      switch (pos) {
-        case 0:
-          return new RevenueExpenditurePage();
-        case 1:
-          return new ReportPage();
-        case 2:
-          return new UserHome();
-        default:
-          return new Text("Error");
+    switch (pos) {
+      case 0:
+        return new RevenueExpenditurePage();
+      case 1:
+        return new ReportPage();
+      case 2:
+        return new UserHome();
+      default:
+        return new Text("Error");
     }
-
   }
 
   _onSelectItem(int index) async {
-    if(index == widget.drawerItems.length-1){
+    if (index == widget.drawerItems.length - 1) {
       await _userRepository.signOut();
-      Navigator.of(context)
-          .pushReplacementNamed("logout");
+      Navigator.of(context).pushReplacementNamed("logout");
     } else {
       setState(() => _selectedDrawerIndex = index);
       Navigator.of(context).pop(); // close the drawer
@@ -72,15 +71,14 @@ class HomePageState extends State<HomePage> {
     final String subUserName = prefs.getString(SUB_USER_NAME);
     if (subUserName != SUB_USER_NAME_EMPTY) {
       setState(() {
-        userName = user_name;
-        this.widget.drawerItems.removeAt(2);
+        userName = subUserName;
+        isAdmin = false;
       });
-    }else{
+    } else {
       setState(() {
         userName = user_name;
       });
     }
-
   }
 
   @override
@@ -88,12 +86,13 @@ class HomePageState extends State<HomePage> {
     // TODO: implement initState
     super.initState();
     printDailyNewsDigest();
-
   }
 
   @override
   Widget build(BuildContext context) {
-
+    if (!isAdmin && widget.drawerItems.length == 4) {
+      widget.drawerItems.removeAt(2);
+    }
     var drawerOptions = <Widget>[];
     for (var i = 0; i < widget.drawerItems.length; i++) {
       var d = widget.drawerItems[i];
@@ -106,29 +105,29 @@ class HomePageState extends State<HomePage> {
     }
 
     return Scaffold(
-          appBar: new AppBar(
-            // here we display the title corresponding to the fragment
-            // you can instead choose to have a static title
-            title: new Text(widget.drawerItems[_selectedDrawerIndex].title),
-          ),
-          drawer: new Drawer(
-            child: new Column(
-              children: <Widget>[
-                new UserAccountsDrawerHeader(
-                    currentAccountPicture: Container(
-                      decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          image: DecorationImage(
-                              fit: BoxFit.fill,
-                              image: ExactAssetImage('assets/flutter_logo.png'))),
-                    ),
-                    accountName: new Text(userName), accountEmail: null),
-                new Column(children: drawerOptions)
-              ],
-            ),
-          ),
-          body: _getDrawerItemWidget(_selectedDrawerIndex),
-        );
+      appBar: new AppBar(
+        // here we display the title corresponding to the fragment
+        // you can instead choose to have a static title
+        title: new Text(widget.drawerItems[_selectedDrawerIndex].title),
+      ),
+      drawer: new Drawer(
+        child: new Column(
+          children: <Widget>[
+            new UserAccountsDrawerHeader(
+                currentAccountPicture: Container(
+                  decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      image: DecorationImage(
+                          fit: BoxFit.fill,
+                          image: ExactAssetImage('assets/flutter_logo.png'))),
+                ),
+                accountName: new Text(userName),
+                accountEmail: null),
+            new Column(children: drawerOptions)
+          ],
+        ),
+      ),
+      body: _getDrawerItemWidget(_selectedDrawerIndex),
+    );
   }
-
 }

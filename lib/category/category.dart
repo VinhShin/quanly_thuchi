@@ -224,14 +224,14 @@ class ItemRow extends StatelessWidget {
     // TODO: implement build
     return Container(
       height: 50,
-        margin: EdgeInsets.all(10),
+        margin: EdgeInsets.only(top: 10, left: 10, right: 10),
         child: GestureDetector(
           onTap: () async {
             cateBloc.dispatch(CateChange(position));
           },
           child: Card(
             child: Padding(
-                padding: const EdgeInsets.all(6.0),
+                padding: const EdgeInsets.only(top: 6,bottom: 6,left: 10,right: 10),
                 child: new Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[

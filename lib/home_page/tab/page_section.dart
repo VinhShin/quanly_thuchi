@@ -63,7 +63,8 @@ class _PageSection extends State<PageSection> {
         child: BlocListener(
             bloc: _pageBloc,
             listener: (BuildContext context, PageState pageState) {
-              if(pageState is PageLoadingData && pageState.time == this.dateTime){
+              if (pageState is PageLoadingData &&
+                  pageState.time == this.dateTime) {
                 //this._isLoading = true;
 //                Scaffold.of(context)
 //                  ..hideCurrentSnackBar()
@@ -79,7 +80,6 @@ class _PageSection extends State<PageSection> {
 //                    ),
 //                  );
               }
-
             },
             child: BlocBuilder(
                 bloc: _pageBloc,
@@ -93,10 +93,11 @@ class _PageSection extends State<PageSection> {
                   }
                   return Padding(
                       padding: EdgeInsets.all(20),
-                      child:Stack(
+                      child: Stack(
                         children: <Widget>[
-                          ModalProgressHUD(child: Container(
-                             child: new Column(
+                          ModalProgressHUD(
+                              child: Container(
+                                  child: new Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: <Widget>[
 //                        TextKeyValue("Tiền đầu ngày:", "200.000"),
@@ -123,27 +124,31 @@ class _PageSection extends State<PageSection> {
                                           .toString())),
 //                        TextKeyValue("Tiền cuối ngày:", "290.000"),
                                   Container(
-                                    margin: EdgeInsets.only(top: 10, bottom: 10),
+                                    margin:
+                                        EdgeInsets.only(top: 10, bottom: 10),
                                     child: CustomPaint(
-                                      size: Size(MediaQuery.of(context).size.width, 1),
+                                      size: Size(
+                                          MediaQuery.of(context).size.width, 1),
                                       painter: Drawhorizontalline(),
                                     ),
                                   ),
                                   Flexible(
                                     flex: 1,
                                     child: ListView.builder(
-                                      itemCount: this.section.transactions.length,
+                                      itemCount:
+                                          this.section.transactions.length,
                                       itemBuilder: (context, position) {
                                         return ItemRow(
-                                            transaction:
-                                            this.section.transactions[position],
+                                            transaction: this
+                                                .section
+                                                .transactions[position],
                                             pageBloc: _pageBloc);
                                       },
                                     ),
                                   )
                                 ],
-                              )
-                          ), inAsyncCall: _isLoading),
+                              )),
+                              inAsyncCall: _isLoading),
                         ],
                       ));
                 })));
@@ -230,30 +235,40 @@ class ItemRow extends StatelessWidget {
                 padding: const EdgeInsets.all(16.0),
                 child: new Row(
                   children: <Widget>[
-                    Text(
-                      transaction.cateId ?? "",
-                      style: TextStyle(
-                          color: transaction.type == REVENUE_TYPE
-                              ? Colors.green
-                              : Colors.red,
-                          fontSize: 18.0),
-                    ),
-                    Spacer(),
-                    Text(
-                      transaction.subUserId == '2'?"":transaction.subUserId,
-                      style: TextStyle(
-                          color: Colors.blue,
-                          fontSize: 18.0),
-                    ),
-                    Spacer(),
-                    Text(
-                      formatMoney(transaction.money.toString()),
-                      style: TextStyle(
-                          color: transaction.type == REVENUE_TYPE
-                              ? Colors.green
-                              : Colors.red,
-                          fontSize: 18.0),
-                    )
+                    Expanded(
+                        flex: 1,
+                        child: Text(
+                          transaction.cateId ?? "",
+                          style: TextStyle(
+                              color: transaction.type == REVENUE_TYPE
+                                  ? Colors.green
+                                  : Colors.red,
+                              fontSize: 18.0),
+                        )),
+                    Expanded(
+                        flex: 1,
+                        child: Center(
+                          child: Text(
+                            transaction.subUserId == '2'
+                                ? ""
+                                : transaction.subUserId,
+                            style:
+                                TextStyle(color: Colors.blue, fontSize: 18.0),
+                          ),
+                        )),
+                    Expanded(
+                        flex: 1,
+                        child: Align(
+                          alignment: Alignment.topRight,
+                          child: Text(
+                            formatMoney(transaction.money.toString()),
+                            style: TextStyle(
+                                color: transaction.type == REVENUE_TYPE
+                                    ? Colors.green
+                                    : Colors.red,
+                                fontSize: 18.0),
+                          ),
+                        ))
                   ],
                 )),
           ),

@@ -100,13 +100,13 @@ class _UserHome extends State<UserHome> {
                         }
                       },
                       child: Container(
-                          width: 150,
+                          width: 120,
                           height: 45,
                           child: Center(
                             child: Text("Xóa tài khoản",
                                 textAlign: TextAlign.center,
                                 style:
-                                TextStyle(fontSize: 20, color: Colors.white)),
+                                TextStyle(fontSize: 16, color: Colors.white)),
                           ))),
                 ),
                 Container(
@@ -125,13 +125,13 @@ class _UserHome extends State<UserHome> {
                         }
                       },
                       child: Container(
-                          width: 150,
+                          width: 120,
                           height: 45,
                           child: Center(
                             child: Text("Thêm tài khoản",
                                 textAlign: TextAlign.center,
                                 style:
-                                TextStyle(fontSize: 20, color: Colors.white)),
+                                TextStyle(fontSize: 16, color: Colors.white)),
                           ))),
                 )
               ],)

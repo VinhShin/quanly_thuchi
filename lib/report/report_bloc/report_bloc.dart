@@ -5,6 +5,7 @@ import 'package:meta/meta.dart';
 import './bloc.dart';
 import 'package:quanly_thuchi/repository/user_repository.dart';
 import 'package:quanly_thuchi/model/category_model.dart';
+import 'package:quanly_thuchi/model/transaction.dart' as my;
 
 class ReportBloc extends Bloc<ReportEvent, ReportState> {
   // ignore: unused_field
@@ -46,6 +47,9 @@ class ReportBloc extends Bloc<ReportEvent, ReportState> {
       }
     // ignore: unused_local_variable
     List<DocumentSnapshot> list = new List();
+    List<my.Transaction> listRevenue = new List();
+    List<my.Transaction> listExpendture = new List();
+
     if(list == null)
       yield ReportState.Failure();
     else{
@@ -79,15 +83,17 @@ class ReportBloc extends Bloc<ReportEvent, ReportState> {
         if(e.data['type']==1) {
           sumEx += e.data['money'];
           mapEx[e.data['cate_id']] += e.data['money'];
+          listExpendture.add(my.Transaction.fromMap(e.data));
         }
         else {
           sumRe += e.data['money'];
           mapRe[e.data['cate_id']] += e.data['money'];
-        }
+          listRevenue.add(my.Transaction.fromMap(e.data));
+          }
       }
       yield ReportState.Success();
     }
-    yield ReportAll(sumRe,sumEx,mapEx,mapRe);
+    yield ReportAll(sumRe,sumEx,mapEx,mapRe, type, listExpendture, listRevenue);
     }
 }
 
