@@ -46,7 +46,7 @@ class ReportBloc extends Bloc<ReportEvent, ReportState> {
         mapEx[e.name] = 0;
       }
     // ignore: unused_local_variable
-    List<DocumentSnapshot> list = new List();
+    List<my.Transaction> list = new List();
     List<my.Transaction> listRevenue = new List();
     List<my.Transaction> listExpendture = new List();
 
@@ -80,16 +80,15 @@ class ReportBloc extends Bloc<ReportEvent, ReportState> {
       }
       for(final e in list)
       {
-        if(e.data['type']==1) {
-          sumEx += e.data['money'];
-          mapEx[e.data['cate_id']] += e.data['money'];
-          listExpendture.add(my.Transaction.fromMap(e.data));
+        if(e.type == 1){
+          sumEx += e.money;
+          mapEx[e.cateId] += e.money;
+          listExpendture.add(e);
+        } else {
+          sumRe += e.money;
+          mapRe[e.cateId] += e.money;
+          listRevenue.add(e);
         }
-        else {
-          sumRe += e.data['money'];
-          mapRe[e.data['cate_id']] += e.data['money'];
-          listRevenue.add(my.Transaction.fromMap(e.data));
-          }
       }
       yield ReportState.Success();
     }

@@ -1,3 +1,4 @@
+import 'package:quanly_thuchi/model/user.dart';
 class UserEvent{
 
 }
@@ -13,4 +14,13 @@ class UserEventDelete extends UserEvent{
   String userName;
 
   UserEventDelete({this.userName});
+}
+
+class UserUpdateEvent extends UserEvent{
+  User userUpdate;
+  UserUpdateEvent({this.userUpdate});
+}
+
+class GetAllUser extends UserEvent{
+
 }

@@ -2,6 +2,7 @@ import 'package:bloc/bloc.dart';
 import 'user_event.dart';
 import 'user_state.dart';
 import 'package:quanly_thuchi/repository/firestorage_repository.dart';
+import 'package:quanly_thuchi/model/user.dart';
 
 class UserBloc extends Bloc<UserEvent, UserState>{
 
@@ -22,10 +23,24 @@ class UserBloc extends Bloc<UserEvent, UserState>{
     if(event is UserEventRegister){
       yield UserAdd.Processing();
       yield* inserNewUser(event.userName, event.userPass);
-    } else if (event is UserEventDelete){
+    } else if (event is UserUpdateEvent){
+      yield UserAdd.Processing();
+      yield* updateUser(event.userUpdate);
+//      List<User> users = await _fireStorageRepository.getAllUser();
+//      yield UsersLoaded(users);
+    }
+    else if (event is UserEventDelete){
       yield UserAdd.Processing();
       yield* deleteUser(event.userName);
+//      List<User> users = await _fireStorageRepository.getAllUser();
+//      yield UsersLoaded(users);
     }
+//    else if (event is GetAllUser){
+//      List<User> users = await _fireStorageRepository.getAllUser();
+//      yield UsersLoaded(users);
+//    }
+    List<User> users = await _fireStorageRepository.getAllUser();
+    yield UsersLoaded(users);
   }
 
   Stream<UserState> inserNewUser(String user, String pass) async* {
@@ -43,6 +58,15 @@ class UserBloc extends Bloc<UserEvent, UserState>{
       yield UserDelete.DeleteResult(success);
     }catch(_){
       yield UserDelete.DeleteResult(false);
+    }
+  }
+
+  Stream<UserState> updateUser(User user) async* {
+    try{
+      bool success = await _fireStorageRepository.updateUser(user);
+      yield UserUpdate.UpdateResult(success??false);
+    }catch(_){
+      yield UserUpdate.UpdateResult(false);
     }
   }
 

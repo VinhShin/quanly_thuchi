@@ -5,6 +5,7 @@ import 'package:quanly_thuchi/home_page/tab/bloc/page_bloc.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:quanly_thuchi/home_page/tab/bloc/page_event.dart';
+import 'package:quanly_thuchi/home_page/tab/option_page.dart';
 
 class RevenueExpenditurePage extends StatefulWidget {
   @override
@@ -17,8 +18,8 @@ class RevenueExpenditurePage extends StatefulWidget {
 class _RevenueExpediturePage extends State<RevenueExpenditurePage> {
   PageBloc _pageBloc;
 
-  List<Tab> list = new List(10);
-  List<PageSection> listPage = new List(10);
+  List<Tab> list = new List(2);
+  List<Widget> listPage = new List(2);
 
   @override
   void initState() {
@@ -27,55 +28,18 @@ class _RevenueExpediturePage extends State<RevenueExpenditurePage> {
     _pageBloc = new PageBloc();
   }
 
+
   @override
   Widget build(BuildContext context) {
-    DateTime date4 = DateTime.now();
-    //3 ngay sau
-    DateTime date1 = new DateTime(date4.year, date4.month, date4.day + 3);
-    DateTime date2 = new DateTime(date4.year, date4.month, date4.day + 2);
-    DateTime date3 = new DateTime(date4.year, date4.month, date4.day + 1);
-    //7 ngay truoc
-    DateTime date5 = new DateTime(date4.year, date4.month, date4.day - 1);
-    DateTime date6 = new DateTime(date4.year, date4.month, date4.day - 2);
-    DateTime date7 = new DateTime(date4.year, date4.month, date4.day - 3);
-    DateTime date8 = new DateTime(date4.year, date4.month, date4.day - 4);
-    DateTime date9 = new DateTime(date4.year, date4.month, date4.day - 5);
-    DateTime date10 = new DateTime(date4.year, date4.month, date4.day - 6);
 
+    DateTime date4 = DateTime.now();
 
     var format = new DateFormat("yyyy-MM-dd");
-    String strDate1 = format.format(date1);
-    String strDate2 = format.format(date2);
-    String strDate3 = format.format(date3);
     String strDate4 = format.format(date4);
-    String strDate5 = format.format(date5);
-    String strDate6 = format.format(date6);
-    String strDate7= format.format(date7);
-    String strDate8 = format.format(date8);
-    String strDate9 = format.format(date9);
-    String strDate10 = format.format(date10);
-
-    list[0] = Tab(child: Text(strDate10));
-    list[1] = Tab(child: Text(strDate9));
-    list[2] = Tab(child: Text(strDate8));
-    list[3] = Tab(child: Text(strDate7));
-    list[4] = Tab(child: Text(strDate6));
-    list[5] = Tab(child: Text(strDate5));
-    list[6] = Tab(child: Text(strDate4));
-    list[7] = Tab(child: Text(strDate3));
-    list[8] = Tab(child: Text(strDate2));
-    list[9] = Tab(child: Text(strDate1));
-    listPage[0] = PageSection(dateTime: strDate10,);
-    listPage[1] = PageSection(dateTime: strDate9,);
-    listPage[2] = PageSection(dateTime: strDate8,);
-    listPage[3] = PageSection(dateTime: strDate7,);
-    listPage[4] = PageSection(dateTime: strDate6,);
-    listPage[5] = PageSection(dateTime: strDate5,);
-    listPage[6] = PageSection(dateTime: strDate4,);
-    listPage[7] = PageSection(dateTime: strDate3,);
-    listPage[8] = PageSection(dateTime: strDate2,);
-    listPage[9] = PageSection(dateTime: strDate1,);
-
+    list[0] = Tab(child: Text("Hôm nay"));
+    list[1] = Tab(child: Text("Tùy chọn"));
+    listPage[0] = PageSection(dateTime: strDate4,);
+    listPage[1] = OptionPage();
     _passAddScreen()async{
       var result = await Navigator.push(
         context,
@@ -91,7 +55,7 @@ class _RevenueExpediturePage extends State<RevenueExpenditurePage> {
     return BlocProvider(
         bloc: _pageBloc,
         child: DefaultTabController(
-            initialIndex: 6,
+            initialIndex: 0,
             length: list.length,
             child: Scaffold(
                 appBar: PreferredSize(

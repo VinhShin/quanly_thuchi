@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:quanly_thuchi/repository/user_repository.dart';
 import 'package:quanly_thuchi/authentication_bloc/bloc.dart';
 import 'package:quanly_thuchi/login/login.dart';
+import 'package:quanly_thuchi/dialog/TextFieldAlertDialog.java';
 
 class LoginForm extends StatefulWidget {
   final UserRepository _userRepository;
@@ -72,8 +73,7 @@ class _LoginFormState extends State<LoginForm> {
             );
         }
         if (state.isSuccess) {
-          Navigator.of(context)
-              .pushReplacementNamed("revenue_expenditure");
+          Navigator.of(context).pushReplacementNamed("revenue_expenditure");
 //          BlocProvider.of<AuthenticationBloc>(context).dispatch(LoggedIn());
         }
       },
@@ -124,7 +124,23 @@ class _LoginFormState extends State<LoginForm> {
                               ? _onFormSubmitted
                               : null,
                         ),
-//                        GoogleLoginButton(),
+                        Center(
+                            child: GestureDetector(
+                          child: Container(
+                            margin: EdgeInsets.only(left: 10),
+                            child: GestureDetector(
+                              onTap: () {
+                                _showDialog(context, _emailController);
+                              },
+                              child: Text(
+                                "Quên mật khẩu?",
+                                style: TextStyle(
+                                  decoration: TextDecoration.underline,
+                                ),
+                              ),
+                            ),
+                          ),
+                        )),
                         CreateAccountButton(userRepository: _userRepository),
                       ],
                     ),
@@ -166,9 +182,61 @@ class _LoginFormState extends State<LoginForm> {
     );
   }
 
-  void _savePass(){
-    _loginBloc.dispatch(
-      SavePassCheck(email: _emailController.text, pass: _passwordController.text)
+  void _savePass() {
+    _loginBloc.dispatch(SavePassCheck(
+        email: _emailController.text, pass: _passwordController.text));
+  }
+
+  _showDialog(
+      BuildContext context, TextEditingController _textFieldController) {
+    return showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: Text('Nhập gmail của bạn!'),
+            content: TextField(
+              controller: _textFieldController,
+            ),
+            actions: <Widget>[
+              new FlatButton(
+                child: new Text('Hủy'),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+              new FlatButton(
+                child: new Text('lấy lại mật khẩu'),
+                onPressed: () {
+                  _userRepository.resetPassword(_emailController.text);
+                  Navigator.of(context).pop();
+                  _showDialogInfo();
+                },
+              ),
+            ],
+          );
+        });
+  }
+
+  void _showDialogInfo() {
+    // flutter defined function
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        // return object of type Dialog
+        return AlertDialog(
+          title: new Text("Thông báo"),
+          content: new Text("Mật khẩu mới đã được gửi đến tài khoản của bạn, bạn vui lòng kiểm tra mail để cập nhật mật khẩu mới!"),
+          actions: <Widget>[
+            // usually buttons at the bottom of the dialog
+            new FlatButton(
+              child: new Text("Ok"),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
     );
   }
 }

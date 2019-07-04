@@ -6,6 +6,7 @@ import 'package:quanly_thuchi/repository/firestorage_repository.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:quanly_thuchi/constant.dart';
 import 'package:quanly_thuchi/model/category_model.dart';
+import 'package:quanly_thuchi/model/transaction.dart' as my;
 
 class UserRepository {
   final FirebaseAuth _firebaseAuth;
@@ -88,10 +89,16 @@ class UserRepository {
   Future<String> getId() async {
     return (await _firebaseAuth.currentUser()).uid;
   }
-  Future<List<DocumentSnapshot>> getDateFromTo(DateTime dateFrom, DateTime dateTo) async{
-    return await _fireStorageRepository.getDataFromDateTo(dateFrom, dateTo);
+  Future<List<my.Transaction>> getDateFromTo(DateTime dateFrom, DateTime dateTo) async{
+    return await _fireStorageRepository.getTransactionFromDateToDate(dateFrom, dateTo);
   }
   Future<List<CategoryModel>> getAllCategory() async{
     return await _fireStorageRepository.getAllCategory();
+  }
+
+  void resetPassword(String _userEmail) async{
+    _firebaseAuth.sendPasswordResetEmail(email: _userEmail).then((value){
+
+    });
   }
 }

@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/material.dart';
 import 'package:quanly_thuchi/model/transaction.dart' as MyTransaction;
 import 'package:quanly_thuchi/constant.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -8,13 +9,14 @@ import 'dart:convert';
 import 'package:quanly_thuchi/model/transaction_section.dart';
 import 'package:quanly_thuchi/model/index.dart';
 import 'package:quanly_thuchi/model/category_model.dart';
+import 'package:quanly_thuchi/model/user.dart';
 
 final CollectionReference noteCollection =
-Firestore.instance.collection('shops12');
+    Firestore.instance.collection('shops12');
 
 class FireStorageRepository {
   static final FireStorageRepository _instance =
-  new FireStorageRepository.internal();
+      new FireStorageRepository.internal();
 
   factory FireStorageRepository() => _instance;
 
@@ -31,19 +33,28 @@ class FireStorageRepository {
     final String userId = prefs.getString(USER_NAME) ?? "temp";
     final String subUserName = prefs.getString(SUB_USER_NAME);
     reExData.setSubUserId = subUserName;
-    int currentMiliSecond = DateTime
-        .now()
-        .millisecondsSinceEpoch;
-    reExData.setId = currentMiliSecond.toString();
+
+    //lay id thoi gian thu chi
+    List<String> timeSeprate = reExData.time.split(" ");
+    String time = timeSeprate[0];
+    String timeType = timeSeprate[1];
+    int hour = int.parse(time.split(":")[0]);
+    String minute = time.split(":")[1];
+
+    DateTime dateCreate = DateTime.parse(reExData.date +
+        " " +
+        ((timeType == "PM" ? 12 : 0) + hour).toString() +
+        minute);
+    reExData.setId = dateCreate.millisecondsSinceEpoch;
+    //
     await Firestore.instance
         .collection(userId)
         .document("data")
-        .collection(reExData.date)
-        .document(reExData.id)
+        .collection("transaction")
+        .document(reExData.id.toString())
         .setData(reExData.toMap());
     return;
   }
-
 
   Stream<QuerySnapshot> getAllData({String date, int offset, int limit}) {
     return SharedPreferences.getInstance().then((prefs) {
@@ -53,16 +64,19 @@ class FireStorageRepository {
         return Firestore.instance
             .collection(userId)
             .document("data")
-            .collection(date)
-            .where('sub_user', isEqualTo: subUserName).getDocuments();
+            .collection("transaction")
+            .where("date", isEqualTo: date)
+            .where('sub_user', isEqualTo: subUserName)
+            .getDocuments();
       else
         return Firestore.instance
             .collection(userId)
             .document("data")
-            .collection(date).getDocuments();
+            .collection("transaction")
+            .where("date", isEqualTo: date)
+            .getDocuments();
     }).asStream();
   }
-
 
   Future<List<MyTransaction.Transaction>> getReExDataList(
       {String date, int offset, int limit}) async {
@@ -75,14 +89,16 @@ class FireStorageRepository {
       querySnapshot = await Firestore.instance
           .collection(userId)
           .document("data")
-          .collection(date)
+          .collection("transaction")
           .where('sub_user', isEqualTo: subUserName)
+          .where("date", isEqualTo: date)
           .getDocuments();
     else
       querySnapshot = await Firestore.instance
           .collection(userId)
           .document("data")
-          .collection(date)
+          .collection("transaction")
+          .where("date", isEqualTo: date)
           .getDocuments();
     var list = querySnapshot.documents;
     for (final e in list) {
@@ -90,55 +106,6 @@ class FireStorageRepository {
     }
     return listData;
   }
-
-
-//  Future<TransactionSection> getReExDataList(
-//      {String date, int offset, int limit}) {
-//    return SharedPreferences.getInstance().then((prefs){
-//      final String userId = prefs.getString(USER_NAME) ?? "temp";
-//      final String subUserName = prefs.getString(SUB_USER_NAME);
-//      List<MyTransaction.Transaction> listData = new List();
-//      Future<QuerySnapshot> querySnapshot;
-//      if(subUserName!='sub_user_name_is_empty')
-//        querySnapshot = Firestore.instance
-//            .collection(userId)
-//            .document("data")
-//            .collection(date)
-//            .where('sub_user', isEqualTo: subUserName)
-//            .getDocuments();
-//      else
-//        querySnapshot =  Firestore.instance
-//            .collection(userId)
-//            .document("data")
-//            .collection(date)
-//            .getDocuments();
-//
-//      querySnapshot.then((querySnapshot){
-//        var list = querySnapshot.documents;
-//        for (final e in list) {
-//          listData.add(new MyTransaction.Transaction.fromMap(e.data));
-//        }
-//        int revenue = 0;
-//        int expendTure = 0;
-//        for(int i = 0 ; i < listData.length; i++){
-//          if(listData[i].type == REVENUE_TYPE){
-//            revenue += listData[i].money;
-//          } else{
-//            expendTure += listData[i].money;
-//          }
-//        }
-//        TransactionSection section = new TransactionSection(
-//            transactionHeader: new TransactionHeader(revenue: revenue, expendture: expendTure, total: revenue + expendTure),
-//            transactions: listData
-//        );
-//
-//        return section;
-//      });
-//    });
-//
-//
-//  }
-
 
   Future<dynamic> updateReExData(MyTransaction.Transaction transaction) async {
     final prefs = await SharedPreferences.getInstance();
@@ -149,12 +116,12 @@ class FireStorageRepository {
     return Firestore.instance
         .collection(userId)
         .document("data")
-        .collection(transaction.date)
-        .document(transaction.id)
+        .collection("transaction")
+        .document(transaction.id.toString())
         .updateData(transaction.toMap());
   }
 
-  Future<void> deleteReExData(String date, String id) async {
+  Future<void> deleteReExData(String date, int id) async {
     final prefs = await SharedPreferences.getInstance();
 // Try reading data from the counter key. If it does not exist, return 0.
     final String userId = prefs.getString(USER_NAME) ?? "temp";
@@ -162,8 +129,8 @@ class FireStorageRepository {
     await Firestore.instance
         .collection(userId)
         .document("data")
-        .collection(date)
-        .document(id)
+        .collection("transaction")
+        .document(id.toString())
         .delete();
     return;
   }
@@ -228,7 +195,6 @@ class FireStorageRepository {
     return false;
   }
 
-
   Future<bool> deleteUser(String userName) async {
     final prefs = await SharedPreferences.getInstance();
 // Try reading data from the counter key. If it does not exist, return 0.
@@ -246,33 +212,95 @@ class FireStorageRepository {
     return false;
   }
 
-  Future<List<DocumentSnapshot>> getDataFromDateTo(DateTime dateFrom,
-      DateTime dateTo) async {
-    List<DocumentSnapshot> list = new List();
-    DateTime dateTime = dateFrom;
+
+
+  Future<List<User>> getAllUser() async {
+    final prefs = await SharedPreferences.getInstance();
+    final String userId = prefs.getString(USER_ID) ?? "temp";
+    List<User> listData = new List();
+    QuerySnapshot querySnapshot = await Firestore.instance
+          .collection("sub_user")
+          .where("parent_id", isEqualTo: userId)
+          .getDocuments();
+    var list = querySnapshot.documents;
+    for (final e in list) {
+      listData.add(new User.fromMap(e.data));
+    }
+    return listData;
+  }
+
+
+  Future<bool> updateUser(User user) async {
+    await Firestore.instance
+        .collection("sub_user")
+        .document(user.user)
+        .updateData(user.toMap());
+    return true;
+  }
+
+
+//
+//  Future<List<DocumentSnapshot>> getTransactionFromDateToDate(
+//      DateTime dateFrom, DateTime dateTo) async {
+//    List<DocumentSnapshot> list = new List();
+//    DateTime dateTime = dateFrom;
+//    final prefs = await SharedPreferences.getInstance();
+//    // set value
+//    String subUser = prefs.getString(SUB_USER_NAME);
+//    String user = prefs.getString(USER_NAME);
+//    do {
+//      QuerySnapshot querySnapshot = await Firestore.instance
+//          .collection(user)
+//          .document("data")
+//          .collection(new DateFormat('yyyy-MM-dd').format(
+//              new DateTime(dateTime.year, dateTime.month, dateTime.day)))
+//          .where('sub_user', isEqualTo: subUser)
+//          .getDocuments();
+//      if (subUser == SUB_USER_NAME_EMPTY)
+//        querySnapshot = await Firestore.instance
+//            .collection(user)
+//            .document("data")
+//            .collection(new DateFormat('yyyy-MM-dd').format(
+//                new DateTime(dateTime.year, dateTime.month, dateTime.day)))
+//            .getDocuments();
+//      for (final e in querySnapshot.documents) list.add(e);
+//      dateTime = dateTime.add(new Duration(days: 1));
+//    } while (!dateTime.isAfter(dateTo));
+//    return list;
+//  }
+
+  Future<List<MyTransaction.Transaction>> getTransactionFromDateToDate(
+      DateTime from, DateTime to) async {
+    DateTime dateFrom = new DateTime(from.year, from.month, from.day, 0, 0, 0);
+    DateTime dateTo = new DateTime(to.year, to.month, to.day, 0, 0, 0);
+    dateTo = dateTo.add(new Duration(days: 1));
+    List<MyTransaction.Transaction> list = new List();
     final prefs = await SharedPreferences.getInstance();
     // set value
     String subUser = prefs.getString(SUB_USER_NAME);
     String user = prefs.getString(USER_NAME);
-    do {
-      QuerySnapshot querySnapshot = await Firestore.instance
-          .collection(user)
-          .document("data")
-          .collection(new DateFormat('yyyy-MM-dd').format(
-          new DateTime(dateTime.year, dateTime.month, dateTime.day)))
-          .where('sub_user', isEqualTo: subUser)
-          .getDocuments();
-      if (subUser == SUB_USER_NAME_EMPTY)
-        querySnapshot = await Firestore.instance
-            .collection(user)
-            .document("data")
-            .collection(new DateFormat('yyyy-MM-dd').format(
-            new DateTime(dateTime.year, dateTime.month, dateTime.day)))
-            .getDocuments();
-      for (final e in querySnapshot.documents)
-        list.add(e);
-      dateTime = dateTime.add(new Duration(days: 1));
-    } while (!dateTime.isAfter(dateTo));
+    //ly do: query > 3 dieu kien bi loi => phai choi chieu
+    QuerySnapshot querySnapshot = await Firestore.instance
+        .collection(user)
+        .document("data")
+        .collection("transaction")
+        .where('id', isGreaterThan: dateFrom.millisecondsSinceEpoch)
+        .where('id', isLessThan: dateTo.millisecondsSinceEpoch)
+        .getDocuments();
+    //tai khoan con
+    if (subUser != SUB_USER_NAME_EMPTY) {
+      for (final e in querySnapshot.documents) {
+        if (e["sub_user"] != subUser) {
+          continue;
+        }
+        list.add(MyTransaction.Transaction.fromMap(e.data));
+      }
+    } else {
+      //tai khoan cha
+      for (final e in querySnapshot.documents) {
+        list.add(MyTransaction.Transaction.fromMap(e.data));
+      }
+    }
     return list;
   }
 
@@ -281,11 +309,9 @@ class FireStorageRepository {
     final prefs = await SharedPreferences.getInstance();
 // Try reading data from the counter key. If it does not exist, return 0.
     final String userName = prefs.getString(USER_NAME) ?? "temp";
-    int currentMiliSecond = DateTime
-        .now()
-        .millisecondsSinceEpoch;
-    CategoryModel categoryModel = new CategoryModel(
-        currentMiliSecond, category);
+    int currentMiliSecond = DateTime.now().millisecondsSinceEpoch;
+    CategoryModel categoryModel =
+        new CategoryModel(currentMiliSecond, category);
     await Firestore.instance
         .collection(userName)
         .document("category")
@@ -294,7 +320,6 @@ class FireStorageRepository {
         .setData(categoryModel.toMap());
     return;
   }
-
 
   Future<List<CategoryModel>> getAllCategory() async {
     final prefs = await SharedPreferences.getInstance();

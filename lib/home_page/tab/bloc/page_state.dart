@@ -14,3 +14,14 @@ class PageLoadedData extends PageState{
   TransactionSection section;
   PageLoadedData({this.section});
 }
+
+class PageLoadOption extends PageState{
+  TransactionSection section;
+  PageLoadOption(this.section);
+}
+
+class PageLoadingOption extends PageState{
+
+}
+
+class PageInitOption extends PageState{}

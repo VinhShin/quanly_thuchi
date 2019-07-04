@@ -1,5 +1,5 @@
 class Transaction {
-  String _id;
+  int _id;
   int _type;
   int _money;
   String _date;
@@ -8,7 +8,7 @@ class Transaction {
   String _cateId;
   String _subUserId;
 
-  String get id => _id;
+  int get id => _id;
   int get type => _type;
   int get money => _money;
   String get date => _date;

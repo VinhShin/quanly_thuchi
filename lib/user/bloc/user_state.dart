@@ -1,3 +1,5 @@
+import 'package:quanly_thuchi/model/user.dart';
+
 class UserState{
 }
 
@@ -50,6 +52,34 @@ class UserDelete extends UserState{
   factory UserDelete.DeleteResult(bool success ){
     return UserDelete(loading:false, delete: true, deleteSuccess:success);
   }
-
 }
 
+class UsersLoaded extends UserState{
+  List<User> users;
+  UsersLoaded(this.users);
+}
+
+class UserUpdate extends UserState{
+  bool loading;
+  bool update;
+  bool updateSuccess;
+
+  UserUpdate({this.loading, this.update, this.updateSuccess});
+
+  factory UserUpdate.Empty(){
+    return UserUpdate(loading: false, update: false, updateSuccess: false);
+  }
+
+  factory UserUpdate.Processing(){
+    return UserUpdate(loading:true, update: false,  updateSuccess:false);
+  }
+
+
+  factory UserUpdate.UpdateUser(){
+    return UserUpdate(loading:false, update: false,  updateSuccess:false);
+  }
+
+  factory UserUpdate.UpdateResult(bool success ){
+    return UserUpdate(loading:false, update: true, updateSuccess:success);
+  }
+}

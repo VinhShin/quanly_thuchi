@@ -16,7 +16,7 @@ class LoadCategory extends EditEvent {}
 
 class Delete extends EditEvent {
   String date;
-  String id;
+  int id;
 
   Delete({this.date, this.id});
 }

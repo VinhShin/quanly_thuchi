@@ -55,7 +55,7 @@ class EditBloc extends Bloc<EditEvent, EditState> {
     }
   }
 
-  Stream<EditState> _delete(String data, String id) async* {
+  Stream<EditState> _delete(String data, int id) async* {
     try {
       await _fireStorageRepository.deleteReExData(data, id);
       yield EditState.Delete(true);

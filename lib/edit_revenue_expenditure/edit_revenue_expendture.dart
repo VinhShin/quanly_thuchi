@@ -81,14 +81,15 @@ class _EditPage extends State<EditPage> {
           hour: int.parse(time[0]), minute: int.parse(time[1].split(" ")[0]));
     }
     category = "Chọn danh mục";
-    listDropDonwMenuItem.add(new DropdownMenuItem(value: "Chọn danh mục", child: new Text("Chọn danh mục")));
+    listDropDonwMenuItem.add(new DropdownMenuItem(
+        value: "Chọn danh mục", child: new Text("Chọn danh mục")));
 
-     SharedPreferences.getInstance().then((prefs){
-       final String subUserName = prefs.getString(SUB_USER_NAME);
-       setState(() {
-         isShowEditCategory = subUserName == SUB_USER_NAME_EMPTY;
-       });
-     });
+    SharedPreferences.getInstance().then((prefs) {
+      final String subUserName = prefs.getString(SUB_USER_NAME);
+      setState(() {
+        isShowEditCategory = subUserName == SUB_USER_NAME_EMPTY;
+      });
+    });
 
     super.initState();
   }
@@ -145,159 +146,169 @@ class _EditPage extends State<EditPage> {
 //              listDropDonwMenuItem = getDropDownMenuItems();
             }
 
-            return SingleChildScrollView(
-              child: new Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  TextBase("Số tiền"),
-                  EditMoneyBase(
-                    "200.000",
-                    controller: this.moneyInput,
-                    isMoney: true,
-                  ),
-                  Row(
-                    children: <Widget>[
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
-                          Row(
-                            children: <Widget>[
-                              TextBase("Danh mục"),
-                              Visibility(
-                                visible: isShowEditCategory,
-                                child: GestureDetector(
-                                  child: Container(
-                                    margin: EdgeInsets.only(left: 10),
-                                    height: 60,
-                                    child: GestureDetector(
-                                      onTap: passEditCategory,
-                                      child: Icon(Icons.edit),
+//
+
+            return Column(
+              children: <Widget>[
+                Expanded(
+                  child: SingleChildScrollView(
+                    child: new Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        TextBase("Số tiền"),
+                        EditMoneyBase(
+                          "200.000",
+                          controller: this.moneyInput,
+                          isMoney: true,
+                        ),
+                        Row(
+                          children: <Widget>[
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: <Widget>[
+                                Row(
+                                  children: <Widget>[
+                                    TextBase("Danh mục"),
+                                    Visibility(
+                                      visible: isShowEditCategory,
+                                        child: GestureDetector(
+                                          child: Container(
+                                            margin: EdgeInsets.only(left: 10),
+                                            height: 60,
+                                            child: GestureDetector(
+                                              onTap: passEditCategory,
+                                              child: Icon(Icons.edit),
+                                            ),
+                                          ),
+                                        ),
+                                    )
+                                  ],
+                                ),
+                                Container(
+                                  margin: EdgeInsets.only(left: 10),
+                                  height: 60,
+                                  child: DropdownButton<String>(
+                                    items: listDropDonwMenuItem,
+                                    value: category,
+                                    onChanged: (value) {
+                                      dropDownButtonHandle(value);
+                                    },
+                                    hint: Text(
+                                      "Chọn danh mục",
+                                      style: TextStyle(
+                                        color: Colors.pink,
+                                      ),
                                     ),
                                   ),
                                 ),
-                              )
-
-                            ],
-                          ),
-                          Container(
-                            margin: EdgeInsets.only(left: 10),
-                            height: 60,
-                            child: DropdownButton<String>(
-                              items: listDropDonwMenuItem,
-                              value: category,
-                              onChanged: (value) {
-                                dropDownButtonHandle(value);
-                              },
-                              hint: Text(
-                                "Chọn danh mục",
-                                style: TextStyle(
-                                  color: Colors.pink,
+                              ],
+                            ),
+                          ],
+                        ),
+                        Container(
+                          child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: <Widget>[
+                                TextBase("Loại"),
+                                Row(children: createRadioListUsers())
+                              ]),
+                        ),
+                        TextBase("Thời gian"),
+                        Container(
+                          margin: EdgeInsets.only(left: 10, right: 10),
+                          child: new Row(
+                            crossAxisAlignment: CrossAxisAlignment.end,
+                            children: <Widget>[
+                              new Expanded(
+                                flex: 4,
+                                child: new InputDropdown(
+                                  labelText: "Ngày",
+                                  valueText: new DateFormat.yMMMd()
+                                      .format(selectedDate),
+                                  valueStyle: valueStyle,
+                                  onPressed: () {
+                                    _selectDate(context);
+                                  },
                                 ),
                               ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                  Container(
-                    child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
-                          TextBase("Loại"),
-                          Row(children: createRadioListUsers())
-                        ]),
-                  ),
-                  TextBase("Thời gian"),
-                  Container(
-                    margin: EdgeInsets.only(left: 10, right: 10),
-                    child: new Row(
-                      crossAxisAlignment: CrossAxisAlignment.end,
-                      children: <Widget>[
-                        new Expanded(
-                          flex: 4,
-                          child: new InputDropdown(
-                            labelText: "Ngày",
-                            valueText:
-                                new DateFormat.yMMMd().format(selectedDate),
-                            valueStyle: valueStyle,
-                            onPressed: () {
-                              _selectDate(context);
-                            },
+                              const SizedBox(width: 12.0),
+                              new Expanded(
+                                flex: 3,
+                                child: new InputDropdown(
+                                  labelText: "Giờ",
+                                  valueText: selectedTime.format(context),
+                                  valueStyle: valueStyle,
+                                  onPressed: () {
+                                    _selectTime(context);
+                                  },
+                                ),
+                              ),
+                            ],
                           ),
                         ),
-                        const SizedBox(width: 12.0),
-                        new Expanded(
-                          flex: 3,
-                          child: new InputDropdown(
-                            labelText: "Giờ",
-                            valueText: selectedTime.format(context),
-                            valueStyle: valueStyle,
-                            onPressed: () {
-                              _selectTime(context);
-                            },
-                          ),
-                        ),
+                        TextBase("Ghi chú"),
+                        EditBase("",
+                            isMultiline: true, controller: this.noteInput),
                       ],
                     ),
                   ),
-                  TextBase("Ghi chú"),
-                  EditBase("", isMultiline: true, controller: this.noteInput),
-                  Container(
-                    margin: EdgeInsets.only(top: 20),
-                    height: 50,
-                    alignment: Alignment.center,
-                    child: Row(
-                      mainAxisAlignment: transaction != null
-                          ? MainAxisAlignment.spaceAround
-                          : MainAxisAlignment.center,
-                      children: <Widget>[
-                        Visibility(
-                          visible: transaction != null,
-                          child: RaisedButton(
-                              color: Colors.blue,
-                              onPressed: () {
-                                _showDialog(_editBloc);
-                              },
-                              child: Container(
-                                  width: 100,
-                                  height: 40,
-                                  child: Center(
-                                    child: Text("Xoá",
-                                        textAlign: TextAlign.center,
-                                        style: TextStyle(
-                                            fontSize: 20, color: Colors.white)),
-                                  ))),
-                        ),
-                        RaisedButton(
+                ),
+                Container(
+                  margin: EdgeInsets.only(top: 20, bottom: 20),
+                  height: 50,
+                  alignment: Alignment.center,
+                  child: Row(
+                    mainAxisAlignment: transaction != null
+                        ? MainAxisAlignment.spaceAround
+                        : MainAxisAlignment.center,
+                    children: <Widget>[
+                      Visibility(
+                        visible: transaction != null,
+                        child: RaisedButton(
                             color: Colors.blue,
                             onPressed: () {
-                              if (!isOnClick) {
-                                Transaction transac = getReExData();
-                                if (transac != null) {
-                                  _editBloc.dispatch(transaction == null
-                                      ? InsertData(reExData: transac)
-                                      : Update(reExData: transac));
-                                } else {
-                                  isOnClick = false;
-                                }
-                              }
+                              _showDialog(_editBloc);
                             },
                             child: Container(
                                 width: 100,
                                 height: 40,
                                 child: Center(
-                                  child: Text(
-                                      transaction == null ? 'Thêm' : "Cập nhật",
+                                  child: Text("Xoá",
                                       textAlign: TextAlign.center,
                                       style: TextStyle(
-                                          fontSize: 20, color: Colors.white)),
-                                )))
-                      ],
-                    ),
-                  )
-                ],
-              ),
+                                          fontSize: 20,
+                                          color: Colors.white)),
+                                ))),
+                      ),
+                      RaisedButton(
+                          color: Colors.blue,
+                          onPressed: () {
+                            if (!isOnClick) {
+                              Transaction transac = getReExData();
+                              if (transac != null) {
+                                _editBloc.dispatch(transaction == null
+                                    ? InsertData(reExData: transac)
+                                    : Update(reExData: transac));
+                              } else {
+                                isOnClick = false;
+                              }
+                            }
+                          },
+                          child: Container(
+                              width: 100,
+                              height: 40,
+                              child: Center(
+                                child: Text(
+                                    transaction == null ? 'Thêm' : "Cập nhật",
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                        fontSize: 20, color: Colors.white)),
+                              )))
+                    ],
+                  ),
+                )
+
+              ],
             );
           }),
     );
