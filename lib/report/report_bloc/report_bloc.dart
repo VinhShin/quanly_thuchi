@@ -85,11 +85,11 @@ class ReportBloc extends Bloc<ReportEvent, ReportState> {
       {
         if(e.type == 1){
           sumEx += e.money;
-          mapEx[e.cateId] += e.money;
+          mapEx[e.cateName] += e.money;
           listExpendture.add(e);
         } else {
           sumRe += e.money;
-          mapRe[e.cateId] += e.money;
+          mapRe[e.cateName] += e.money;
           listRevenue.add(e);
         }
       }

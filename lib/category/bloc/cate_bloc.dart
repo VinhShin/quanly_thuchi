@@ -38,13 +38,13 @@ class CateBloc extends Bloc<CateEvent, CateState> {
       yield CateLoad(listCate);
     } else if (event is AddCate) {
       yield CateLoading();
-      await _fireStorageRepository.addCate(event.cateName);
+      bool status = await _fireStorageRepository.addCate(event.cateName);
       List<CategoryModel> listCate =
           await _fireStorageRepository.getAllCategory();
       yield CateLoad(listCate);
     } else if (event is Update){
       yield CateLoading();
-      await _fireStorageRepository.updateCategory(event.categoryModel);
+      await _fireStorageRepository.updateCategory(event.categoryModel, event.oldCateName);
       List<CategoryModel> listCate =
       await _fireStorageRepository.getAllCategory();
       yield CateLoad(listCate);

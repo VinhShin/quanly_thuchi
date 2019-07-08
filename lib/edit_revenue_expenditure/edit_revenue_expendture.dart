@@ -73,7 +73,7 @@ class _EditPage extends State<EditPage> {
     if (transaction != null) {
       moneyInput.text = formatMoney(transaction.money.toString());
       noteInput.text = transaction.note;
-      category = transaction.cateId;
+      category = transaction.cateName;
       _radioValue1 = transaction.type;
       selectedDate = DateTime.parse(transaction.date + " 00:00:00.00");
       List<String> times = transaction.time.split(" ");

@@ -61,7 +61,7 @@ class ItemRow extends StatelessWidget {
                     Expanded(
                         flex: 1,
                         child: Text(
-                          transaction.cateId ?? "",
+                          transaction.cateName ?? "",
                           style: TextStyle(
                               color: transaction.type == REVENUE_TYPE
                                   ? Colors.green

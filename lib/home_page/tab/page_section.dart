@@ -221,14 +221,12 @@ class ItemRow extends StatelessWidget {
         margin: EdgeInsets.only(top: 10),
         child: GestureDetector(
           onTap: () async {
-            var result = await Navigator.push(
+            await Navigator.push(
                 context,
                 MaterialPageRoute(
                     builder: (context) =>
                         EditRevenueExpendture(transaction: transaction)));
-            if (result != null) {
-              pageBloc.dispatch(PageLoadData(transaction.date));
-            }
+            pageBloc.dispatch(PageLoadData(transaction.date));
           },
           child: Card(
             child: Padding(
@@ -238,7 +236,7 @@ class ItemRow extends StatelessWidget {
                     Expanded(
                         flex: 1,
                         child: Text(
-                          transaction.cateId ?? "",
+                          transaction.cateName ?? "",
                           style: TextStyle(
                               color: transaction.type == REVENUE_TYPE
                                   ? Colors.green

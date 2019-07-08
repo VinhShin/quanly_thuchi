@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:math';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:cloud_firestore/cloud_firestore.dart' as fireStore;
 import 'package:flutter/material.dart';
 import 'package:quanly_thuchi/model/transaction.dart' as MyTransaction;
 import 'package:quanly_thuchi/constant.dart';
@@ -37,13 +38,15 @@ class FireStorageRepository {
     return;
   }
 
- Future<void> createReExDataWithExistUser(MyTransaction.Transaction reExData) async {
-   final prefs = await SharedPreferences.getInstance();
+  Future<void> createReExDataWithExistUser(
+      MyTransaction.Transaction reExData) async {
+    final prefs = await SharedPreferences.getInstance();
     await insertNewReEXData(reExData, prefs);
     return;
   }
 
-  insertNewReEXData(MyTransaction.Transaction reExData, SharedPreferences prefs)async{
+  insertNewReEXData(
+      MyTransaction.Transaction reExData, SharedPreferences prefs) async {
     final String userId = prefs.getString(USER_NAME) ?? "temp";
 
     //lay id thoi gian thu chi
@@ -79,7 +82,6 @@ class FireStorageRepository {
         .document(reExData.id.toString())
         .setData(reExData.toMap());
   }
-
 
   Stream<QuerySnapshot> getAllData({String date, int offset, int limit}) {
     return SharedPreferences.getInstance().then((prefs) {
@@ -323,20 +325,30 @@ class FireStorageRepository {
   }
 
   //category
-  Future<void> addCate(String category) async {
+  Future<bool> addCate(String category) async {
     final prefs = await SharedPreferences.getInstance();
 // Try reading data from the counter key. If it does not exist, return 0.
     final String userName = prefs.getString(USER_NAME) ?? "temp";
     int currentMiliSecond = DateTime.now().millisecondsSinceEpoch;
     CategoryModel categoryModel =
         new CategoryModel(currentMiliSecond, category);
+
+    QuerySnapshot snapshot = await Firestore.instance
+        .collection(userName)
+        .document("category")
+        .collection("data")
+        .where('name', isEqualTo: category)
+        .getDocuments();
+    if (snapshot.documents.length > 0) {
+      return false; //da ton tai
+    }
     await Firestore.instance
         .collection(userName)
         .document("category")
         .collection("data")
         .document(categoryModel.id.toString())
         .setData(categoryModel.toMap());
-    return;
+    return true;
   }
 
   Future<List<CategoryModel>> getAllCategory() async {
@@ -369,15 +381,35 @@ class FireStorageRepository {
     return;
   }
 
-  Future<dynamic> updateCategory(CategoryModel cate) async {
+  Future<dynamic> updateCategory(CategoryModel cate, String oldCateName) async {
     final prefs = await SharedPreferences.getInstance();
 // Try reading data from the counter key. If it does not exist, return 0.
     final String userId = prefs.getString(USER_NAME) ?? "temp";
-    return Firestore.instance
+    await Firestore.instance
         .collection(userId)
         .document("category")
         .collection("data")
         .document(cate.id.toString())
         .updateData(cate.toMap());
+
+    var map = new Map<String, dynamic>();
+    map["cate_name"] = cate.name;
+
+    List<MyTransaction.Transaction> itemUpdate = await getReExDataList();
+    itemUpdate.forEach((transaction) async {
+      if (transaction.cateName == oldCateName) {
+        transaction.setCateName = cate.name;
+        await Firestore.instance
+            .collection(userId)
+            .document("data")
+            .collection("transaction")
+            .document(transaction.id.toString())
+            .updateData(transaction.toMap());
+      }
+    });
+
+//    querySnapshot.documents.forEach((e) {
+//        e.data.update("cate_name", cate.name);
+//      });
   }
 }

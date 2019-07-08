@@ -151,7 +151,7 @@ class _category extends State<Category> {
                                 )))),
                     Container(
                       margin: EdgeInsets.only(top: 10, left: 10, right: 10),
-                      width: 100,
+                      width: 120,
                       height: 43,
                       child: RaisedButton(
                         color: Colors.blue,
@@ -160,9 +160,10 @@ class _category extends State<Category> {
                             _cateBloc.dispatch(AddCate(_cateController.text));
                           } else {
                             if (currentCate != null) {
+                              String oldCateName = currentCate.name;
                               currentCate.setName = _cateController.text;
                               _cateBloc
-                                  .dispatch(Update(categoryModel: currentCate));
+                                  .dispatch(Update(categoryModel: currentCate,oldCateName: oldCateName));
                             }
                           }
                           setState(() {

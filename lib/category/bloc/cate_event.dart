@@ -20,8 +20,8 @@ class Delete extends CateEvent {
 
 class Update extends CateEvent {
   final CategoryModel categoryModel;
-
-  Update({@required this.categoryModel});
+  final String oldCateName;
+  Update({@required this.categoryModel, @required this.oldCateName});
 }
 
 class LoadCate extends CateEvent {
