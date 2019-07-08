@@ -53,6 +53,8 @@ class _MyHomePageState extends State<MyHomePage> {
   DateTime selectedDateFrom = DateTime.now();
   DateTime selectedDateTo = DateTime.now();
   String typeReport = "d2d";
+  bool isVisible = true;
+  String textState = "Ẩn";
   TransactionSection section;
 
   @override
@@ -65,10 +67,17 @@ class _MyHomePageState extends State<MyHomePage> {
     super.initState();
   }
 
+  changeState(){
+    isVisible = !isVisible;
+    if(isVisible){
+      textState = "Ẩn";
+    } else{
+      textState = "Hiện";
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    final TextStyle valueStyle = Theme.of(context).textTheme.body1;
-
     return BlocListener(
       bloc: _pageBloc,
       listener: (BuildContext context, PageState state) {},
@@ -106,31 +115,67 @@ class _MyHomePageState extends State<MyHomePage> {
               padding: EdgeInsets.all(20),
               child: Column(
                 children: <Widget>[
-                  InputDropdown(
-                    labelText: "Từ Ngày",
-                    valueText: new DateFormat.yMMMd().format(selectedDateFrom),
-                    valueStyle: valueStyle,
-                    onPressed: () {
-                      _selectDateFrom(context);
-                    },
+                  Visibility(
+                    visible: isVisible,
+                    child: InputDropdown(
+                      labelText: "Từ Ngày",
+                      valueText:
+                          new DateFormat.yMMMd().format(selectedDateFrom),
+                      valueStyle: valueStyle,
+                      onPressed: () {
+                        _selectDateFrom(context);
+                      },
+                    ),
+                  ),
+                  Visibility(
+                    visible: isVisible,
+                    child: InputDropdown(
+                      labelText: "Đến Ngày",
+                      valueText: new DateFormat.yMMMd().format(selectedDateTo),
+                      valueStyle: valueStyle,
+                      onPressed: () {
+                        _selectDateTo(context);
+                      },
+                    ),
                   ),
                   const SizedBox(width: 5.0),
-                  InputDropdown(
-                    labelText: "Đến Ngày",
-                    valueText: new DateFormat.yMMMd().format(selectedDateTo),
-                    valueStyle: valueStyle,
-                    onPressed: () {
-                      _selectDateTo(context);
-                    },
-                  ),
-                  const SizedBox(width: 5.0),
-                  new FlatButton(
-                    textTheme: ButtonTextTheme.primary,
-                    child: Text('OK'),
-                    onPressed: () {
-                      _pageBloc.dispatch(
-                          OptionLoadData(selectedDateFrom, selectedDateTo));
-                    },
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: <Widget>[
+                      Text(""),
+                      Visibility(
+                        visible: isVisible,
+                        child: new FlatButton(
+                          padding: EdgeInsets.only(left:40),
+                          textTheme: ButtonTextTheme.primary,
+                          child: Text('OK'),
+                          onPressed: () {
+                            _pageBloc.dispatch(
+                                OptionLoadData(selectedDateFrom, selectedDateTo));
+                          },
+                        ),
+                      ),
+                      Align(
+                        alignment: Alignment.topRight,
+                        child: GestureDetector(
+                              onTap: (){
+                                setState(() {
+                                  changeState();
+                                });
+                              },
+                              child:
+                                  Container(
+                                    color: Colors.transparent,
+                                    padding: EdgeInsets.only(left: 10, top: 20),
+                                    height: 40,
+                                    width: 40,
+                                    child:Text(textState,style: TextStyle(color: Colors.blueAccent, fontWeight: FontWeight.bold) ,
+                                  )
+
+                            ),
+                          ),
+                        ),
+                    ],
                   ),
                   TextKeyValue(
                       "Tiền thu:",

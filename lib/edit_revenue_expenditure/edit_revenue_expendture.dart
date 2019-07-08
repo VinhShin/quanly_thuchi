@@ -76,9 +76,16 @@ class _EditPage extends State<EditPage> {
       category = transaction.cateId;
       _radioValue1 = transaction.type;
       selectedDate = DateTime.parse(transaction.date + " 00:00:00.00");
-      List<String> time = transaction.time.split(":");
-      selectedTime = TimeOfDay(
-          hour: int.parse(time[0]), minute: int.parse(time[1].split(" ")[0]));
+      List<String> times = transaction.time.split(" ");
+
+      String time = times[0];
+      String timeType = times.length > 1 ? times[1] : "";
+      int hour = int.parse(time.split(":")[0]);
+      String minute = time.split(":")[1];
+      if (timeType == "PM") {
+        hour += 12;
+      }
+      selectedTime = TimeOfDay(hour: hour, minute: int.parse(minute));
     }
     category = "Chọn danh mục";
     listDropDonwMenuItem.add(new DropdownMenuItem(
@@ -117,7 +124,6 @@ class _EditPage extends State<EditPage> {
         } else {
           Scaffold.of(context)..hideCurrentSnackBar();
           if (editState.currentStep == CONNECT_FAIL) {
-//          _showDialogNoNetWork();
             alertNotify(this.context, "Tác vụ thất bại",
                 "Bạn cần kết nối internet để thực hiện tác vụ này");
           } else if (editState.currentStep == STEP_INSERT && editState.status) {
@@ -155,63 +161,64 @@ class _EditPage extends State<EditPage> {
                     child: new Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
-                        TextBase("Số tiền"),
-                        EditMoneyBase(
-                          "200.000",
-                          controller: this.moneyInput,
-                          isMoney: true,
+                        Container(
+                          child: Row(children: <Widget>[
+                            Container(child: TextBase("Loại")),
+                            Container(
+                              margin: EdgeInsets.only(top: 10),
+                              child: Row(children: createRadioListUsers()),
+                            )
+                          ]),
                         ),
                         Row(
                           children: <Widget>[
                             Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.center,
                               children: <Widget>[
                                 Row(
                                   children: <Widget>[
                                     TextBase("Danh mục"),
-                                    Visibility(
-                                      visible: isShowEditCategory,
-                                        child: GestureDetector(
-                                          child: Container(
-                                            margin: EdgeInsets.only(left: 10),
-                                            height: 60,
-                                            child: GestureDetector(
-                                              onTap: passEditCategory,
-                                              child: Icon(Icons.edit),
-                                            ),
+                                    Container(
+                                      margin: EdgeInsets.only(left: 20),
+                                      height: 60,
+                                      child: DropdownButton<String>(
+                                        items: listDropDonwMenuItem,
+                                        value: category,
+                                        onChanged: (value) {
+                                          dropDownButtonHandle(value);
+                                        },
+                                        hint: Text(
+                                          "Chọn danh mục",
+                                          style: TextStyle(
+                                            color: Colors.pink,
                                           ),
                                         ),
-                                    )
-                                  ],
-                                ),
-                                Container(
-                                  margin: EdgeInsets.only(left: 10),
-                                  height: 60,
-                                  child: DropdownButton<String>(
-                                    items: listDropDonwMenuItem,
-                                    value: category,
-                                    onChanged: (value) {
-                                      dropDownButtonHandle(value);
-                                    },
-                                    hint: Text(
-                                      "Chọn danh mục",
-                                      style: TextStyle(
-                                        color: Colors.pink,
                                       ),
                                     ),
-                                  ),
+                                    Visibility(
+                                      visible: isShowEditCategory,
+                                      child: GestureDetector(
+                                        child: Container(
+                                          margin: EdgeInsets.only(left: 20),
+                                          height: 60,
+                                          child: GestureDetector(
+                                            onTap: passEditCategory,
+                                            child: Icon(Icons.edit),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
                                 ),
                               ],
                             ),
                           ],
                         ),
-                        Container(
-                          child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: <Widget>[
-                                TextBase("Loại"),
-                                Row(children: createRadioListUsers())
-                              ]),
+                        TextBase("Số tiền"),
+                        EditMoneyBase(
+                          "200.000",
+                          controller: this.moneyInput,
+                          isMoney: true,
                         ),
                         TextBase("Thời gian"),
                         Container(
@@ -276,8 +283,7 @@ class _EditPage extends State<EditPage> {
                                   child: Text("Xoá",
                                       textAlign: TextAlign.center,
                                       style: TextStyle(
-                                          fontSize: 20,
-                                          color: Colors.white)),
+                                          fontSize: 20, color: Colors.white)),
                                 ))),
                       ),
                       RaisedButton(
@@ -307,7 +313,6 @@ class _EditPage extends State<EditPage> {
                     ],
                   ),
                 )
-
               ],
             );
           }),
@@ -358,21 +363,21 @@ class _EditPage extends State<EditPage> {
   }
 
   Future<Null> _selectDate(BuildContext context) async {
-    if (transaction == null) {
-      final DateTime picked = await showDatePicker(
-          context: context,
-          initialDatePickerMode: DatePickerMode.day,
-          initialDate: selectedDate,
-          firstDate: DateTime(2015, 8),
-          lastDate: DateTime(2101));
-      if (picked != null && picked != selectedDate)
-        setState(() {
-          selectedDate = picked;
-        });
-    } else {
-      alertNotify(
-          this.context, "Thông báo", "Bạn không có quyền sửa thông tin này");
-    }
+//    if (transaction == null) {
+    final DateTime picked = await showDatePicker(
+        context: context,
+        initialDatePickerMode: DatePickerMode.day,
+        initialDate: selectedDate,
+        firstDate: DateTime(2015, 8),
+        lastDate: DateTime(2101));
+    if (picked != null && picked != selectedDate)
+      setState(() {
+        selectedDate = picked;
+      });
+//    } else {
+//      alertNotify(
+//          this.context, "Thông báo", "Bạn không có quyền sửa thông tin này");
+//    }
   }
 
   Future<void> _selectTime(BuildContext context) async {
@@ -412,6 +417,7 @@ class _EditPage extends State<EditPage> {
           '');
       if (transaction != null) {
         newTransaction.setId = transaction.id;
+        newTransaction.setSubUserId = transaction.subUserId;
       }
       return newTransaction;
     }
@@ -471,6 +477,29 @@ class _EditPage extends State<EditPage> {
           actions: <Widget>[
             new FlatButton(
               child: new Text("OK"),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void _showDialogRegisterResult(String content) {
+    // flutter defined function
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        // return object of type Dialog
+        return AlertDialog(
+          title: new Text("Thông báo"),
+          content: new Text(content),
+          actions: <Widget>[
+            // usually buttons at the bottom of the dialog
+            new FlatButton(
+              child: new Text("Ok"),
               onPressed: () {
                 Navigator.of(context).pop();
               },

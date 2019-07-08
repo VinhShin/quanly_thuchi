@@ -42,7 +42,6 @@ class UserRepository {
     prefs.setString(USER_ID, user.uid);
     prefs.setString(USER_NAME, user.email);
     prefs.setString(SUB_USER_NAME, SUB_USER_NAME_EMPTY);
-    _fireStorageRepository.addShop(user.uid, user.email);
     return;
   }
 

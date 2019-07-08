@@ -101,14 +101,16 @@ class _userHome extends State<UserHome> {
                     itemCount: users.length,
                     itemBuilder: (context, position) {
                       return Container(
-                          margin: EdgeInsets.only(top: 10),
+                          height: 50,
+                          margin: EdgeInsets.only(top: 10, left: 10, right: 10),
                           child: GestureDetector(
                             onTap: () async {
                               _showDialog(user: users[position]);
                             },
                             child: Card(
                               child: Padding(
-                                  padding: const EdgeInsets.all(16.0),
+                                  padding: const EdgeInsets.only(
+                                      top: 6, bottom: 6, left: 10, right: 10),
                                   child: new Row(
                                     children: <Widget>[
                                       Expanded(
@@ -121,15 +123,13 @@ class _userHome extends State<UserHome> {
                                           )),
                                       Expanded(
                                           flex: 1,
-                                          child: Align(
-                                            alignment: Alignment.topRight,
                                             child: Text(
                                               users[position].pass,
                                               style: TextStyle(
                                                   color: Colors.red,
                                                   fontSize: 18.0),
                                             ),
-                                          )),
+                                          ),
                                       Expanded(
                                         child: GestureDetector(
                                           child: Container(
@@ -159,6 +159,8 @@ class _userHome extends State<UserHome> {
                         alignment: Alignment.bottomRight,
                         child: FloatingActionButton(
                           onPressed: () {
+                            this.subPassName.text = "";
+                            this.subUserName.text = "";
                             _showDialog();
                           },
                           child: Icon(
@@ -183,68 +185,114 @@ class _userHome extends State<UserHome> {
           return AlertDialog(
             title: Text(user == null ? 'Thêm tài khoản' : "Cập nhật tài khoản"),
             content: Container(
-              height: 200,
+              height: 168,
               width: 350,
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
-                  TextBase("Tài khoản con"),
                   Container(
-                      margin: EdgeInsets.only(left: 10),
+                      width: 350,
                       height: 45,
                       child: TextField(
+                        maxLines: null,
+                        minLines: null,
+                        expands: true,
                         enabled: user == null,
                         controller: this.subUserName,
                         decoration: new InputDecoration(
+                            contentPadding: EdgeInsets.only(top: 10, left: 5),
+                            hintText: "Tên tài khoản",
                             border: new OutlineInputBorder(
                                 borderSide: new BorderSide(color: Colors.teal)),
                             suffixStyle: const TextStyle(color: Colors.green)),
                       )),
-                  TextBase("Mật khẩu"),
                   Container(
-                    margin: EdgeInsets.only(left: 10),
+                    margin: EdgeInsets.only(top: 20, bottom: 10),
+                    padding: EdgeInsets.only(bottom: 5),
+                    width: 350,
                     height: 45,
                     child: TextField(
-                      maxLines: 1,
+                      maxLines: null,
+                      minLines: null,
+                      expands: true,
                       controller: this.subPassName,
                       decoration: new InputDecoration(
+                          contentPadding: EdgeInsets.only(top: 10, left: 5),
+                          hintText: "Mật khẩu",
                           border: new OutlineInputBorder(
                               borderSide: new BorderSide(color: Colors.teal)),
                           suffixStyle: const TextStyle(color: Colors.green)),
                     ),
+                  ),
+                  Row(
+                    children: <Widget>[
+                      Spacer(),
+                      RaisedButton(
+                        color: Colors.red,
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                        },
+                        child: Text("Đóng", style: TextStyle(color: Colors.white)),
+                      ),
+                      Container(
+                        margin: EdgeInsets.only(left: 20),
+                        child: RaisedButton(
+                          color: Colors.blueAccent,
+                          child: new Text(user == null ? "Thêm" : "Cập nhật", style: TextStyle(color: Colors.white),),
+                          onPressed: () {
+                            if (this.subPassName.text.length == 0 ||
+                                this.subUserName.text.length == 0) {
+                              _showDialogRegisterResult(
+                                  "Tài khoản và mật khẩu không được để trống");
+                            } else {
+                              if (user == null) {
+                                _userBloc.dispatch(UserEventRegister(
+                                    userName: this.subUserName.text,
+                                    userPass: this.subPassName.text));
+                              } else {
+                                user.setPass = this.subPassName.text;
+                                _userBloc.dispatch(
+                                    UserUpdateEvent(userUpdate: user));
+                              }
+                              Navigator.of(context).pop();
+                            }
+                          },
+                        ),
+                      )
+                    ],
                   )
                 ],
               ),
             ),
-            actions: <Widget>[
-              new FlatButton(
-                child: new Text('Đóng'),
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-              ),
-              new FlatButton(
-                child: new Text(user == null ? "Thêm" : "Cập nhật"),
-                onPressed: () {
-                  if (this.subPassName.text.length == 0 ||
-                      this.subUserName.text.length == 0) {
-                    _showDialogRegisterResult(
-                        "Tài khoản và mật khẩu không được để trống");
-                  } else {
-                    if (user == null) {
-                      _userBloc.dispatch(UserEventRegister(
-                          userName: this.subUserName.text,
-                          userPass: this.subPassName.text));
-                    } else {
-                      user.setPass = this.subPassName.text;
-                      _userBloc.dispatch(UserUpdateEvent(userUpdate: user));
-                    }
-                    Navigator.of(context).pop();
-                  }
-                },
-              ),
-            ],
+//            actions: <Widget>[
+//              new FlatButton(
+//                child: new Text('Đóng'),
+//                onPressed: () {
+//                  Navigator.of(context).pop();
+//                },
+//              ),
+//              new FlatButton(
+//                child: new Text(user == null ? "Thêm" : "Cập nhật"),
+//                onPressed: () {
+//                  if (this.subPassName.text.length == 0 ||
+//                      this.subUserName.text.length == 0) {
+//                    _showDialogRegisterResult(
+//                        "Tài khoản và mật khẩu không được để trống");
+//                  } else {
+//                    if (user == null) {
+//                      _userBloc.dispatch(UserEventRegister(
+//                          userName: this.subUserName.text,
+//                          userPass: this.subPassName.text));
+//                    } else {
+//                      user.setPass = this.subPassName.text;
+//                      _userBloc.dispatch(UserUpdateEvent(userUpdate: user));
+//                    }
+//                    Navigator.of(context).pop();
+//                  }
+//                },
+//              ),
+//            ],
           );
         });
   }

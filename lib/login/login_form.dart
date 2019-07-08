@@ -225,7 +225,7 @@ class _LoginFormState extends State<LoginForm> {
         // return object of type Dialog
         return AlertDialog(
           title: new Text("Thông báo"),
-          content: new Text("Mật khẩu mới đã được gửi đến tài khoản của bạn, bạn vui lòng kiểm tra mail để cập nhật mật khẩu mới!"),
+          content: new Text("Mật khẩu mới đã được gửi đến gmail của bạn, bạn vui lòng kiểm tra mail để cập nhật mật khẩu mới!"),
           actions: <Widget>[
             // usually buttons at the bottom of the dialog
             new FlatButton(

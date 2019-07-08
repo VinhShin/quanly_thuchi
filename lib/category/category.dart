@@ -120,35 +120,39 @@ class _category extends State<Category> {
                   Row(children: <Widget>[
                     Expanded(
                         child: Container(
-                          width: 100,
-                            height: 55,
+                            width: 100,
+                            height: 43,
                             margin:
                                 EdgeInsets.only(top: 10, left: 10, right: 10),
                             child: new Theme(
-                              data: new ThemeData(
-                                primaryColor: Colors.redAccent,
-                                primaryColorDark: Colors.red,
-                              ),
-                              child: new TextField(
-                                onChanged: (text) {
-                                  if (text.length == 0) {
-                                    _cateBloc.dispatch(ChangeTextToAdd());
-                                  }
-                                },
-                                controller: _cateController,
-                                decoration: new InputDecoration(
-                                    border: new OutlineInputBorder(
-                                        borderSide:
-                                            new BorderSide(color: Colors.teal)),
-                                    hintText: "Thêm danh mục",
-                                    suffixStyle:
-                                        const TextStyle(color: Colors.green)),
-                              ),
-                            ))),
+                                data: new ThemeData(
+                                  primaryColor: Colors.redAccent,
+                                  primaryColorDark: Colors.red,
+                                ),
+                                child: new TextField(
+                                  onChanged: (text) {
+                                    if (text.length == 0) {
+                                      _cateBloc.dispatch(ChangeTextToAdd());
+                                    }
+                                  },
+                                  controller: _cateController,
+                                  maxLines: null,
+                                  minLines: null,
+                                  expands: true,
+                                  decoration: new InputDecoration(
+                                      contentPadding:
+                                          EdgeInsets.only(top: 10, left: 5),
+                                      hintText: "Thêm danh mục",
+                                      border: new OutlineInputBorder(
+                                          borderSide: new BorderSide(
+                                              color: Colors.teal)),
+                                      suffixStyle:
+                                          const TextStyle(color: Colors.green)),
+                                )))),
                     Container(
                       margin: EdgeInsets.only(top: 10, left: 10, right: 10),
                       width: 100,
-                      height: 40,
+                      height: 43,
                       child: RaisedButton(
                         color: Colors.blue,
                         onPressed: () {
@@ -223,7 +227,7 @@ class ItemRow extends StatelessWidget {
   Widget build(BuildContext context) {
     // TODO: implement build
     return Container(
-      height: 50,
+        height: 50,
         margin: EdgeInsets.only(top: 10, left: 10, right: 10),
         child: GestureDetector(
           onTap: () async {
@@ -231,7 +235,8 @@ class ItemRow extends StatelessWidget {
           },
           child: Card(
             child: Padding(
-                padding: const EdgeInsets.only(top: 6,bottom: 6,left: 10,right: 10),
+                padding: const EdgeInsets.only(
+                    top: 6, bottom: 6, left: 10, right: 10),
                 child: new Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[

@@ -3,7 +3,6 @@ import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 
 class EditMoneyBase extends StatelessWidget {
-
   TextEditingController controller;
   int numberLine = 1;
   String hint;
@@ -26,39 +25,39 @@ class EditMoneyBase extends StatelessWidget {
     }
     // TODO: implement build
     return Container(
+        height: 50,
         margin: EdgeInsets.only(top: 10, left: 10, right: 10),
         child: new Theme(
-            data: new ThemeData(
-              primaryColor: Colors.redAccent,
-              primaryColorDark: Colors.red,
-            ),
-            child: new TextField(
-                inputFormatters: [
-                  WhitelistingTextInputFormatter.digitsOnly,
-// Fit the validating format.
-//fazer o formater para dinheiro
-                  new CurrencyInputFormatter()
-                ],
-                obscureText: this.isPassWord,
-                controller: controller,
-                keyboardType: isMoney?TextInputType.number:TextInputType.
-                multiline,
-                maxLines: this.numberLine,
-                decoration: new InputDecoration(
-            border: new OutlineInputBorder(
-            borderSide: new BorderSide(color: Colors.teal)),
-        hintText: hint,
-        suffixStyle: const TextStyle(color: Colors.green)),)
-    ,
-    )
-    );
+          data: new ThemeData(
+            primaryColor: Colors.redAccent,
+            primaryColorDark: Colors.red,
+          ),
+          child: TextField(
+            inputFormatters: [
+              WhitelistingTextInputFormatter.digitsOnly,
+              new CurrencyInputFormatter()
+            ],
+            obscureText: this.isPassWord,
+            controller: controller,
+            keyboardType: TextInputType.number,
+            maxLines: null,
+            minLines: null,
+            expands: true,
+            decoration: new InputDecoration(
+                contentPadding: EdgeInsets.only(top: 10, left: 5),
+                hintText: "200.000",
+                border: new OutlineInputBorder(
+                    borderSide: new BorderSide(color: Colors.teal)),
+                suffixStyle: const TextStyle(color: Colors.green)),
+          )
+          ,
+        ));
   }
 }
 
 class CurrencyInputFormatter extends TextInputFormatter {
-
-  TextEditingValue formatEditUpdate(TextEditingValue oldValue,
-      TextEditingValue newValue) {
+  TextEditingValue formatEditUpdate(
+      TextEditingValue oldValue, TextEditingValue newValue) {
     if (newValue.selection.baseOffset == 0) {
       print(true);
       return newValue;
@@ -75,4 +74,3 @@ class CurrencyInputFormatter extends TextInputFormatter {
         selection: new TextSelection.collapsed(offset: newText.length));
   }
 }
-

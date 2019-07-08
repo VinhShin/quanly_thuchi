@@ -35,10 +35,15 @@ class EditBloc extends Bloc<EditEvent, EditState> {
         yield* _insertData(event.reExData);
       } else if (event is Delete) {
         yield EditState.Loading();
-        yield* _delete(event.date, event.id);
+        yield* _delete(event.id);
       } else if (event is Update) {
         yield EditState.Loading();
-        yield* _update(event.reExData);
+        //lý do: id được generate ra từ thời gian tạo thu chi
+        // => khi update lại thời gian thu chi => id sẽ cần thay đổi
+        //=> cách tốt nhất là xóa cái cũ + tạo lại mới cho đơn giản
+        await _fireStorageRepository.deleteReExData(event.reExData.id);
+        await _fireStorageRepository.createReExDataWithExistUser(event.reExData);
+        yield EditState.Update(true);
       } else if (event is EditEventEmpty)
         yield EditState.Empty();
     } else {
@@ -55,9 +60,9 @@ class EditBloc extends Bloc<EditEvent, EditState> {
     }
   }
 
-  Stream<EditState> _delete(String data, int id) async* {
+  Stream<EditState> _delete(int id) async* {
     try {
-      await _fireStorageRepository.deleteReExData(data, id);
+      await _fireStorageRepository.deleteReExData(id);
       yield EditState.Delete(true);
     } catch (_) {
       yield EditState.Delete(false);

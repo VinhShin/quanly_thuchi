@@ -47,6 +47,7 @@ class CateChartCircle extends StatelessWidget {
             ),
           ),
           Container(
+            width: 200,
               height: 100,
               child: new ListView.builder(
                   itemCount: mapEx.length,

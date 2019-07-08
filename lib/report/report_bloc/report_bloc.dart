@@ -38,6 +38,9 @@ class ReportBloc extends Bloc<ReportEvent, ReportState> {
     int sumEx = 0;
     List<CategoryModel> listCate = new List();
     listCate = await _userRepository.getAllCategory();
+    if(listCate == null || listCate.length == 0){
+      listCate.add(CategoryModel(-1, "Rỗng"));
+    }
     var mapEx = new Map<String,double>();
     var mapRe = new Map<String,double>();
     for(final e in listCate)

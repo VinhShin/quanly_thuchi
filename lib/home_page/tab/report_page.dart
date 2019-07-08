@@ -85,7 +85,11 @@ class _MyHomePageState extends State<MyHomePage> {
       Color(0xFF00e344),
     ];
     Colors.primaries;
-    _reportBloc.dispatch(ReportInit());
+//    _reportBloc.dispatch(ReportInit());
+    _reportBloc.dispatch(ReportPressed(
+        datefrom: selectedDateFrom,
+        dateto: selectedDateTo,
+        type: typeReport));
     super.initState();
   }
 
@@ -201,7 +205,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       color: Colors.grey,
                     ),
                     Container(
-                        height: 400,
+                        height: 365,
                         child: CateChartCircle(context, mapEx, colors,
                             listSegmentEntryEx, "DANH MỤC CHI")),
                     Container(
@@ -209,7 +213,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       color: Colors.grey,
                     ),
                     Container(
-                        height: 400,
+                        height: 365,
                         child: CateChartCircle(context, mapRe, colors,
                             listSegmentEntryRe, "DANH MỤC THU")),
                     Container(
