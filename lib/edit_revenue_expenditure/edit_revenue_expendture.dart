@@ -8,13 +8,12 @@ import 'package:quanly_thuchi/edit_revenue_expenditure/bloc/edit_bloc.dart';
 import 'package:quanly_thuchi/edit_revenue_expenditure/bloc/edit_event.dart';
 import 'package:quanly_thuchi/edit_revenue_expenditure/bloc/edit_state.dart';
 import 'package:quanly_thuchi/constant.dart';
-import 'package:intl/intl.dart';
 import 'package:quanly_thuchi/edit_revenue_expenditure/input_down.dart';
 import 'package:quanly_thuchi/base_widget/edit_money_base.dart';
-import 'dart:io';
 import 'package:quanly_thuchi/common_func.dart';
 import 'package:quanly_thuchi/category/category.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:quanly_thuchi/model/category_model.dart';
 
 class EditRevenueExpendture extends StatelessWidget {
   Transaction transaction = null;
@@ -26,8 +25,6 @@ class EditRevenueExpendture extends StatelessWidget {
     // TODO: implement build
     return Scaffold(
       appBar: new AppBar(
-        // here we display the title corresponding to the fragment
-        // you can instead choose to have a static title
         title: new Text(transaction == null ? "Thêm thu chi" : "Sửa thu chi"),
       ),
       body: EditPage(transaction),
@@ -52,9 +49,11 @@ class _EditPage extends State<EditPage> {
   TextEditingController noteInput = new TextEditingController();
   EditBloc _editBloc;
   int _radioValue1 = REVENUE_TYPE;
-  String category;
+  String _category;
+  List<CategoryModel> _listCate;
   bool isOnClick = false;
   bool isShowEditCategory = true;
+
 
   List<DropdownMenuItem<String>> listDropDonwMenuItem = new List();
 
@@ -62,7 +61,7 @@ class _EditPage extends State<EditPage> {
 
   void dropDownButtonHandle(String value) {
     setState(() {
-      category = value;
+      _category = value;
     });
   }
 
@@ -73,7 +72,7 @@ class _EditPage extends State<EditPage> {
     if (transaction != null) {
       moneyInput.text = formatMoney(transaction.money.toString());
       noteInput.text = transaction.note;
-      category = transaction.cateName;
+      _category = transaction.cateName;
       _radioValue1 = transaction.type;
       selectedDate = DateTime.parse(transaction.date + " 00:00:00.00");
       List<String> times = transaction.time.split(" ");
@@ -87,7 +86,7 @@ class _EditPage extends State<EditPage> {
       }
       selectedTime = TimeOfDay(hour: hour, minute: int.parse(minute));
     }
-    category = "Chọn danh mục";
+    _category = "Chọn danh mục";
     listDropDonwMenuItem.add(new DropdownMenuItem(
         value: "Chọn danh mục", child: new Text("Chọn danh mục")));
 
@@ -139,6 +138,7 @@ class _EditPage extends State<EditPage> {
           bloc: _editBloc,
           builder: (BuildContext context, EditState edistate) {
             if (edistate is EditAllCategory) {
+              this._listCate = edistate.list;
               listDropDonwMenuItem = new List(edistate.list.length);
               for (int i = 0; i < edistate.list.length; i++) {
                 listDropDonwMenuItem[i] = new DropdownMenuItem(
@@ -146,14 +146,10 @@ class _EditPage extends State<EditPage> {
                     child: new Text(edistate.list[i].name));
               }
               if (edistate.list.length > 0) {
-                category = edistate.list[0].name;
+                _category = edistate.list[0].name;
               }
               _editBloc.dispatch(EditEventEmpty());
-//              listDropDonwMenuItem = getDropDownMenuItems();
             }
-
-//
-
             return Column(
               children: <Widget>[
                 Expanded(
@@ -161,15 +157,15 @@ class _EditPage extends State<EditPage> {
                     child: new Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
-                        Container(
-                          child: Row(children: <Widget>[
-                            Container(child: TextBase("Loại")),
-                            Container(
-                              margin: EdgeInsets.only(top: 10),
-                              child: Row(children: createRadioListUsers()),
-                            )
-                          ]),
-                        ),
+//                        Container(
+//                          child: Row(children: <Widget>[
+//                            Container(child: TextBase("Loại")),
+//                            Container(
+//                              margin: EdgeInsets.only(top: 10),
+//                              child: Row(children: createRadioListUsers()),
+//                            )
+//                          ]),
+//                        ),
                         Row(
                           children: <Widget>[
                             Column(
@@ -183,7 +179,7 @@ class _EditPage extends State<EditPage> {
                                       height: 60,
                                       child: DropdownButton<String>(
                                         items: listDropDonwMenuItem,
-                                        value: category,
+                                        value: _category,
                                         onChanged: (value) {
                                           dropDownButtonHandle(value);
                                         },
@@ -319,51 +315,7 @@ class _EditPage extends State<EditPage> {
     );
   }
 
-  List<Widget> createRadioListUsers() {
-    List<Widget> widgets = [];
-    widgets.add(SizedBox(
-      width: 120,
-      child: RadioListTile(
-        value: REVENUE_TYPE,
-        groupValue: _radioValue1,
-        title: Text("Thu"),
-        onChanged: (currentUser) {
-          _handleRadioValueChange1(REVENUE_TYPE);
-        },
-        selected: _radioValue1 == REVENUE_TYPE,
-        activeColor: Colors.green,
-      ),
-    ));
-    widgets.add(SizedBox(
-      width: 120,
-      child: RadioListTile(
-        value: EXPENDTURE_TYPE,
-        groupValue: _radioValue1,
-        title: Text("Chi"),
-        onChanged: (currentUser) {
-          _handleRadioValueChange1(EXPENDTURE_TYPE);
-        },
-        selected: _radioValue1 == EXPENDTURE_TYPE,
-        activeColor: Colors.green,
-      ),
-    ));
-    return widgets;
-  }
-
-  List<DropdownMenuItem<String>> getDropDownMenuItems() {
-    List<DropdownMenuItem<String>> items = new List(1);
-    items[0] =
-        new DropdownMenuItem(value: "Bán hàng", child: new Text("Bán hàng"));
-//    items[1] = new DropdownMenuItem(value: "Thu nợ", child: new Text("Thu nợ"));
-//    items[2] = new DropdownMenuItem(value: "Vay nợ", child: new Text("Vay nợ"));
-//    items[3] = new DropdownMenuItem(
-//        value: "Điều chỉnh", child: new Text("Điều chỉnh"));
-//    items[4] = new DropdownMenuItem(value: "khác", child: new Text("khác"));
-    return items;
-  }
-
   Future<Null> _selectDate(BuildContext context) async {
-//    if (transaction == null) {
     final DateTime picked = await showDatePicker(
         context: context,
         initialDatePickerMode: DatePickerMode.day,
@@ -374,10 +326,6 @@ class _EditPage extends State<EditPage> {
       setState(() {
         selectedDate = picked;
       });
-//    } else {
-//      alertNotify(
-//          this.context, "Thông báo", "Bạn không có quyền sửa thông tin này");
-//    }
   }
 
   Future<void> _selectTime(BuildContext context) async {
@@ -391,12 +339,6 @@ class _EditPage extends State<EditPage> {
     }
   }
 
-  void _handleRadioValueChange1(int value) {
-    setState(() {
-      _radioValue1 = value;
-    });
-  }
-
   Transaction getReExData() {
 // Try reading data from the counter key. If it does not exist, return 0.
     var dateFormat = new DateFormat('yyyy-MM-dd');
@@ -407,13 +349,14 @@ class _EditPage extends State<EditPage> {
     if (money.length == 0) {
       alertNotify(context, "Thông báo", "Số tiền không được để trống");
     } else {
+      int type = getTypeCategory();
       Transaction newTransaction = new Transaction(
-          _radioValue1,
+          getTypeCategory(),
           int.parse(money),
           date,
           selectedTime.format(context),
           noteInput.text,
-          category,
+          _category,
           '');
       if (transaction != null) {
         newTransaction.setId = transaction.id;
@@ -422,6 +365,16 @@ class _EditPage extends State<EditPage> {
       return newTransaction;
     }
     return null;
+  }
+
+  int getTypeCategory(){
+    int typeCategory = 0;
+    _listCate.forEach((cate){
+      if(cate.name == _category){
+        typeCategory = cate.type;
+      }
+    });
+    return typeCategory;
   }
 
   void _showDialog(EditBloc editBloc) {
@@ -465,48 +418,4 @@ class _EditPage extends State<EditPage> {
     }
   }
 
-  void _showDialogNoNetWork() {
-    // flutter defined function
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        // return object of type Dialog
-        return AlertDialog(
-          title: new Text("Tác vụ thất bại"),
-          content: new Text("Bạn cần kết nối internet để thực hiện tác vụ này"),
-          actions: <Widget>[
-            new FlatButton(
-              child: new Text("OK"),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-          ],
-        );
-      },
-    );
-  }
-
-  void _showDialogRegisterResult(String content) {
-    // flutter defined function
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        // return object of type Dialog
-        return AlertDialog(
-          title: new Text("Thông báo"),
-          content: new Text(content),
-          actions: <Widget>[
-            // usually buttons at the bottom of the dialog
-            new FlatButton(
-              child: new Text("Ok"),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-          ],
-        );
-      },
-    );
-  }
 }

@@ -65,20 +65,6 @@ class _PageSection extends State<PageSection> {
             listener: (BuildContext context, PageState pageState) {
               if (pageState is PageLoadingData &&
                   pageState.time == this.dateTime) {
-                //this._isLoading = true;
-//                Scaffold.of(context)
-//                  ..hideCurrentSnackBar()
-//                  ..showSnackBar(
-//                    SnackBar(
-//                      content: Row(
-//                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-//                        children: [
-//                          Text('Đang tải dữ liệu...'),
-//                          CircularProgressIndicator(),
-//                        ],
-//                      ),
-//                    ),
-//                  );
               }
             },
             child: BlocBuilder(
@@ -100,7 +86,6 @@ class _PageSection extends State<PageSection> {
                                   child: new Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: <Widget>[
-//                        TextKeyValue("Tiền đầu ngày:", "200.000"),
                                   TextKeyValue(
                                       "Tiền thu:",
                                       formatMoney(this
@@ -122,7 +107,6 @@ class _PageSection extends State<PageSection> {
                                           .transactionHeader
                                           .total
                                           .toString())),
-//                        TextKeyValue("Tiền cuối ngày:", "290.000"),
                                   Container(
                                     margin:
                                         EdgeInsets.only(top: 10, bottom: 10),

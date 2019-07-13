@@ -1,22 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:quanly_thuchi/home_page/tab/bloc/page_bloc.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:quanly_thuchi/home_page/tab/bloc/page_state.dart';
-import 'package:quanly_thuchi/home_page/tab/bloc/page_event.dart';
-import 'package:quanly_thuchi/model/transaction.dart' as my;
-import 'package:quanly_thuchi/model/transaction_header.dart';
-import 'package:quanly_thuchi/model/transaction_section.dart';
 import 'package:quanly_thuchi/constant.dart';
-import 'package:quanly_thuchi/edit_revenue_expenditure/edit_revenue_expendture.dart';
-import 'package:quanly_thuchi/common_func.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:quanly_thuchi/repository/firestorage_repository.dart';
-import 'package:modal_progress_hud/modal_progress_hud.dart';
 import 'package:quanly_thuchi/category/bloc/cate_bloc.dart';
 import 'package:quanly_thuchi/category/bloc/cate_event.dart';
 import 'package:quanly_thuchi/category/bloc/cate_state.dart';
-import 'package:quanly_thuchi/base_widget/edit_base.dart';
 import 'package:quanly_thuchi/model/category_model.dart';
+import 'package:quanly_thuchi/base_widget/text_base.dart';
 
 class Category extends StatefulWidget {
   Category();
@@ -32,6 +21,7 @@ class _category extends State<Category> {
   CateBloc _cateBloc;
   String currentCateSelect = "";
   String buttonText = "Thêm";
+  int _radioValue1 = REVENUE_TYPE;
   List<CategoryModel> _listCate;
   TextEditingController _cateController;
   CategoryModel currentCate;
@@ -59,11 +49,10 @@ class _category extends State<Category> {
     super.didChangeDependencies();
   }
 
-  void setCategory(String category) {
-//    setState(() {
-//      currentCateSelect:
-//      category;
-//    });
+  void _handleRadioValueChange1(int value) {
+    setState(() {
+      _radioValue1 = value;
+    });
   }
 
   @override
@@ -109,6 +98,7 @@ class _category extends State<Category> {
                       _listCate.length > state.position) {
                     _cateController.text = _listCate[state.position].name;
                     currentCate = _listCate[state.position];
+                    _radioValue1 = currentCate.type;
                     buttonText = "Cập nhật";
                     _cateBloc.dispatch(EmptyEvent());
                   }
@@ -149,19 +139,26 @@ class _category extends State<Category> {
                                       suffixStyle:
                                           const TextStyle(color: Colors.green)),
                                 )))),
+                  ]),Row(children: <Widget>[
+                    Expanded(
+                        child: Container(
+                              margin: EdgeInsets.only(top: 10),
+                              child: Row(children: createRadioListUsers()),
+                        ),),
                     Container(
                       margin: EdgeInsets.only(top: 10, left: 10, right: 10),
-                      width: 120,
+                      width: 110,
                       height: 43,
                       child: RaisedButton(
                         color: Colors.blue,
                         onPressed: () {
                           if (buttonText == "Thêm") {
-                            _cateBloc.dispatch(AddCate(_cateController.text));
+                            _cateBloc.dispatch(AddCate(_cateController.text, this._radioValue1));
                           } else {
                             if (currentCate != null) {
                               String oldCateName = currentCate.name;
                               currentCate.setName = _cateController.text;
+                              currentCate.type = _radioValue1;
                               _cateBloc
                                   .dispatch(Update(categoryModel: currentCate,oldCateName: oldCateName));
                             }
@@ -173,7 +170,7 @@ class _category extends State<Category> {
                         child: Text(buttonText,
                             textAlign: TextAlign.center,
                             style:
-                                TextStyle(fontSize: 20, color: Colors.white)),
+                                TextStyle(fontSize: 18, color: Colors.white)),
                       ),
                     )
                   ]),
@@ -192,6 +189,38 @@ class _category extends State<Category> {
                 ]);
               }),
         ));
+  }
+
+  List<Widget> createRadioListUsers() {
+    List<Widget> widgets = [];
+    widgets.add(SizedBox(
+      width: 120,
+      child: RadioListTile(
+        dense: false,
+        value: REVENUE_TYPE,
+        groupValue: _radioValue1,
+        title: Text("Thu"),
+        onChanged: (currentUser) {
+          _handleRadioValueChange1(REVENUE_TYPE);
+        },
+        selected: _radioValue1 == REVENUE_TYPE,
+        activeColor: Colors.green,
+      ),
+    ));
+    widgets.add(SizedBox(
+      width: 120,
+      child: RadioListTile(
+        value: EXPENDTURE_TYPE,
+        groupValue: _radioValue1,
+        title: Text("Chi"),
+        onChanged: (currentUser) {
+          _handleRadioValueChange1(EXPENDTURE_TYPE);
+        },
+        selected: _radioValue1 == EXPENDTURE_TYPE,
+        activeColor: Colors.green,
+      ),
+    ));
+    return widgets;
   }
 }
 
@@ -292,4 +321,5 @@ void _showDialog(BuildContext context, CateBloc cateBloc, int id) {
       );
     },
   );
+
 }

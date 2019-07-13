@@ -3,7 +3,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:quanly_thuchi/repository/user_repository.dart';
 import 'package:quanly_thuchi/authentication_bloc/bloc.dart';
 import 'package:quanly_thuchi/login/login.dart';
-import 'package:quanly_thuchi/dialog/TextFieldAlertDialog.java';
 
 class LoginForm extends StatefulWidget {
   final UserRepository _userRepository;

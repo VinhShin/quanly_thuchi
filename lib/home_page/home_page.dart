@@ -91,7 +91,9 @@ class HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     if (!isAdmin && widget.drawerItems.length == 4) {
-      widget.drawerItems.removeAt(2);
+      widget.drawerItems.removeAt(1);
+      widget.drawerItems.removeAt(1);
+
     }
     var drawerOptions = <Widget>[];
     for (var i = 0; i < widget.drawerItems.length; i++) {

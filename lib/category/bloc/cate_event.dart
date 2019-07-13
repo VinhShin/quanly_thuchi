@@ -30,8 +30,9 @@ class LoadCate extends CateEvent {
 
 class AddCate extends CateEvent {
   String cateName;
+  int type;
 
-  AddCate(this.cateName);
+  AddCate(this.cateName, this.type);
 }
 
 class NoInternet extends CateEvent {

@@ -259,7 +259,6 @@ class FireStorageRepository {
     return true;
   }
 
-//
 //  Future<List<DocumentSnapshot>> getTransactionFromDateToDate(
 //      DateTime dateFrom, DateTime dateTo) async {
 //    List<DocumentSnapshot> list = new List();
@@ -325,13 +324,13 @@ class FireStorageRepository {
   }
 
   //category
-  Future<bool> addCate(String category) async {
+  Future<bool> addCate(String category, int type) async {
     final prefs = await SharedPreferences.getInstance();
 // Try reading data from the counter key. If it does not exist, return 0.
     final String userName = prefs.getString(USER_NAME) ?? "temp";
     int currentMiliSecond = DateTime.now().millisecondsSinceEpoch;
     CategoryModel categoryModel =
-        new CategoryModel(currentMiliSecond, category);
+        new CategoryModel(currentMiliSecond, category, type);
 
     QuerySnapshot snapshot = await Firestore.instance
         .collection(userName)
@@ -392,13 +391,11 @@ class FireStorageRepository {
         .document(cate.id.toString())
         .updateData(cate.toMap());
 
-    var map = new Map<String, dynamic>();
-    map["cate_name"] = cate.name;
-
     List<MyTransaction.Transaction> itemUpdate = await getReExDataList();
     itemUpdate.forEach((transaction) async {
       if (transaction.cateName == oldCateName) {
         transaction.setCateName = cate.name;
+        transaction.setType = cate.type;
         await Firestore.instance
             .collection(userId)
             .document("data")
@@ -408,8 +405,5 @@ class FireStorageRepository {
       }
     });
 
-//    querySnapshot.documents.forEach((e) {
-//        e.data.update("cate_name", cate.name);
-//      });
   }
 }
