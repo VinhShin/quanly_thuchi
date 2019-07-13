@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:quanly_thuchi/home_page/tab/report_page.dart';
-import 'package:quanly_thuchi/home_page/tab/revenue_expenditure_page.dart';
+import 'package:thuchi/home_page/tab/report_page.dart';
+import 'package:thuchi/home_page/tab/revenue_expenditure_page.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:quanly_thuchi/main.dart';
-import 'package:quanly_thuchi/user/user_home.dart';
-import 'package:quanly_thuchi/constant.dart';
+import 'package:thuchi/main.dart';
+import 'package:thuchi/user/user_home.dart';
+import 'package:thuchi/constant.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:quanly_thuchi/repository/user_repository.dart';
+import 'package:thuchi/repository/user_repository.dart';
 
 class DrawerItem {
   String title;

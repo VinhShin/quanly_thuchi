@@ -1,8 +1,8 @@
 import 'package:bloc/bloc.dart';
 import 'user_event.dart';
 import 'user_state.dart';
-import 'package:quanly_thuchi/repository/firestorage_repository.dart';
-import 'package:quanly_thuchi/model/user.dart';
+import 'package:thuchi/repository/firestorage_repository.dart';
+import 'package:thuchi/model/user.dart';
 
 class UserBloc extends Bloc<UserEvent, UserState>{
 

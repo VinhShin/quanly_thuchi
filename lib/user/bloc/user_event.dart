@@ -1,4 +1,4 @@
-import 'package:quanly_thuchi/model/user.dart';
+import 'package:thuchi/model/user.dart';
 class UserEvent{
 
 }

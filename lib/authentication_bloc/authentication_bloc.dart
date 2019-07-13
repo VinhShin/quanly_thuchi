@@ -1,9 +1,9 @@
 import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';
-import 'package:quanly_thuchi/authentication_bloc/bloc.dart';
-import 'package:quanly_thuchi/repository/user_repository.dart';
-import 'package:quanly_thuchi/repository/firestorage_repository.dart';
+import 'package:thuchi/authentication_bloc/bloc.dart';
+import 'package:thuchi/repository/user_repository.dart';
+import 'package:thuchi/repository/firestorage_repository.dart';
 
 class AuthenticationBloc
     extends Bloc<AuthenticationEvent, AuthenticationState> {

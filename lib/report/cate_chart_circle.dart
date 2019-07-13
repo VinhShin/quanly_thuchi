@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:quanly_thuchi/pie_chart.dart';
+import 'package:thuchi/pie_chart.dart';
 import 'package:flutter_circular_chart/flutter_circular_chart.dart';
-import "package:quanly_thuchi/common_func.dart";
+import "package:thuchi/common_func.dart";
 
 class CateChartCircle extends StatelessWidget {
   Map<String, double> mapEx = new Map();

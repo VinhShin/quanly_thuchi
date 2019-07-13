@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:bloc/bloc.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:quanly_thuchi/authentication_bloc/bloc.dart';
-import 'package:quanly_thuchi/repository/user_repository.dart';
-import 'package:quanly_thuchi/login/login.dart';
-import 'package:quanly_thuchi/splash_screen.dart';
-import 'package:quanly_thuchi/simple_bloc_delegate.dart';
-import 'package:quanly_thuchi/home_page/home_page.dart';
+import 'package:thuchi/authentication_bloc/bloc.dart';
+import 'package:thuchi/repository/user_repository.dart';
+import 'package:thuchi/login/login.dart';
+import 'package:thuchi/splash_screen.dart';
+import 'package:thuchi/simple_bloc_delegate.dart';
+import 'package:thuchi/home_page/home_page.dart';
 
 main() {
   BlocSupervisor.delegate = SimpleBlocDelegate();

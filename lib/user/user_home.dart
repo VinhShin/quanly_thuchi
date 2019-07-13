@@ -1,24 +1,24 @@
 import 'package:flutter/material.dart';
-import 'package:quanly_thuchi/home_page/tab/bloc/page_bloc.dart';
+import 'package:thuchi/home_page/tab/bloc/page_bloc.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:quanly_thuchi/home_page/tab/bloc/page_state.dart';
-import 'package:quanly_thuchi/home_page/tab/bloc/page_event.dart';
-import 'package:quanly_thuchi/model/transaction.dart' as my;
-import 'package:quanly_thuchi/model/transaction_header.dart';
-import 'package:quanly_thuchi/model/transaction_section.dart';
-import 'package:quanly_thuchi/constant.dart';
-import 'package:quanly_thuchi/edit_revenue_expenditure/edit_revenue_expendture.dart';
-import 'package:quanly_thuchi/common_func.dart';
+import 'package:thuchi/home_page/tab/bloc/page_state.dart';
+import 'package:thuchi/home_page/tab/bloc/page_event.dart';
+import 'package:thuchi/model/transaction.dart' as my;
+import 'package:thuchi/model/transaction_header.dart';
+import 'package:thuchi/model/transaction_section.dart';
+import 'package:thuchi/constant.dart';
+import 'package:thuchi/edit_revenue_expenditure/edit_revenue_expendture.dart';
+import 'package:thuchi/common_func.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:quanly_thuchi/repository/firestorage_repository.dart';
+import 'package:thuchi/repository/firestorage_repository.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
 import 'bloc/user_bloc.dart';
-import 'package:quanly_thuchi/model/user.dart';
+import 'package:thuchi/model/user.dart';
 import 'bloc/user_event.dart';
 import 'bloc/user_state.dart';
 import 'user_home_edit.dart';
-import 'package:quanly_thuchi/base_widget/text_base.dart';
-import 'package:quanly_thuchi/base_widget/edit_base.dart';
+import 'package:thuchi/base_widget/text_base.dart';
+import 'package:thuchi/base_widget/edit_base.dart';
 
 class UserHome extends StatefulWidget {
   @override
@@ -182,89 +182,93 @@ class _userHome extends State<UserHome> {
     return showDialog(
         context: context,
         builder: (context) {
-          return AlertDialog(
-            title: Text(user == null ? 'Thêm tài khoản' : "Cập nhật tài khoản"),
-            content: Container(
-              height: 168,
-              width: 350,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  Container(
+          return SimpleDialog(
+            contentPadding: EdgeInsets.only(left: 20, right: 20),
+            title: Text(user == null ? 'Thêm tài khoản' : "Cập nhật tài khoản", style: TextStyle(color: Colors.blueAccent),),
+            children: <Widget>[
+              Container(
+                margin: EdgeInsets.only(top: 10),
+                height: 168,
+                width: 350,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Container(
+                        width: 350,
+                        height: 45,
+                        child: TextField(
+                          maxLines: null,
+                          minLines: null,
+                          expands: true,
+                          enabled: user == null,
+                          controller: this.subUserName,
+                          decoration: new InputDecoration(
+                              contentPadding: EdgeInsets.only(top: 10, left: 5),
+                              hintText: "Tên tài khoản",
+                              border: new OutlineInputBorder(
+                                  borderSide: new BorderSide(color: Colors.teal)),
+                              suffixStyle: const TextStyle(color: Colors.green)),
+                        )),
+                    Container(
+                      margin: EdgeInsets.only(top: 20, bottom: 10),
+                      padding: EdgeInsets.only(bottom: 5),
                       width: 350,
                       height: 45,
                       child: TextField(
                         maxLines: null,
                         minLines: null,
                         expands: true,
-                        enabled: user == null,
-                        controller: this.subUserName,
+                        controller: this.subPassName,
                         decoration: new InputDecoration(
                             contentPadding: EdgeInsets.only(top: 10, left: 5),
-                            hintText: "Tên tài khoản",
+                            hintText: "Mật khẩu",
                             border: new OutlineInputBorder(
                                 borderSide: new BorderSide(color: Colors.teal)),
                             suffixStyle: const TextStyle(color: Colors.green)),
-                      )),
-                  Container(
-                    margin: EdgeInsets.only(top: 20, bottom: 10),
-                    padding: EdgeInsets.only(bottom: 5),
-                    width: 350,
-                    height: 45,
-                    child: TextField(
-                      maxLines: null,
-                      minLines: null,
-                      expands: true,
-                      controller: this.subPassName,
-                      decoration: new InputDecoration(
-                          contentPadding: EdgeInsets.only(top: 10, left: 5),
-                          hintText: "Mật khẩu",
-                          border: new OutlineInputBorder(
-                              borderSide: new BorderSide(color: Colors.teal)),
-                          suffixStyle: const TextStyle(color: Colors.green)),
-                    ),
-                  ),
-                  Row(
-                    children: <Widget>[
-                      Spacer(),
-                      RaisedButton(
-                        color: Colors.red,
-                        onPressed: () {
-                          Navigator.of(context).pop();
-                        },
-                        child: Text("Đóng", style: TextStyle(color: Colors.white)),
                       ),
-                      Container(
-                        margin: EdgeInsets.only(left: 20),
-                        child: RaisedButton(
-                          color: Colors.blueAccent,
-                          child: new Text(user == null ? "Thêm" : "Cập nhật", style: TextStyle(color: Colors.white),),
+                    ),
+                    Row(
+                      children: <Widget>[
+                        Spacer(),
+                        RaisedButton(
+                          color: Colors.red,
                           onPressed: () {
-                            if (this.subPassName.text.length == 0 ||
-                                this.subUserName.text.length == 0) {
-                              _showDialogRegisterResult(
-                                  "Tài khoản và mật khẩu không được để trống");
-                            } else {
-                              if (user == null) {
-                                _userBloc.dispatch(UserEventRegister(
-                                    userName: this.subUserName.text,
-                                    userPass: this.subPassName.text));
-                              } else {
-                                user.setPass = this.subPassName.text;
-                                _userBloc.dispatch(
-                                    UserUpdateEvent(userUpdate: user));
-                              }
-                              Navigator.of(context).pop();
-                            }
+                            Navigator.of(context).pop();
                           },
+                          child: Text("Đóng", style: TextStyle(color: Colors.white)),
                         ),
-                      )
-                    ],
-                  )
-                ],
+                        Container(
+                          margin: EdgeInsets.only(left: 20),
+                          child: RaisedButton(
+                            color: Colors.blueAccent,
+                            child: new Text(user == null ? "Thêm" : "Cập nhật", style: TextStyle(color: Colors.white),),
+                            onPressed: () {
+                              if (this.subPassName.text.length == 0 ||
+                                  this.subUserName.text.length == 0) {
+                                _showDialogRegisterResult(
+                                    "Tài khoản và mật khẩu không được để trống");
+                              } else {
+                                if (user == null) {
+                                  _userBloc.dispatch(UserEventRegister(
+                                      userName: this.subUserName.text,
+                                      userPass: this.subPassName.text));
+                                } else {
+                                  user.setPass = this.subPassName.text;
+                                  _userBloc.dispatch(
+                                      UserUpdateEvent(userUpdate: user));
+                                }
+                                Navigator.of(context).pop();
+                              }
+                            },
+                          ),
+                        )
+                      ],
+                    )
+                  ],
+                ),
               ),
-            ),
+            ],
 //            actions: <Widget>[
 //              new FlatButton(
 //                child: new Text('Đóng'),

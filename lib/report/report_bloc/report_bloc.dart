@@ -3,9 +3,9 @@ import 'package:bloc/bloc.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:meta/meta.dart';
 import './bloc.dart';
-import 'package:quanly_thuchi/repository/user_repository.dart';
-import 'package:quanly_thuchi/model/category_model.dart';
-import 'package:quanly_thuchi/model/transaction.dart' as my;
+import 'package:thuchi/repository/user_repository.dart';
+import 'package:thuchi/model/category_model.dart';
+import 'package:thuchi/model/transaction.dart' as my;
 
 class ReportBloc extends Bloc<ReportEvent, ReportState> {
   // ignore: unused_field

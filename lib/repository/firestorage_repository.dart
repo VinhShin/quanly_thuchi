@@ -3,15 +3,15 @@ import 'dart:math';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cloud_firestore/cloud_firestore.dart' as fireStore;
 import 'package:flutter/material.dart';
-import 'package:quanly_thuchi/model/transaction.dart' as MyTransaction;
-import 'package:quanly_thuchi/constant.dart';
+import 'package:thuchi/model/transaction.dart' as MyTransaction;
+import 'package:thuchi/constant.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:intl/intl.dart';
 import 'dart:convert';
-import 'package:quanly_thuchi/model/transaction_section.dart';
-import 'package:quanly_thuchi/model/index.dart';
-import 'package:quanly_thuchi/model/category_model.dart';
-import 'package:quanly_thuchi/model/user.dart';
+import 'package:thuchi/model/transaction_section.dart';
+import 'package:thuchi/model/index.dart';
+import 'package:thuchi/model/category_model.dart';
+import 'package:thuchi/model/user.dart';
 
 final CollectionReference noteCollection =
     Firestore.instance.collection('shops12');

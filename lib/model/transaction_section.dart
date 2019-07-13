@@ -1,5 +1,5 @@
-import 'package:quanly_thuchi/model/transaction.dart';
-import 'package:quanly_thuchi/model/transaction_header.dart';
+import 'package:thuchi/model/transaction.dart';
+import 'package:thuchi/model/transaction_header.dart';
 
 class TransactionSection{
   String time;

@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'page_section.dart';
-import 'package:quanly_thuchi/edit_revenue_expenditure/edit_revenue_expendture.dart';
-import 'package:quanly_thuchi/home_page/tab/bloc/page_bloc.dart';
+import 'package:thuchi/edit_revenue_expenditure/edit_revenue_expendture.dart';
+import 'package:thuchi/home_page/tab/bloc/page_bloc.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
-import 'package:quanly_thuchi/home_page/tab/bloc/page_event.dart';
-import 'package:quanly_thuchi/home_page/tab/option_page.dart';
+import 'package:thuchi/home_page/tab/bloc/page_event.dart';
+import 'package:thuchi/home_page/tab/option_page.dart';
 
 class RevenueExpenditurePage extends StatefulWidget {
   @override

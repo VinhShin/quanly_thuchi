@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:quanly_thuchi/constant.dart';
-import 'package:quanly_thuchi/category/bloc/cate_bloc.dart';
-import 'package:quanly_thuchi/category/bloc/cate_event.dart';
-import 'package:quanly_thuchi/category/bloc/cate_state.dart';
-import 'package:quanly_thuchi/model/category_model.dart';
-import 'package:quanly_thuchi/base_widget/text_base.dart';
+import 'package:thuchi/constant.dart';
+import 'package:thuchi/category/bloc/cate_bloc.dart';
+import 'package:thuchi/category/bloc/cate_event.dart';
+import 'package:thuchi/category/bloc/cate_state.dart';
+import 'package:thuchi/model/category_model.dart';
+import 'package:thuchi/base_widget/text_base.dart';
 
 class Category extends StatefulWidget {
   Category();

@@ -1,4 +1,4 @@
-# quanly_thuchi
+# thuchi
 
 A new Flutter application.
 

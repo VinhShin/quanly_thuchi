@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:quanly_thuchi/base_widget/text_base.dart';
-import 'package:quanly_thuchi/base_widget/edit_base.dart';
-import 'package:quanly_thuchi/user/bloc/user_bloc.dart';
-import 'package:quanly_thuchi/user/bloc/user_event.dart';
-import 'package:quanly_thuchi/user/bloc/user_state.dart';
+import 'package:thuchi/base_widget/text_base.dart';
+import 'package:thuchi/base_widget/edit_base.dart';
+import 'package:thuchi/user/bloc/user_bloc.dart';
+import 'package:thuchi/user/bloc/user_event.dart';
+import 'package:thuchi/user/bloc/user_state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:quanly_thuchi/model/user.dart';
+import 'package:thuchi/model/user.dart';
 
 class UserHomeEdit extends StatefulWidget {
 

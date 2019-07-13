@@ -1,5 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.yongquan.quanly_thuchi">
+    package="app.takica.thuchi">
 
     <!-- io.flutter.app.FlutterApplication is an android.app.Application that
          calls FlutterMain.startInitialization(this); in its onCreate method.
@@ -8,7 +8,7 @@
          FlutterApplication and put your custom class here. -->
     <application
         android:name="io.flutter.app.FlutterApplication"
-        android:label="quanly_thuchi"
+        android:label="Thu Chi"
         android:icon="@mipmap/ic_launcher">
         <activity
             android:name=".MainActivity"

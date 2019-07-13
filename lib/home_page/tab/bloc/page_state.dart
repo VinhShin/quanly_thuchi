@@ -1,4 +1,4 @@
-import 'package:quanly_thuchi/model/transaction_section.dart';
+import 'package:thuchi/model/transaction_section.dart';
 
 
 class PageState{

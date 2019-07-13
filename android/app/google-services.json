@@ -1,50 +1,35 @@
 {
   "project_info": {
-    "project_number": "381721850943",
-    "firebase_url": "https://quanlythuchi-c510f.firebaseio.com",
-    "project_id": "quanlythuchi-c510f",
-    "storage_bucket": "quanlythuchi-c510f.appspot.com"
+    "project_number": "203415608770",
+    "firebase_url": "https://thu-chi-1fa56.firebaseio.com",
+    "project_id": "thu-chi-1fa56",
+    "storage_bucket": "thu-chi-1fa56.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:381721850943:android:bc9cdde3befe4d52",
+        "mobilesdk_app_id": "1:203415608770:android:43f4950ad63affed",
         "android_client_info": {
-          "package_name": "com.yongquan.quanly_thuchi"
+          "package_name": "app.takica.thuchi"
         }
       },
       "oauth_client": [
         {
-          "client_id": "381721850943-k4l3orujn81ta094g8me8511ebak0iio.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.yongquan.quanly_thuchi",
-            "certificate_hash": "21546ac19b06ac34d28b049630ea940952175168"
-          }
-        },
-        {
-          "client_id": "381721850943-ovd48vsl8s2sc4vp6nke5b1lchfsjcpv.apps.googleusercontent.com",
+          "client_id": "203415608770-3glreko798v8c44a9ce78eajo92grq79.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyAaXvCUzeEpT-EOcw_nBr0cCOuhr_FIOUw"
+          "current_key": "AIzaSyDV-47ujrgKZCSB_k3k9mDk2UtNjKM7Dyg"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "381721850943-ovd48vsl8s2sc4vp6nke5b1lchfsjcpv.apps.googleusercontent.com",
+              "client_id": "203415608770-3glreko798v8c44a9ce78eajo92grq79.apps.googleusercontent.com",
               "client_type": 3
-            },
-            {
-              "client_id": "381721850943-eo7kc64giadsi833qbmg2a6hei74cfu2.apps.googleusercontent.com",
-              "client_type": 2,
-              "ios_info": {
-                "bundle_id": "j"
-              }
             }
           ]
         }

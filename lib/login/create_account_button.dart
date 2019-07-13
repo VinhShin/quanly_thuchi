@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:quanly_thuchi/repository/user_repository.dart';
-import 'package:quanly_thuchi/register/register.dart';
+import 'package:thuchi/repository/user_repository.dart';
+import 'package:thuchi/register/register.dart';
 
 class CreateAccountButton extends StatelessWidget {
   final UserRepository _userRepository;

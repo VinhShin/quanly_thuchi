@@ -1,10 +1,10 @@
 import 'package:bloc/bloc.dart';
-import 'package:quanly_thuchi/home_page/tab/bloc/page_event.dart';
-import 'package:quanly_thuchi/home_page/tab/bloc/page_state.dart';
-import 'package:quanly_thuchi/repository/firestorage_repository.dart';
-import 'package:quanly_thuchi/model/index.dart';
-import 'package:quanly_thuchi/constant.dart';
-import 'package:quanly_thuchi/model/transaction.dart';
+import 'package:thuchi/home_page/tab/bloc/page_event.dart';
+import 'package:thuchi/home_page/tab/bloc/page_state.dart';
+import 'package:thuchi/repository/firestorage_repository.dart';
+import 'package:thuchi/model/index.dart';
+import 'package:thuchi/constant.dart';
+import 'package:thuchi/model/transaction.dart';
 
 class PageBloc extends Bloc<PageEvent, PageState> {
   FireStorageRepository _fireStorageRepository;

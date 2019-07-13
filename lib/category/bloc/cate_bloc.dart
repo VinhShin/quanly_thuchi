@@ -1,10 +1,10 @@
 import 'package:bloc/bloc.dart';
-import 'package:quanly_thuchi/repository/firestorage_repository.dart';
-import 'package:quanly_thuchi/model/index.dart';
-import 'package:quanly_thuchi/constant.dart';
+import 'package:thuchi/repository/firestorage_repository.dart';
+import 'package:thuchi/model/index.dart';
+import 'package:thuchi/constant.dart';
 import 'cate_event.dart';
 import 'cate_state.dart';
-import 'package:quanly_thuchi/model/category_model.dart';
+import 'package:thuchi/model/category_model.dart';
 
 class CateBloc extends Bloc<CateEvent, CateState> {
   FireStorageRepository _fireStorageRepository;

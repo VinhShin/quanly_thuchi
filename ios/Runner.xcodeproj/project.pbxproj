@@ -421,13 +421,13 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/Flutter",
 				);
-				INFOPLIST_FILE = /Users/yongquan/Desktop/Project/quanly_thuchi/ios/Runner/Info.plist;
+				INFOPLIST_FILE = /Users/yongquan/Desktop/Project/thuchi/ios/Runner/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Flutter",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.yongquan.quanlyThuchi;
+				PRODUCT_BUNDLE_IDENTIFIER = app.takica.thuchi;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				VERSIONING_SYSTEM = "apple-generic";
 			};
@@ -547,13 +547,13 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/Flutter",
 				);
-				INFOPLIST_FILE = /Users/yongquan/Desktop/Project/quanly_thuchi/ios/Runner/Info.plist;
+				INFOPLIST_FILE = /Users/yongquan/Desktop/Project/thuchi/ios/Runner/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Flutter",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.yongquan.quanlyThuchi;
+				PRODUCT_BUNDLE_IDENTIFIER = app.takica.thuchi;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				VERSIONING_SYSTEM = "apple-generic";
 			};
@@ -571,13 +571,13 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/Flutter",
 				);
-				INFOPLIST_FILE = /Users/yongquan/Desktop/Project/quanly_thuchi/ios/Runner/Info.plist;
+				INFOPLIST_FILE = /Users/yongquan/Desktop/Project/thuchi/ios/Runner/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Flutter",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.yongquan.quanlyThuchi;
+				PRODUCT_BUNDLE_IDENTIFIER = app.takica.thuchi;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				VERSIONING_SYSTEM = "apple-generic";
 			};

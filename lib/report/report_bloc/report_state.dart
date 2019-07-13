@@ -1,5 +1,5 @@
 import 'package:meta/meta.dart';
-import 'package:quanly_thuchi/model/transaction.dart';
+import 'package:thuchi/model/transaction.dart';
 
 @immutable
 class ReportState {

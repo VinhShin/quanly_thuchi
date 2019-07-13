@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:quanly_thuchi/home_page/tab/bloc/page_bloc.dart';
+import 'package:thuchi/home_page/tab/bloc/page_bloc.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:quanly_thuchi/home_page/tab/bloc/page_state.dart';
-import 'package:quanly_thuchi/home_page/tab/bloc/page_event.dart';
-import 'package:quanly_thuchi/model/transaction.dart' as my;
-import 'package:quanly_thuchi/model/transaction_header.dart';
-import 'package:quanly_thuchi/model/transaction_section.dart';
-import 'package:quanly_thuchi/constant.dart';
-import 'package:quanly_thuchi/edit_revenue_expenditure/edit_revenue_expendture.dart';
-import 'package:quanly_thuchi/common_func.dart';
+import 'package:thuchi/home_page/tab/bloc/page_state.dart';
+import 'package:thuchi/home_page/tab/bloc/page_event.dart';
+import 'package:thuchi/model/transaction.dart' as my;
+import 'package:thuchi/model/transaction_header.dart';
+import 'package:thuchi/model/transaction_section.dart';
+import 'package:thuchi/constant.dart';
+import 'package:thuchi/edit_revenue_expenditure/edit_revenue_expendture.dart';
+import 'package:thuchi/common_func.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:quanly_thuchi/repository/firestorage_repository.dart';
+import 'package:thuchi/repository/firestorage_repository.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
 
 class PageSection extends StatefulWidget {

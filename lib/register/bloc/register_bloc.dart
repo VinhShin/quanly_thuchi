@@ -2,9 +2,9 @@ import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';
 import 'package:rxdart/rxdart.dart';
-import 'package:quanly_thuchi/repository/user_repository.dart';
-import 'package:quanly_thuchi/register/register.dart';
-import 'package:quanly_thuchi/validators.dart';
+import 'package:thuchi/repository/user_repository.dart';
+import 'package:thuchi/register/register.dart';
+import 'package:thuchi/validators.dart';
 
 class RegisterBloc extends Bloc<RegisterEvent, RegisterState> {
   final UserRepository _userRepository;

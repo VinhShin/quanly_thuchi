@@ -1,7 +1,7 @@
 import 'package:meta/meta.dart';
 import 'package:equatable/equatable.dart';
-import 'package:quanly_thuchi/model/transaction.dart';
-import 'package:quanly_thuchi/model/category_model.dart';
+import 'package:thuchi/model/transaction.dart';
+import 'package:thuchi/model/category_model.dart';
 abstract class CateEvent extends Equatable {
 }
 

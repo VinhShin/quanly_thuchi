@@ -1,6 +1,6 @@
 import 'package:meta/meta.dart';
 import 'package:equatable/equatable.dart';
-import 'package:quanly_thuchi/model/transaction.dart';
+import 'package:thuchi/model/transaction.dart';
 
 abstract class EditEvent extends Equatable {}
 

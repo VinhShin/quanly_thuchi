@@ -2,11 +2,11 @@ import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:quanly_thuchi/repository/firestorage_repository.dart';
+import 'package:thuchi/repository/firestorage_repository.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:quanly_thuchi/constant.dart';
-import 'package:quanly_thuchi/model/category_model.dart';
-import 'package:quanly_thuchi/model/transaction.dart' as my;
+import 'package:thuchi/constant.dart';
+import 'package:thuchi/model/category_model.dart';
+import 'package:thuchi/model/transaction.dart' as my;
 
 class UserRepository {
   final FirebaseAuth _firebaseAuth;

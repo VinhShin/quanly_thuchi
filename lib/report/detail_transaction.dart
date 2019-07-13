@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:quanly_thuchi/model/transaction.dart';
-import 'package:quanly_thuchi/constant.dart';
-import 'package:quanly_thuchi/common_func.dart';
+import 'package:thuchi/model/transaction.dart';
+import 'package:thuchi/constant.dart';
+import 'package:thuchi/common_func.dart';
 
 class DetailTransaction extends StatefulWidget {
 

@@ -1,5 +1,5 @@
 import 'package:meta/meta.dart';
-import 'package:quanly_thuchi/model/category_model.dart';
+import 'package:thuchi/model/category_model.dart';
 
 
 class CateState{

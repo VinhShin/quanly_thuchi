@@ -1,19 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:quanly_thuchi/base_widget/text_base.dart';
-import 'package:quanly_thuchi/base_widget/edit_base.dart';
+import 'package:thuchi/base_widget/text_base.dart';
+import 'package:thuchi/base_widget/edit_base.dart';
 import 'package:intl/intl.dart';
-import 'package:quanly_thuchi/model/transaction.dart';
-import 'package:quanly_thuchi/edit_revenue_expenditure/bloc/edit_bloc.dart';
-import 'package:quanly_thuchi/edit_revenue_expenditure/bloc/edit_event.dart';
-import 'package:quanly_thuchi/edit_revenue_expenditure/bloc/edit_state.dart';
-import 'package:quanly_thuchi/constant.dart';
-import 'package:quanly_thuchi/edit_revenue_expenditure/input_down.dart';
-import 'package:quanly_thuchi/base_widget/edit_money_base.dart';
-import 'package:quanly_thuchi/common_func.dart';
-import 'package:quanly_thuchi/category/category.dart';
+import 'package:thuchi/model/transaction.dart';
+import 'package:thuchi/edit_revenue_expenditure/bloc/edit_bloc.dart';
+import 'package:thuchi/edit_revenue_expenditure/bloc/edit_event.dart';
+import 'package:thuchi/edit_revenue_expenditure/bloc/edit_state.dart';
+import 'package:thuchi/constant.dart';
+import 'package:thuchi/edit_revenue_expenditure/input_down.dart';
+import 'package:thuchi/base_widget/edit_money_base.dart';
+import 'package:thuchi/common_func.dart';
+import 'package:thuchi/category/category.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:quanly_thuchi/model/category_model.dart';
+import 'package:thuchi/model/category_model.dart';
 
 class EditRevenueExpendture extends StatelessWidget {
   Transaction transaction = null;
@@ -349,7 +349,6 @@ class _EditPage extends State<EditPage> {
     if (money.length == 0) {
       alertNotify(context, "Thông báo", "Số tiền không được để trống");
     } else {
-      int type = getTypeCategory();
       Transaction newTransaction = new Transaction(
           getTypeCategory(),
           int.parse(money),

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:quanly_thuchi/authentication_bloc/bloc.dart';
-import 'package:quanly_thuchi/register/register.dart';
+import 'package:thuchi/authentication_bloc/bloc.dart';
+import 'package:thuchi/register/register.dart';
 
 class RegisterForm extends StatefulWidget {
   State<RegisterForm> createState() => _RegisterFormState();

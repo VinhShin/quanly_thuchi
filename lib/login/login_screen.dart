@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:quanly_thuchi/repository/user_repository.dart';
-import 'package:quanly_thuchi/login/login.dart';
+import 'package:thuchi/repository/user_repository.dart';
+import 'package:thuchi/login/login.dart';
 
 class LoginScreen extends StatefulWidget {
   final UserRepository _userRepository;

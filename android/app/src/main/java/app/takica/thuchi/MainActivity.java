@@ -1,4 +1,4 @@
-package com.yongquan.quanly_thuchi;
+package app.takica.thuchi;
 
 import android.os.Bundle;
 import io.flutter.app.FlutterActivity;
