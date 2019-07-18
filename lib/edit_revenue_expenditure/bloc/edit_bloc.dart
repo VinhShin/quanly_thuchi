@@ -27,6 +27,7 @@ class EditBloc extends Bloc<EditEvent, EditState> {
     if (connectivityResult == ConnectivityResult.mobile ||
         connectivityResult == ConnectivityResult.wifi) {
       if (event is LoadCategory) {
+        yield EditState.Loading();
         List<CategoryModel> listCate =
             await _fireStorageRepository.getAllCategory();
         yield EditAllCategory(listCate);

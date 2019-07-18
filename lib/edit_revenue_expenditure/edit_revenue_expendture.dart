@@ -146,7 +146,15 @@ class _EditPage extends State<EditPage> {
                     child: new Text(edistate.list[i].name));
               }
               if (edistate.list.length > 0) {
-                _category = edistate.list[0].name;
+                if(transaction!=null) {
+                  edistate.list.forEach((cate){
+                    if(cate.type == transaction.type){
+                      _category = cate.name;
+                    }
+                  });
+                }else{
+                  _category = edistate.list[0].name;
+                }
               }
               _editBloc.dispatch(EditEventEmpty());
             }
@@ -157,15 +165,6 @@ class _EditPage extends State<EditPage> {
                     child: new Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
-//                        Container(
-//                          child: Row(children: <Widget>[
-//                            Container(child: TextBase("Loại")),
-//                            Container(
-//                              margin: EdgeInsets.only(top: 10),
-//                              child: Row(children: createRadioListUsers()),
-//                            )
-//                          ]),
-//                        ),
                         Row(
                           children: <Widget>[
                             Column(
